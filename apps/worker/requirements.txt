@@ -1,0 +1,9 @@
+-r ../api/requirements.txt
+feedparser>=6.0.11
+apscheduler>=3.10.4
+scikit-learn>=1.5.0
+textstat>=0.7.4
+openai>=1.55.0
+beautifulsoup4>=4.12.3
+lxml>=5.3.0
+langdetect>=1.0.9
