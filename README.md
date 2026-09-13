@@ -1,4 +1,4 @@
-# News Reels — Structured Importance & Multi-Dimensional News Platform
+# Newzz — Structured Importance & Multi-Dimensional News Platform
 
 A verification-forward, local-relevant, and explainable news platform. News Reels clusters multi-source coverage, verifies facts, and ranks real-world events using an objective 5-dimension scoring engine that answers:
 
