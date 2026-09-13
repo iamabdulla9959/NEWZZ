@@ -701,24 +701,22 @@
     syncPriorityOrderWithInterests();
     const categoriesToSend = state.priorityOrder.map(c => c.toLowerCase());
 
+    // 1. Immediately persist preferences in browser localStorage
+    localStorage.setItem(STORAGE_KEYS.INTERESTS, JSON.stringify(state.interests));
+    localStorage.setItem(STORAGE_KEYS.PRIORITY_ORDER, JSON.stringify(state.priorityOrder));
+    localStorage.setItem(STORAGE_KEYS.ONBOARDING_COMPLETE, 'true');
+
+    // 2. Hide modal and trigger feed rendering immediately
+    elements.modalPriority.classList.add('hidden');
+    if (typeof setOnboardingFalse === 'function') {
+      setOnboardingFalse();
+    }
+    fetchFeed();
+
+    // 3. Sync to backend in the background if API is available
     try {
-      const res = await fetch(`${API_BASE}/user/${encodeURIComponent(state.deviceId)}/preferences`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          category_order: categoriesToSend
-        })
-      });
-
-      // Always persist locally
-      localStorage.setItem(STORAGE_KEYS.INTERESTS, JSON.stringify(state.interests));
-      localStorage.setItem(STORAGE_KEYS.PRIORITY_ORDER, JSON.stringify(state.priorityOrder));
-      localStorage.setItem(STORAGE_KEYS.ONBOARDING_COMPLETE, 'true');
-
-      try {
-        const res = await fetch(`${API_BASE}/user/${encodeURIComponent(state.deviceId)}/preferences`, {
+      if (!window.location.hostname.includes('github.io')) {
+        await fetch(`${API_BASE}/user/${encodeURIComponent(state.deviceId)}/preferences`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -727,26 +725,9 @@
             category_order: categoriesToSend
           })
         });
-
-        if (!res.ok && !window.location.hostname.includes('github.io')) {
-          throw new Error(`Preferences API returned status ${res.status}`);
-        }
-      } catch (err) {
-        if (!window.location.hostname.includes('github.io')) {
-          console.error('Failed to sync preferences to backend:', err);
-          elements.priorityErrorMsg.textContent = 'Failed to save priorities to server. Please try again.';
-          elements.priorityErrorBanner.classList.remove('hidden');
-          return;
-        } else {
-          console.warn('Running on static host; preferences saved locally in browser.');
-        }
       }
-
-      elements.modalPriority.classList.add('hidden');
-      if (typeof setOnboardingFalse === 'function') {
-        setOnboardingFalse();
-      }
-      fetchFeed();
+    } catch (err) {
+      console.warn('Backend preferences sync failed (using local settings):', err);
     } finally {
       elements.btnSavePriority.disabled = false;
       elements.btnSavePriority.textContent = originalBtnText;
