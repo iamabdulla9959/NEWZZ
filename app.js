@@ -7,7 +7,17 @@
   'use strict';
 
   // --- Constants & Config ---
-  const API_BASE = window.location.origin;
+  // Smart API Base resolution for Localhost, Netlify proxy (/api), and custom Render backend
+  let API_BASE = window.RENDER_API_BASE || '';
+  if (!API_BASE) {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      API_BASE = window.location.origin;
+    } else if (window.location.hostname.includes('netlify.app')) {
+      API_BASE = '/api';
+    } else {
+      API_BASE = window.location.origin;
+    }
+  }
   const STORAGE_KEYS = {
     DEVICE_ID: 'newsreels_device_id',
     LOCATION_STATE: 'newsreels_state',

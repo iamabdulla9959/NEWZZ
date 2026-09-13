@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: newzz-api
+    runtime: python
+    buildCommand: pip install -r apps/api/requirements.txt
+    startCommand: bash start.sh
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: DATABASE_URL
+        value: sqlite:///newsreels.db
