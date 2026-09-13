@@ -31,6 +31,7 @@ def test_ingest_dedupes_on_url(db: Session):
         name="Example Gazette",
         category="national",
         region=None,
+      district="Exampleville",
         rss_url="https://example.invalid/rss.xml",
         trust_tier=2,
         is_active=True,
@@ -43,4 +44,5 @@ def test_ingest_dedupes_on_url(db: Session):
         second = ingest_rss_source(db, source, client=client)
     assert first == 1
     assert second == 0
-    assert db.query(Article).count() == 1
+    article = db.query(Article).filter(Article.url == "https://example.invalid/example-corp-plant").one()
+    assert article.district == "Exampleville"

@@ -1,29 +1,65 @@
+# Environment configurations & secrets
 .env
-.netlify
-node_modules
-.expo
-dist
-build
-__pycache__
-*.pyc
-.pytest_cache
-.venv
-newsreels.db
-apps/api/test.db
-apps/api/worker_test.db
-apps/api/newsreels.db
+.env.*
+!.env.example
 
-.idea
-.vscode
-*.egg-info
-.DS_Store
-web-build
-coverage
-.coverage
-htmlcov
+# Python bytecode & caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+apps/api/.pytest_cache/
+apps/worker/.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Local databases & runtime datasets
+newsreels.db
+*.db
+*.sqlite3
+news.json
+summarized_news.json
+
+# Scratch temporary artifacts & logs (preserve permanent audit test scripts)
+scratch/__pycache__/
+scratch/*.png
+scratch/*.json
+scratch/*_screenshots/
+scratch/debug_*.py
+scratch/inspect_*.py
+scratch/diagnose_*.py
+scratch/sync_*.py
+scratch/audit_formula_948.py
+
+# Logs & temporary files
 *.log
-apps/mobile/.expo
-apps/api/.pytest_cache
-apps/worker/.pytest_cache
-news.db
-apps/api/news.db
+*.tmp
+*.temp
+temp_check.html
+
+# Test coverage & build artifacts
+coverage/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+web-build/
+.netlify/
+
+# Mobile (React Native / Expo) local outputs
+.expo/
+node_modules/
+apps/mobile/.expo/
+apps/mobile/android/
+apps/mobile/ios/
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

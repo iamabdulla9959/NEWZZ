@@ -13,6 +13,15 @@ def test_health_returns_200_when_db_reachable():
     assert response.json()["status"] == "ok"
 
 
+def test_ready_returns_status_and_geocoder_provider():
+    response = client.get("/ready")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "ok"
+    assert data["database"] == "ok"
+    assert data["geocoder_provider"] in {"nominatim", "locationiq"}
+
+
 def test_health_ingestion_returns_status():
     db = SessionLocal()
     try:

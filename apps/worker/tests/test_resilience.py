@@ -70,12 +70,12 @@ def test_worker_runs_table_records_every_run(monkeypatch):
     monkeypatch.setattr(main_mod, "SessionLocal", Session)
 
     # 1. Normal run
-    monkeypatch.setattr(main_mod, "ingest_all_active", lambda db, **kw: (3, 5, []))
+    monkeypatch.setattr(main_mod, "poll_currents_sources", lambda db, **kw: (3, 5, 1, []))
     monkeypatch.setattr(main_mod, "cluster_unassigned_articles", lambda db: 5)
-    main_mod.run_rss_once()
+    main_mod.run_currents_once()
 
     db = Session()
-    runs = db.query(WorkerRun).filter(WorkerRun.provider == "rss").all()
+    runs = db.query(WorkerRun).filter(WorkerRun.provider == "currents_api").all()
     assert len(runs) == 1
     assert runs[0].sources_polled == 3
     assert runs[0].articles_ingested == 5
@@ -83,12 +83,12 @@ def test_worker_runs_table_records_every_run(monkeypatch):
 
     # 2. Failing run
     def failing_ingest(db, **kw):
-        raise ConnectionError("Network down to RSS feeds")
+        raise ConnectionError("Network down to Currents API")
 
-    monkeypatch.setattr(main_mod, "ingest_all_active", failing_ingest)
-    main_mod.run_rss_once()
+    monkeypatch.setattr(main_mod, "poll_currents_sources", failing_ingest)
+    main_mod.run_currents_once()
 
-    runs = db.query(WorkerRun).filter(WorkerRun.provider == "rss").order_by(WorkerRun.timestamp.asc()).all()
+    runs = db.query(WorkerRun).filter(WorkerRun.provider == "currents_api").order_by(WorkerRun.timestamp.asc()).all()
     assert len(runs) == 2
     assert runs[1].errors is not None
     assert any("Network down" in e for e in runs[1].errors)

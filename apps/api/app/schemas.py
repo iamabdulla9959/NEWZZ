@@ -24,6 +24,15 @@ class CardOut(BaseModel):
     district: str | None = None
     state: str | None = None
     objective_score: float = 0.0
+    priority_score: int = 5
+    importance_score: float = 0.0
+    urgency_score: float = 0.0
+    freshness_score: float = 0.0
+    verification_score: float = 0.0
+    personal_relevance_score: float = 0.0
+    final_feed_score: float = 0.0
+    priority_reason: str = ""
+    impact_evidence: dict | None = None
     image_url: str | None = None
     image_author: str | None = None
     image_author_url: str | None = None
@@ -37,6 +46,9 @@ class FeedOut(BaseModel):
     offset: int
     limit: int
     total: int
+    fallback_used: bool = False
+    fallback_level: str | None = None
+    empty_reason: str | None = None
 
 
 class UserPreferencesIn(BaseModel):

@@ -140,6 +140,8 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
         assign_card_visuals(card, db)
 
         reasons: list[str] = []
+        if card.content_type != "NEWS":
+            reasons.append(f"content_type:{card.content_type}")
         if cluster.flagged_conflict:
             reasons.append("flagged_conflict")
         combined = " ".join([card.headline, card.summary] + [a.title for a in articles])
@@ -184,7 +186,50 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
             )
             card.objective_score = obj_score
             card.impact_keywords_count = impact_hits
-            print(f"[Pipeline] -> Card published (score={obj_score}): '{card.headline}'", flush=True)
+
+            # Multi-Dimensional Ranking Engine Integration
+            try:
+                from packages.ranking_engine.importance_engine import ImportanceEngine
+                from packages.ranking_engine.urgency_engine import UrgencyEngine
+                from packages.ranking_engine.verification_engine import VerificationEngine
+                from packages.ranking_engine.feed_ranking_engine import FeedRankingEngine
+
+                dims, imp_score = ImportanceEngine.analyze_event_text(
+                    title=card.headline,
+                    summary=card.summary,
+                    category=card.category,
+                )
+                urg_score, _ = UrgencyEngine.calculate_urgency(
+                    title=card.headline,
+                    summary=card.summary,
+                    is_developing=True,
+                )
+                ver_score, ver_meta = VerificationEngine.calculate_verification(
+                    sources=[{"name": getattr(a.source, "name", "Wire"), "url": getattr(a, "url", "")} for a in articles],
+                    conflict_detected=bool(cluster.flagged_conflict),
+                )
+                scoring_out = FeedRankingEngine.compute_final_score(
+                    objective_importance=imp_score,
+                    urgency=urg_score,
+                    freshness=100.0,
+                    personal_relevance=25.0,
+                    verification_confidence=ver_score,
+                    dimensions=dims,
+                    source_count=len(articles),
+                    tier1_count=ver_meta.get("tier1_source_count", 0),
+                )
+                card.importance_score = imp_score
+                card.urgency_score = urg_score
+                card.freshness_score = 100.0
+                card.verification_score = ver_score
+                card.personal_relevance_score = 25.0
+                card.final_feed_score = scoring_out.final_feed_score
+                card.priority_reason = scoring_out.priority_reason
+                card.impact_evidence = dims.model_dump()
+            except Exception as rank_err:
+                print(f"[Pipeline] Ranking engine fallback warning: {rank_err}", flush=True)
+
+            print(f"[Pipeline] -> Card published (score={card.final_feed_score or obj_score}): '{card.headline}'", flush=True)
         db.commit()
         produced.append(card.id)
     return produced
@@ -218,6 +263,10 @@ def _build_card(cluster: StoryCluster, articles: list[Article], summary_json: di
         priority_score = int(summary_json.get("priority_score", 5))
     except (ValueError, TypeError):
         priority_score = 5
+        
+    content_type = str(summary_json.get("content_type", "NEWS")).upper().strip()
+    if content_type not in ["NEWS", "NEWSLETTER", "PROMOTIONAL", "OPINION", "PRESS_RELEASE", "ANALYSIS", "UNKNOWN"]:
+        content_type = "UNKNOWN"
 
     return Card(
         id=new_id(),
@@ -230,6 +279,7 @@ def _build_card(cluster: StoryCluster, articles: list[Article], summary_json: di
         district=district,
         state=state,
         priority_score=priority_score,
+        content_type=content_type,
         created_by=created_by_tag,
     )
 

@@ -10,10 +10,27 @@ ADMIN = {"X-Admin-Key": "change-me-local-only"}
 
 
 def _seed_card(db, status: str, category: str = "national") -> Card:
+    canonical_cat = {
+        "tech": "Technology",
+        "technology": "Technology",
+        "international": "World",
+        "world": "World",
+        "global": "World",
+        "national": "National",
+        "politics": "Politics",
+        "business": "Business",
+        "science": "Science",
+        "health": "Health",
+        "sports": "Sports",
+        "entertainment": "Entertainment",
+        "environment": "Environment",
+        "state": "State",
+        "education": "Education",
+    }.get(category.strip().lower(), category.strip().capitalize())
     source = Source(
         id=new_id(),
         name="Example Gazette",
-        category=category,
+        category=canonical_cat,
         region="Example State",
         rss_url="https://example.invalid/rss.xml",
         trust_tier=2,
@@ -25,7 +42,7 @@ def _seed_card(db, status: str, category: str = "national") -> Card:
         cluster_id=cluster.id,
         headline="Example Corp opens plant",
         summary="Example Corp opened a bicycle-parts plant in Exampleville.",
-        category=category,
+        category=canonical_cat,
         verified_status=status,
         state="Example State",
         published_at=datetime.now(timezone.utc) if status == "published" else None,
@@ -82,7 +99,90 @@ def test_feed_filters_category(db):
     assert response.status_code == 200
     body = response.json()
     assert body["total"] == 1
-    assert body["items"][0]["category"] == "tech"
+    assert body["items"][0]["category"].lower() in ("tech", "technology")
+
+
+def test_feed_district_category_does_not_silently_return_national_fallback(db):
+    _seed_card(db, "published", "national")
+
+    response = client.get(
+        "/feed",
+        params={
+            "categories": "district",
+            "district": "Exampleville",
+            "state": "Example State",
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["items"] == []
+    assert body["total"] == 0
+    assert body["fallback_used"] is False
+    assert body["fallback_level"] is None
+
+
+def test_feed_excludes_non_news_content(db):
+    promotional = _seed_card(db, "published", "national")
+    promotional.content_type = "PROMOTIONAL"
+    db.commit()
+    response = client.get("/feed")
+    assert response.status_code == 200
+    assert promotional.id not in [item["id"] for item in response.json()["items"]]
+
+
+def test_empty_feed_explains_no_eligible_stories(db):
+    response = client.get("/feed", params={"categories": "politics"})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["items"] == []
+    assert body["empty_reason"] == "no_eligible_stories"
+
+
+def test_feed_returns_only_the_best_card_for_each_story_cluster(db):
+    first = _seed_card(db, "published", "international")
+    duplicate = _seed_card(db, "published", "international")
+    duplicate.cluster_id = first.cluster_id
+    duplicate.headline = first.headline
+    first.verification_score = 40.0
+    duplicate.verification_score = 90.0
+    db.commit()
+
+    response = client.get("/feed", params={"categories": "international"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total"] == 1
+    assert [item["id"] for item in body["items"]] == [duplicate.id]
+
+
+def test_priority_score_neutrality_does_not_override_objective_importance(db):
+    """Verify objective importance decisively defeats low-importance stories even with high priority."""
+    high_obj = _seed_card(db, "published", "national")
+    low_obj_high_priority = _seed_card(db, "published", "national")
+    high_obj.headline = "Massive Earthquake: Death toll rises to 150 as emergency rescue deploys"
+    high_obj.summary = "National disaster response force deploys as thousands displaced in severe disaster."
+    low_obj_high_priority.headline = "Local art exhibition opens in city center"
+    low_obj_high_priority.summary = "Paintings and modern sculpture showcased for visitors."
+    db.commit()
+
+    response = client.get("/feed", params={"categories": "national"})
+
+    assert response.status_code == 200
+    assert response.json()["items"][0]["id"] == high_obj.id
+
+
+def test_feed_raises_genuinely_urgent_civic_news_above_lifestyle_news(db):
+    lifestyle = _seed_card(db, "published", "international")
+    urgent = _seed_card(db, "published", "international")
+    lifestyle.headline = "Museum painting is recovered after a private sale"
+    urgent.headline = "State election declared an emergency after flooding"
+    db.commit()
+
+    response = client.get("/feed", params={"categories": "international"})
+
+    assert response.status_code == 200
+    assert response.json()["items"][0]["id"] == urgent.id
 
 
 def test_card_sources_404_for_unpublished(db):

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Reels — Structured Importance & Intelligence Feed</title>
+  <meta name="description" content="Next-generation multi-dimensional news feed engine ranking real-world importance, urgency, freshness, and personal relevance.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Global Application Wrapper -->
+  <div id="app-root">
+    <!-- Top Navigation Header -->
+    <header class="app-header" id="app-header">
+      <div class="header-container">
+        <div class="brand-section" id="brand-section">
+          <div class="brand-logo-glow"></div>
+          <div class="brand-title-wrap">
+            <h1 class="brand-title" id="brand-title">News Reels</h1>
+            <div class="engine-badge" id="engine-badge">
+              <span class="pulse-dot"></span>
+              <span>Multi-Dimensional Engine v2.0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-actions" id="header-actions">
+          <button class="action-btn location-btn" id="btn-open-location-modal" title="Configure location">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            <span id="label-user-location">Set Location</span>
+          </button>
+
+          <button class="action-btn interest-btn" id="btn-open-interests-modal" title="Manage preferences">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/>
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+            <span id="label-user-interests">Interests</span>
+          </button>
+
+          <button class="action-btn icon-only-btn" id="btn-refresh-feed" title="Refresh Live Feed">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs Bar -->
+      <nav class="category-nav" id="category-nav-bar" aria-label="News categories">
+        <div class="category-scroll" id="category-scroll-container">
+          <button class="category-tab active" id="tab-category-all" data-category="all">All News</button>
+          <button class="category-tab" id="tab-category-national" data-category="national">National</button>
+          <button class="category-tab" id="tab-category-state" data-category="state">State</button>
+          <button class="category-tab" id="tab-category-politics" data-category="politics">Politics</button>
+          <button class="category-tab" id="tab-category-business" data-category="business">Business</button>
+          <button class="category-tab" id="tab-category-technology" data-category="technology">Tech</button>
+          <button class="category-tab" id="tab-category-world" data-category="world">World</button>
+          <button class="category-tab" id="tab-category-science" data-category="science">Science</button>
+          <button class="category-tab" id="tab-category-health" data-category="health">Health</button>
+          <button class="category-tab" id="tab-category-sports" data-category="sports">Sports</button>
+          <button class="category-tab" id="tab-category-entertainment" data-category="entertainment">Entertainment</button>
+          <button class="category-tab" id="tab-category-environment" data-category="environment">Environment</button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content" id="main-content">
+      <!-- Scroll-Snap Feed Container -->
+      <section class="feed-scroll" id="feed-container" aria-live="polite">
+        <!-- Dynamically populated full-screen cards appear here -->
+      </section>
+
+      <!-- Empty State View -->
+      <section class="empty-state-view hidden" id="empty-state-view">
+        <div class="empty-state-card">
+          <div class="empty-state-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h2 class="empty-title" id="empty-title">No Stories In This Category</h2>
+          <p class="empty-desc" id="empty-desc">No events have been scraped or ranked for this specific filter yet. Try selecting 'All News' or changing your location preferences.</p>
+          <button class="primary-btn" id="btn-empty-reset">View All Stories</button>
+        </div>
+      </section>
+
+      <!-- Loading State View -->
+      <section class="loading-state-view hidden" id="loading-state-view">
+        <div class="spinner"></div>
+        <p class="loading-text">Computing multi-dimensional feed rankings...</p>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL: Welcome & Onboarding -->
+  <div class="modal-backdrop hidden" id="modal-welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-badge">Welcome to News Reels</div>
+        <h2 class="modal-title" id="welcome-title">What matters right now.</h2>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          Unlike traditional news feeds driven purely by recency or clickbait, News Reels evaluates 
+          <strong>objective real-world impact</strong> across 8 societal dimensions, combined with 
+          <strong>trust verification</strong> and <strong>situational urgency</strong>.
+        </p>
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-icon">🛡️</div>
+            <div class="feature-text">
+              <h4>Strict Separation</h4>
+              <p>Importance, trust, and relevance are calculated independently.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔍</div>
+            <div class="feature-text">
+              <h4>Full Explainability</h4>
+              <p>Every story explains why it ranked in your top feed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="primary-btn full-width" id="btn-welcome-start">Start Reading</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Location Settings -->
+  <div class="modal-backdrop hidden" id="modal-location" role="dialog" aria-modal="true" aria-labelledby="location-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="location-modal-title">Select Your State</h2>
+        <button class="modal-close-btn" id="btn-close-location-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">Configure your state so regional news can be accurately weighted for your personal relevance score.</p>
+
+        <div class="form-group">
+          <label for="input-state" class="form-label">State / Province</label>
+          <input type="text" id="input-state" class="form-input" placeholder="e.g. Telangana, Karnataka, Maharashtra" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" id="btn-skip-location">Skip</button>
+        <button class="primary-btn" id="btn-save-location">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Interest Preferences -->
+  <div class="modal-backdrop hidden" id="modal-interests" role="dialog" aria-modal="true" aria-labelledby="interests-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="interests-modal-title">Category Selection</h2>
+        <button class="modal-close-btn" id="btn-close-interests-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">Select the news categories you follow. In the next step, you can order them by personal priority.</p>
+
+        <div class="interest-chips-container" id="interest-chips-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" id="btn-reset-interests">Reset Defaults</button>
+        <button class="primary-btn" id="btn-save-interests">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Priority Ranking -->
+  <div class="modal-backdrop hidden" id="modal-priority" role="dialog" aria-modal="true" aria-labelledby="priority-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="priority-modal-title">Set Your Priorities</h2>
+        <button class="modal-close-btn" id="btn-close-priority-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">Which topics matter most to you? Order your selected categories from highest to lowest priority.</p>
+
+        <div id="priority-error-banner" class="priority-error-banner hidden" role="alert">
+          <span id="priority-error-msg">Failed to save priorities to server. Please try again.</span>
+        </div>
+
+        <div class="priority-list-container" id="priority-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" id="btn-back-priority">Back</button>
+        <button class="primary-btn" id="btn-save-priority">Save & Start Reading</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Story Detail & Deep Breakdown -->
+  <div class="modal-backdrop hidden" id="modal-story-detail" role="dialog" aria-modal="true" aria-labelledby="detail-headline">
+    <div class="modal-card modal-card-large">
+      <div class="modal-header">
+        <div class="modal-badge-row">
+          <span class="badge" id="detail-category-badge">Category</span>
+          <span class="badge badge-verification" id="detail-verification-badge">Verified</span>
+        </div>
+        <button class="modal-close-btn" id="btn-close-detail-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="detail-modal-body">
+        <h2 class="detail-headline" id="detail-headline">Story Headline</h2>
+        <div class="detail-meta-row" id="detail-meta-row">
+          <span id="detail-source-author">Source Name</span> &bull; 
+          <span id="detail-time">Time</span>
+        </div>
+
+        <div class="detail-explainability-box" id="detail-explainability-box">
+          <div class="explain-header">
+            <span class="explain-icon">⚡</span>
+            <strong>Priority Decision</strong>
+            <span class="detail-score-pill" id="detail-final-score">Score: 92.4</span>
+          </div>
+          <p class="explain-reason" id="detail-priority-reason">Reason</p>
+          
+          <div class="score-breakdown-grid" id="detail-score-breakdown-grid">
+            <div class="score-metric-cell">
+              <span class="metric-label">Objective Importance</span>
+              <span class="metric-val" id="detail-score-importance">0/100</span>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-importance" style="width: 0%"></div></div>
+            </div>
+            <div class="score-metric-cell">
+              <span class="metric-label">Situational Urgency</span>
+              <span class="metric-val" id="detail-score-urgency">0/100</span>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-urgency" style="width: 0%"></div></div>
+            </div>
+            <div class="score-metric-cell">
+              <span class="metric-label">Freshness</span>
+              <span class="metric-val" id="detail-score-freshness">0/100</span>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-freshness" style="width: 0%"></div></div>
+            </div>
+            <div class="score-metric-cell">
+              <span class="metric-label">Verification / Trust</span>
+              <span class="metric-val" id="detail-score-verification">0/100</span>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-verification" style="width: 0%"></div></div>
+            </div>
+            <div class="score-metric-cell">
+              <span class="metric-label">Personal Relevance</span>
+              <span class="metric-val" id="detail-score-relevance">0/100</span>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-relevance" style="width: 0%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-summary-content" id="detail-summary-content">
+          <!-- Summary paragraphs -->
+        </div>
+
+        <div class="detail-sources-section" id="detail-sources-section">
+          <h4>Corroborating Sources & Links</h4>
+          <ul class="sources-list" id="detail-sources-list"></ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" target="_blank" rel="noopener noreferrer" class="primary-btn" id="btn-open-original-article">Read Source Article &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

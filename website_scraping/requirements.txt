@@ -1,0 +1,18 @@
+# Core crawler and data extraction
+feedparser>=6.0.10
+requests>=2.31.0
+pyyaml>=6.0.1
+
+# News Deduplication & Machine Learning
+scikit-learn>=1.4.0
+python-dotenv>=1.0.0
+
+# Optional LLM Summarization (Groq, Gemini, OpenAI, OpenRouter)
+openai>=1.0.0
+
+# Optional Telegram bot and scheduler
+python-telegram-bot>=21.0
+apscheduler>=3.10.0
+
+# Testing
+pytest>=8.0.0

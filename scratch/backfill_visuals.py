@@ -6,9 +6,9 @@ sys.path.insert(0, "d:/News/apps/worker")
 from dotenv import load_dotenv
 load_dotenv("d:/News/.env")
 
-from app.db import SessionLocal
-from app.models import Card
-from worker.visuals import assign_card_visuals
+from app.db import SessionLocal  # type: ignore
+from app.models import Card  # type: ignore
+from worker.visuals import assign_card_visuals  # type: ignore
 
 session = SessionLocal()
 cards = session.query(Card).filter(Card.verified_status == "published").all()

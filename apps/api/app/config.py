@@ -18,9 +18,13 @@ class Settings(BaseSettings):
     llm_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
     llm_model: str = "gemini-2.0-flash"
     newsdata_api_key: str = ""
+    locationiq_api_key: str = ""
     admin_api_key: str = "change-me-local-only"
     api_host: str = "0.0.0.0"
     api_port: int = 8000
+    # Comma-separated allowed CORS origins. Use '*' for development.
+    # Example: CORS_ORIGINS=https://myapp.com,https://www.myapp.com
+    cors_origins: str = "*"
 
 
 settings = Settings()

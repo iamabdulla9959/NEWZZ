@@ -1,0 +1,9 @@
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
+search-path = [
+    "..",
+    "../apps/api",
+    "../apps/worker",
+]

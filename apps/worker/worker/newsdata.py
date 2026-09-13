@@ -11,13 +11,14 @@ from sqlalchemy.orm import Session
 from app.models import Article, Source, WorkerRun, new_id
 from worker.ingest import parse_datetime, process_and_translate_text
 from worker.llm import LLMClient
+from worker.credit_budget import NEWSDATA_DAILY_CREDIT_BUDGET, get_daily_provider_credits
 
 logger = logging.getLogger("newsreels.newsdata")
 
 # Named constants for tuneable polling schedule and credit limits
 NEWSDATA_API_URL: str = "https://newsdata.io/api/1/latest"
 NEWSDATA_POLL_INTERVAL_MINUTES: int = 75  # 60-90 minutes schedule
-DAILY_CREDIT_CEILING: int = 200
+DAILY_CREDIT_CEILING: int = NEWSDATA_DAILY_CREDIT_BUDGET
 USER_AGENT: str = "NewsReelsBot/0.1 (+https://newsreels.local)"
 
 # Internal category to NewsData server-side category mapping
@@ -212,7 +213,7 @@ def ingest_newsdata_source(
                 translation_confidence=conf,
                 category=source.category,
                 state=source.region,
-                district=None,
+                district=source.district,
                 published_at=published,
             )
         )
@@ -240,9 +241,9 @@ def poll_newsdata_sources(
     errors: list[str] = []
 
     # Check daily credit usage ceiling
-    used_today = get_daily_credits_used(db)
+    used_today = get_daily_provider_credits(db, "newsdata_api")
     if used_today >= DAILY_CREDIT_CEILING:
-        err = f"Daily credit ceiling reached ({used_today}/{DAILY_CREDIT_CEILING} credits used). Skipping NewsData poll."
+        err = f"Daily credit ceiling reached for NewsData ({used_today}/{DAILY_CREDIT_CEILING}). Skipping NewsData poll."
         logger.warning(err)
         errors.append(err)
         return 0, 0, 0, errors
@@ -260,7 +261,7 @@ def poll_newsdata_sources(
         # Check credit ceiling between requests as well
         for query in queries:
             if (used_today + total_credits) >= DAILY_CREDIT_CEILING:
-                err = f"Daily credit ceiling reached during run ({used_today + total_credits}/{DAILY_CREDIT_CEILING})."
+                err = f"Daily credit ceiling reached for NewsData during run ({used_today + total_credits}/{DAILY_CREDIT_CEILING})."
                 logger.warning(err)
                 errors.append(err)
                 return polled, total_created, total_credits, errors

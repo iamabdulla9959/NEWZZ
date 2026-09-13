@@ -1,0 +1,16 @@
+user_agent: "NewsAggregatorBot/1.0 (+https://github.com/nuhmanpk/WebScrapper)"
+request_timeout_seconds: 15
+
+feeds:
+  - name: "BBC News"
+    url: "http://feeds.bbci.co.uk/news/rss.xml"
+  - name: "The New York Times"
+    url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+  - name: "The Hindu"
+    url: "https://www.thehindu.com/news/national/feeder/default.rss"
+  - name: "The Times of India"
+    url: "https://timesofindia.indiatimes.com/rssfeedstopstories.cms"
+  - name: "Al Jazeera"
+    url: "https://www.aljazeera.com/xml/rss/all.xml"
+  - name: "WION News"
+    url: "https://news.google.com/rss/search?q=site:wionews.com&hl=en-IN&gl=IN&ceid=IN:en"

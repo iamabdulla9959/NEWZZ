@@ -21,68 +21,68 @@ def ranking_cards(db: Session) -> list[Card]:
     db.add_all([cluster, source])
     db.flush()
 
-    # Create 3 cards in different categories with equal objective_score (1.0)
+    # Create 3 cards in different categories with equal baseline objective impact
+    # so that personal relevance (category preference) determines the relative ordering
+    headline = "Quarterly Activity Report: Operations continuing as planned"
+    summary = "Quarterly activity report released covering routine operations."
     card_tech = Card(
         id=new_id(),
-        cluster_id=cluster.id,
-        headline="Tech Breakthrough in Quantum Computing",
-        summary="A new quantum processor has solved optimization tasks in seconds.",
-        category="tech",
+        cluster_id=new_id(),
+        headline=f"{headline} - Technology",
+        summary=summary,
+        category="technology",
         verified_status="published",
         published_at=now,
-        objective_score=1.0,
     )
-    card_district = Card(
+    card_business = Card(
         id=new_id(),
-        cluster_id=cluster.id,
-        headline="District Council Opens New Healthcare Center",
-        summary="New municipal clinic begins operations to serve local residents.",
-        category="district",
+        cluster_id=new_id(),
+        headline=f"{headline} - Business",
+        summary=summary,
+        category="business",
         verified_status="published",
         published_at=now,
-        objective_score=1.0,
     )
-    card_national = Card(
+    card_sports = Card(
         id=new_id(),
-        cluster_id=cluster.id,
-        headline="National Infrastructure Plan Approved",
-        summary="Parliament has passed the transportation and rail modernization bill.",
-        category="national",
+        cluster_id=new_id(),
+        headline=f"{headline} - Sports",
+        summary=summary,
+        category="sports",
         verified_status="published",
         published_at=now,
-        objective_score=1.0,
     )
-    db.add_all([card_tech, card_district, card_national])
+    db.add_all([card_tech, card_business, card_sports])
     db.commit()
-    return [card_tech, card_district, card_national]
+    return [card_tech, card_business, card_sports]
 
 
 def test_different_device_ids_receive_differently_ordered_feeds(
     db: Session, ranking_cards: list[Card]
 ):
-    # Device A prefers tech > district > national
-    client.put("/user/dev-A/preferences", json={"category_order": ["tech", "district", "national"]})
+    # Device A prefers technology > business > sports
+    client.put("/user/dev-A/preferences", json={"category_order": ["technology", "business", "sports"]})
 
-    # Device B prefers district > national > tech
-    client.put("/user/dev-B/preferences", json={"category_order": ["district", "national", "tech"]})
+    # Device B prefers sports > business > technology
+    client.put("/user/dev-B/preferences", json={"category_order": ["sports", "business", "technology"]})
 
     target_ids = {c.id for c in ranking_cards}
 
     res_a = client.get("/feed?device_id=dev-A")
     assert res_a.status_code == 200
     items_a = [item for item in res_a.json()["items"] if item["id"] in target_ids]
-    categories_a = [item["category"] for item in items_a]
-    assert categories_a[0] == "tech"
-    assert categories_a[1] == "district"
-    assert categories_a[2] == "national"
+    categories_a = [item["category"].lower() for item in items_a]
+    assert categories_a[0] in ("tech", "technology")
+    assert categories_a[1] == "business"
+    assert categories_a[2] == "sports"
 
     res_b = client.get("/feed?device_id=dev-B")
     assert res_b.status_code == 200
     items_b = [item for item in res_b.json()["items"] if item["id"] in target_ids]
-    categories_b = [item["category"] for item in items_b]
-    assert categories_b[0] == "district"
-    assert categories_b[1] == "national"
-    assert categories_b[2] == "tech"
+    categories_b = [item["category"].lower() for item in items_b]
+    assert categories_b[0] == "sports"
+    assert categories_b[1] == "business"
+    assert categories_b[2] in ("tech", "technology")
 
     assert categories_a != categories_b, "Different device IDs must receive differently ordered feeds!"
 
@@ -96,23 +96,21 @@ def test_unranked_device_receives_equal_weight_feed(db: Session):
 
     card_low_obj = Card(
         id="card-low",
-        cluster_id=cluster.id,
-        headline="Routine Civic Update",
+        cluster_id=new_id(),
+        headline="Routine Civic Update: Road maintenance scheduled",
         summary="Road maintenance scheduled next week.",
-        category="district",
+        category="national",
         verified_status="published",
         published_at=datetime.now(timezone.utc),
-        objective_score=1.0,
     )
     card_high_obj = Card(
         id="card-high",
-        cluster_id=cluster.id,
-        headline="Major Scientific Discovery Announced",
-        summary="Astronomers discover water signatures on nearby exoplanet.",
-        category="science",
+        cluster_id=new_id(),
+        headline="Major Earthquake Strikes: Thousands Affected in Natural Disaster",
+        summary="Government declares state of emergency as search and rescue teams deploy.",
+        category="national",
         verified_status="published",
         published_at=datetime.now(timezone.utc),
-        objective_score=5.0,
     )
     db.add_all([card_low_obj, card_high_obj])
     db.commit()
@@ -133,26 +131,26 @@ def test_updating_category_order_immediately_affects_next_fetch(
 
     target_ids = {c.id for c in ranking_cards}
 
-    # 1. Initial order: national first
-    client.put(f"/user/{device_id}/preferences", json={"category_order": ["national", "tech", "district"]})
+    # 1. Initial order: sports first
+    client.put(f"/user/{device_id}/preferences", json={"category_order": ["sports", "technology", "business"]})
     res1 = client.get(f"/feed?device_id={device_id}")
     assert res1.status_code == 200
     items1 = [item for item in res1.json()["items"] if item["id"] in target_ids]
-    assert items1[0]["category"] == "national"
+    assert items1[0]["category"].lower() == "sports"
 
-    # 2. Update order: tech first
-    client.put(f"/user/{device_id}/preferences", json={"category_order": ["tech", "national", "district"]})
+    # 2. Update order: technology first
+    client.put(f"/user/{device_id}/preferences", json={"category_order": ["technology", "sports", "business"]})
     res2 = client.get(f"/feed?device_id={device_id}")
     assert res2.status_code == 200
     items2 = [item for item in res2.json()["items"] if item["id"] in target_ids]
-    assert items2[0]["category"] == "tech"
+    assert items2[0]["category"].lower() in ("tech", "technology")
 
-    # 3. Update order: district first
-    client.put(f"/user/{device_id}/preferences", json={"category_order": ["district", "tech", "national"]})
+    # 3. Update order: business first
+    client.put(f"/user/{device_id}/preferences", json={"category_order": ["business", "technology", "sports"]})
     res3 = client.get(f"/feed?device_id={device_id}")
     assert res3.status_code == 200
     items3 = [item for item in res3.json()["items"] if item["id"] in target_ids]
-    assert items3[0]["category"] == "district"
+    assert items3[0]["category"].lower() == "business"
 
 
 def test_objective_score_calculation():

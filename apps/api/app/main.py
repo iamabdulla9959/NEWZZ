@@ -1,26 +1,29 @@
+import sys
 from pathlib import Path
+
+# Ensure repository root is on sys.path for packages.* imports
+_repo_root = Path(__file__).resolve().parents[3]
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
+from app.config import settings
 from app.db import engine
 from app.routers.admin import router as admin_router
 from app.routers.feed import router as feed_router
+from app.routers.location import router as location_router
 
 app = FastAPI(title="News Reels API", version="0.1.0")
 
+_cors_origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8081",
-        "http://127.0.0.1:8081",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "http://localhost:19006",
-        "http://127.0.0.1:19006",
-        "*",
-    ],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,6 +31,7 @@ app.add_middleware(
 
 app.include_router(feed_router)
 app.include_router(admin_router)
+app.include_router(location_router)
 
 
 @app.get("/health")
@@ -35,6 +39,18 @@ def health() -> dict[str, str]:
     with engine.connect() as conn:
         conn.execute(text("SELECT 1"))
     return {"status": "ok"}
+
+
+@app.get("/ready")
+def ready() -> dict[str, str]:
+    with engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    provider = "locationiq" if settings.locationiq_api_key else "nominatim"
+    return {
+        "status": "ok",
+        "database": "ok",
+        "geocoder_provider": provider,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -97,7 +113,7 @@ def health_ingestion() -> dict:
         db.close()
 
 
-_dist_dir = Path(__file__).resolve().parent.parent.parent / "mobile" / "dist"
-if _dist_dir.exists():
-    app.mount("/", StaticFiles(directory=str(_dist_dir), html=True), name="static")
+_static_dir = Path(__file__).resolve().parent / "static"
+if _static_dir.exists():
+    app.mount("/", StaticFiles(directory=str(_static_dir), html=True), name="static")
 

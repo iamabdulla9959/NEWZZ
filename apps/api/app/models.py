@@ -35,6 +35,7 @@ class Source(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     category: Mapped[str] = mapped_column(String(32), nullable=False)
     region: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    district: Mapped[str | None] = mapped_column(String(128), nullable=True)
     rss_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     trust_tier: Mapped[str] = mapped_column(String(32), nullable=False, default="2")
     source_type: Mapped[str] = mapped_column(String(32), nullable=False, default="rss")
@@ -98,6 +99,7 @@ class Card(Base):
     category: Mapped[str] = mapped_column(String(32), nullable=False)
     verified_status: Mapped[str] = mapped_column(String(32), nullable=False, default="draft")
     verification_type: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    content_type: Mapped[str] = mapped_column(String(32), nullable=False, default="NEWS")
     district: Mapped[str | None] = mapped_column(String(128), nullable=True)
     state: Mapped[str | None] = mapped_column(String(128), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -105,6 +107,17 @@ class Card(Base):
     objective_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     impact_keywords_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     priority_score: Mapped[int] = mapped_column(Integer, nullable=False, default=5)
+    
+    # Structured Multi-Dimensional Ranking Engine Fields
+    importance_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    urgency_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    freshness_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    verification_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    personal_relevance_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    final_feed_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    priority_reason: Mapped[str] = mapped_column(String(512), nullable=False, default="")
+    impact_evidence: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
     created_by: Mapped[str] = mapped_column(String(32), nullable=False, default="live_pipeline")
     is_corrected: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     correction_note: Mapped[str | None] = mapped_column(Text, nullable=True)

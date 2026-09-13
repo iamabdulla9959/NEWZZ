@@ -2,8 +2,8 @@ import sys
 import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 sys.path.insert(0, "d:/News/apps/api")
-from app.db import SessionLocal
-from app.models import Article
+from app.db import SessionLocal  # type: ignore
+from app.models import Article  # type: ignore
 
 session = SessionLocal()
 for a in session.query(Article).filter(Article.cluster_id.in_(["31050e53-29c2-4eaa-808a-713268f0d8f0", "88837dc6-2df1-4e5b-82bf-c021c58ced8a"])):

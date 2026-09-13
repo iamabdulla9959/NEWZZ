@@ -7,11 +7,21 @@ from worker.validate import (
 )
 
 PASSING_SUMMARY = (
-    "Example Corp opened a bicycle parts plant in Exampleville on Monday. "
-    "The company said it will hire four hundred local workers this year. "
-    "City officials said the first shift will start in June. "
-    "Training for new hires begins next week at the site. "
-    "The plant will make bicycle frames and wheels for regional shops."
+    "Example Corp opened a new bicycle center in the town on Monday. "
+    "The company said the center will build bikes and parts for local riders. "
+    "It will also repair older bikes for students and daily workers across the area. "
+    "The team plans to hire fifty workers from the town during the coming year. "
+    "Workers will finish job training before plant work begins next month. "
+    "The district officer visited the site and met with factory workers and staff. "
+    "He said the new center brings welcome jobs and supports green travel for families. "
+    "Local families attended the opening event and walked through the building. "
+    "Company leaders handed out free safety gear to students from local schools. "
+    "Members of the town board confirmed that road access was updated for the site. "
+    "The company plans to build two smaller branch shops in nearby towns next spring. "
+    "These efforts aim to make cycling safe and popular for people across the district. "
+    "Free road safety classes will take place every weekend in town parks. "
+    "School teachers said young students are eager to learn how to ride safely on roads. "
+    "The center will also offer repair discounts to workers who ride to their jobs."
 )
 
 
@@ -34,6 +44,14 @@ def test_word_count_fails_independently():
     result = check_word_count("Example Corp opened a plant.")
     assert result.passed is False
     assert any(r.startswith("word_count:") for r in result.reasons)
+
+
+def test_reel_summary_word_limit_is_180_to_260_words():
+    exactly_180 = " ".join(["fact"] * 180)
+    too_long = " ".join(["fact"] * 261)
+
+    assert check_word_count(exactly_180).passed is True
+    assert check_word_count(too_long).passed is False
 
 
 def test_reading_level_fails_independently():

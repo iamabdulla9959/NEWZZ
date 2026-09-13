@@ -100,6 +100,10 @@ def determine_verification_type(
     if is_local and official_local_count == 1 and len(sources) == 1:
         return "official_source"
 
+    independent_groups = count_independent_sources(sources)
+    if len(independent_groups) < 2:
+        return "single_source"
+
     return "cross_verified"
 
 

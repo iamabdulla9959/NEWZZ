@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from html import escape
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import HTMLResponse
@@ -36,22 +37,23 @@ def review_page(
     rows = []
     for item in items:
         card = item.card
-        reasons = ", ".join(str(r) for r in (item.reasons or []))
+        reasons = escape(", ".join(str(r) for r in (item.reasons or [])))
         sources = "".join(
-            f"<li><a href='{s.url}'>{s.name}</a></li>" for s in card.sources
+            f"<li><a href='{escape(s.url, quote=True)}'>{escape(s.name)}</a></li>"
+            for s in card.sources
         )
         rows.append(
             f"""
             <article style="border:1px solid #333;padding:16px;margin:12px 0;background:#111;color:#eee">
-              <h2>{card.headline}</h2>
+              <h2>{escape(card.headline)}</h2>
               <p><strong>Reasons:</strong> {reasons}</p>
-              <p>{card.summary}</p>
+              <p>{escape(card.summary)}</p>
               <ul>{sources}</ul>
-              <pre style="white-space:pre-wrap;background:#000;padding:8px">{item.source_excerpts}</pre>
-              <form method="post" action="/admin/review/{item.id}/approve?key={admin_key}">
+              <pre style="white-space:pre-wrap;background:#000;padding:8px">{escape(item.source_excerpts)}</pre>
+              <form method="post" action="/admin/review/{escape(item.id, quote=True)}/approve?key={escape(admin_key, quote=True)}">
                 <button type="submit">Approve</button>
               </form>
-              <form method="post" action="/admin/review/{item.id}/reject?key={admin_key}">
+              <form method="post" action="/admin/review/{escape(item.id, quote=True)}/reject?key={escape(admin_key, quote=True)}">
                 <button type="submit">Reject</button>
               </form>
             </article>

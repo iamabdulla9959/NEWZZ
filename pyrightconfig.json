@@ -1,0 +1,13 @@
+{
+    "include": [
+        "apps",
+        "packages",
+        "scratch",
+        "website_scraping"
+    ],
+    "extraPaths": [
+        "apps/api",
+        "apps/worker",
+        "."
+    ]
+}

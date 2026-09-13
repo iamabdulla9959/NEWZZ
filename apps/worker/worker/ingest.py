@@ -34,7 +34,12 @@ def parse_datetime(value: str | None) -> datetime | None:
             dt = dt.replace(tzinfo=timezone.utc)
         return dt
     except (TypeError, ValueError):
-        return None
+        try:
+            normalized = str(value).replace("Z", "+00:00")
+            parsed = datetime.fromisoformat(normalized)
+            return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+        except (TypeError, ValueError):
+            return None
 
 
 def sanitize_article_text(text: str) -> str:
@@ -162,7 +167,7 @@ def ingest_rss_source(
                     translation_confidence=conf,
                     category=source.category,
                     state=source.region,
-                    district=None,
+                    district=source.district,
                     published_at=published,
                     wire_attribution=wire,
                 )
@@ -224,7 +229,7 @@ def ingest_newsdata(
                     translation_confidence=conf,
                     category=source.category,
                     state=source.region,
-                    district=None,
+                    district=source.district,
                     published_at=parse_datetime(item.get("pubDate")),
                     wire_attribution=wire,
                 )
@@ -294,7 +299,7 @@ def ingest_gdelt(
                     translation_confidence=conf,
                     category=source.category,
                     state=source.region,
-                    district=None,
+                    district=source.district,
                     published_at=None,
                     wire_attribution=wire,
                 )

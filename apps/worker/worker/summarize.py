@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import Any
 
 from worker.llm import JUDGE_SYSTEM_PROMPT, LLMClient, SUMMARIZER_SYSTEM_PROMPT
+from worker.validate import word_count
 
-REQUIRED_FIELDS = {"headline", "summary", "category", "key_facts", "conflicts"}
+REQUIRED_FIELDS = {"headline", "summary", "category", "key_facts", "conflicts", "content_type"}
 
 
 def summarize_articles(
@@ -27,6 +28,10 @@ def summarize_articles(
             missing = REQUIRED_FIELDS - set(data)
             if missing:
                 raise ValueError(f"summary JSON missing fields: {sorted(missing)}")
+            summary = str(data.get("summary") or "")
+            words = word_count(summary)
+            if not 200 <= words <= 250:
+                raise ValueError(f"summary word count must be 200-250, got {words}")
             return data
         except Exception as exc:  # retry once, then fail to review queue
             last_error = exc
