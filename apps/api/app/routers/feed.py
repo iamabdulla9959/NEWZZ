@@ -85,6 +85,7 @@ def get_feed(
         # Canonicalize each wanted category so filtering works against stored canonical values
         wanted = [_canonicalize(c) for c in raw_cats]
     
+    is_strictly_state_cat = len(wanted) == 1 and wanted[0].lower() == "state"
     query = _build_query(wanted)
     fallback_used = False
     fallback_level = None
@@ -185,10 +186,18 @@ def get_feed(
         else:
             seen_cluster_keys[cluster_key] = card
 
-    # Authoritative Final Ranking Order: final_feed_score DESC, published_at DESC, created_at DESC
+    # Authoritative Final Ranking Order: user-state priority (if looking at state news), then final_feed_score DESC, published_at DESC, created_at DESC
+    def _state_priority(c: Card) -> int:
+        if state and c.state and c.state.strip().lower() == state.strip().lower():
+            return 2  # exact state match
+        if state and state.strip().lower() in ((c.headline or "") + " " + (c.district or "")).lower():
+            return 1  # mentioned in headline or district
+        return 0
+
     unique_rows = sorted(
         seen_cluster_keys.values(),
         key=lambda c: (
+            _state_priority(c) if (is_strictly_state_cat or not wanted) else 0,
             c.final_feed_score,
             c.published_at.timestamp() if c.published_at else 0.0,
             c.created_at.timestamp() if c.created_at else 0.0,

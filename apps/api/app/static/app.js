@@ -13,7 +13,10 @@
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       API_BASE = window.location.origin;
     } else if (window.location.hostname.includes('netlify.app')) {
-      API_BASE = '/api';
+      // Connect directly to live Render backend
+      API_BASE = 'https://newzz-5e19.onrender.com';
+    } else if (window.location.hostname.includes('github.io')) {
+      API_BASE = 'https://newzz-5e19.onrender.com';
     } else {
       API_BASE = window.location.origin;
     }
@@ -211,6 +214,34 @@
     _detachScrollObserver();
   }
 
+  // --- State Preference News Prioritizer ---
+  function rankCardsByStatePreference(cards, userState, activeCategory) {
+    if (!cards || cards.length === 0 || !userState) return cards;
+    const targetState = userState.trim().toLowerCase();
+
+    return [...cards].sort((a, b) => {
+      // 1. Exact state match: card.state strictly matches user's chosen state
+      const aState = (a.state || '').trim().toLowerCase();
+      const bState = (b.state || '').trim().toLowerCase();
+      const aExact = aState === targetState ? 100 : 0;
+      const bExact = bState === targetState ? 100 : 0;
+
+      // 2. Headline location mention (explicit regional story)
+      const aHead = (a.headline || '').toLowerCase().includes(targetState) ? 50 : 0;
+      const bHead = (b.headline || '').toLowerCase().includes(targetState) ? 50 : 0;
+
+      const aScore = aExact || aHead;
+      const bScore = bExact || bHead;
+
+      if (aScore !== bScore) {
+        return bScore - aScore; // Stories for user's state ALWAYS appear first
+      }
+
+      // Maintain feed importance score order
+      return (Number(b.final_feed_score) || 0) - (Number(a.final_feed_score) || 0);
+    });
+  }
+
   async function fetchFeed(append = false) {
     if (state.loading) return;
     if (!append && !state.hasMore && state.cards.length > 0) return;
@@ -258,12 +289,7 @@
             }
 
             if (state.state) {
-              const st = state.state.toLowerCase();
-              allCards.sort((a, b) => {
-                const aMatch = ((a.headline || '') + ' ' + (a.summary || '')).toLowerCase().includes(st) ? 1 : 0;
-                const bMatch = ((b.headline || '') + ' ' + (b.summary || '')).toLowerCase().includes(st) ? 1 : 0;
-                return bMatch - aMatch;
-              });
+              allCards = rankCardsByStatePreference(allCards, state.state, state.activeCategory);
             }
 
             const paged = allCards.slice(state.offset, state.offset + state.pageSize);
@@ -286,8 +312,13 @@
         return;
       }
 
-      const newItems = Array.isArray(data) ? data : (data.items || data.cards || []);
+      let newItems = Array.isArray(data) ? data : (data.items || data.cards || []);
       const total = data.total || newItems.length;
+
+      // Prioritize user's state news first in State and All categories
+      if (state.state && (state.activeCategory === 'state' || state.activeCategory === 'all')) {
+        newItems = rankCardsByStatePreference(newItems, state.state, state.activeCategory);
+      }
 
       if (append) {
         // Append only non-duplicate cards
@@ -475,7 +506,6 @@
 
         <div class="scroll-card-meta">
           <span class="scroll-source">${sourceName}</span>
-          <span class="scroll-score">Score ${scoreVal}</span>
         </div>
 
         <div class="scroll-card-actions">
@@ -536,10 +566,12 @@
     elements.detailSourceAuthor.textContent = card.source_name || 'Unknown Source';
     elements.detailTime.textContent = formatTimeAgo(card.event_time || card.published_at);
     
-    // Scores
-    const finalScore = Number(card.final_feed_score || 0).toFixed(1);
-    elements.detailFinalScore.textContent = `Score: ${finalScore}/100`;
-    elements.detailPriorityReason.textContent = card.priority_reason || 'Ranked by multi-dimensional algorithm';
+    // Hide technical score from user
+    if (elements.detailFinalScore) {
+      elements.detailFinalScore.textContent = '';
+      elements.detailFinalScore.style.display = 'none';
+    }
+    elements.detailPriorityReason.textContent = card.priority_reason || 'Verified and corroborated news report';
 
     // Subscores and bars
     const imp = Number(card.importance_score || 0).toFixed(1);

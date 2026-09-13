@@ -491,16 +491,10 @@ body {
   color: var(--text-secondary);
 }
 
-/* Understated, non-dominating Score Badge */
-.scroll-score {
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--text-cream);
-  background: rgba(46, 41, 16, 0.50);
-  padding: 0.22rem 0.7rem;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(235, 227, 167, 0.16);
-  letter-spacing: 0.03em;
+/* Score Badges hidden per user preference */
+.scroll-score,
+.detail-score-pill {
+  display: none !important;
 }
 
 /* Card Actions: Share (secondary) and Read Full Story (primary) */

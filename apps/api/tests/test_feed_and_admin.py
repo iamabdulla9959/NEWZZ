@@ -225,3 +225,41 @@ def test_admin_reject_never_in_feed(db):
     feed = client.get("/feed")
     ids = [i["id"] for i in feed.json()["items"]]
     assert card.id not in ids
+
+
+def test_feed_state_priority_orders_user_state_first(db):
+    # Seed a card for Bihar with a dramatic flood headline (high importance)
+    c_bihar = Card(
+        id=new_id(),
+        cluster_id=new_id(),
+        headline="Major floods worsen across northern districts",
+        summary="Severe flooding affects thousands.",
+        category="State",
+        state="Bihar",
+        verified_status="published",
+        published_at=datetime.now(timezone.utc),
+    )
+    # Seed a card for Telangana with a local civic headline
+    c_telangana = Card(
+        id=new_id(),
+        cluster_id=new_id(),
+        headline="Telangana Assembly session begins with civic reforms discussion",
+        summary="Local leaders convene to discuss state developmental initiatives.",
+        category="State",
+        state="Telangana",
+        verified_status="published",
+        published_at=datetime.now(timezone.utc),
+    )
+    db.add_all([c_bihar, c_telangana])
+    db.commit()
+
+    # Query feed requesting state=Telangana
+    res = client.get("/feed?category=state&state=Telangana")
+    assert res.status_code == 200
+    data = res.json()
+    items = data["items"]
+    assert len(items) >= 1
+    # Telangana story must be the top story
+    assert items[0]["id"] == c_telangana.id
+    assert items[0]["state"] == "Telangana"
+

@@ -1,18 +1,19 @@
 [build]
   publish = "."
 
-# SPA fallback rule
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-# API proxy rule (routes /api/* to Render backend once deployed)
+# API proxy rule (routes /api/* to Render backend)
+# MUST be placed before the SPA wildcard rule
 [[redirects]]
   from = "/api/*"
   to = "https://newzz-5e19.onrender.com/:splat"
   status = 200
   force = true
+
+# SPA fallback rule
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 # Global security and CORS headers
 [[headers]]
