@@ -12,12 +12,22 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
 from app.config import settings
+from contextlib import asynccontextmanager
 from app.db import engine
+from app.models import Base
 from app.routers.admin import router as admin_router
 from app.routers.feed import router as feed_router
 from app.routers.location import router as location_router
 
-app = FastAPI(title="News Reels API", version="0.1.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Auto-create all schema tables if they do not exist on application startup
+    Base.metadata.create_all(bind=engine)
+    yield
+
+
+app = FastAPI(title="News Reels API", version="0.1.0", lifespan=lifespan)
 
 _cors_origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
 

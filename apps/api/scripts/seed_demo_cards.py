@@ -1,4 +1,13 @@
+import sys
+from pathlib import Path
 from datetime import datetime, timezone
+
+_api_dir = Path(__file__).resolve().parents[1]
+_repo_dir = Path(__file__).resolve().parents[3]
+for _p in [str(_api_dir), str(_repo_dir)]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 from app.db import SessionLocal
 from app.models import Card, CardSource, Source, StoryCluster, new_id
 

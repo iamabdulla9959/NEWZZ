@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+# Ensure apps/api and root are discoverable on PYTHONPATH
+export PYTHONPATH="/app:/app/apps/api:${PYTHONPATH}"
+
 echo "Starting News Reels Backend on Render..."
 
 # Apply database migrations if alembic is configured

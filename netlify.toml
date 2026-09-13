@@ -10,9 +10,9 @@
 # API proxy rule (routes /api/* to Render backend once deployed)
 [[redirects]]
   from = "/api/*"
-  to = "https://newzz-api.onrender.com/:splat"
+  to = "https://newzz-5e19.onrender.com/:splat"
   status = 200
-  force = false
+  force = true
 
 # Global security and CORS headers
 [[headers]]
