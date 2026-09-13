@@ -1,6 +1,7 @@
 services:
   - type: web
     name: newzz-api
+    plan: free
     runtime: python
     buildCommand: pip install -r apps/api/requirements.txt
     startCommand: bash start.sh
