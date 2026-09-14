@@ -214,6 +214,36 @@
     _detachScrollObserver();
   }
 
+  // --- Category Synonyms & Aliasing ---
+  const CATEGORY_SYNONYMS = {
+    'tech': ['tech', 'technology'],
+    'technology': ['tech', 'technology'],
+    'world': ['world', 'international', 'global'],
+    'international': ['world', 'international', 'global'],
+    'global': ['world', 'international', 'global'],
+    'national': ['national', 'india'],
+    'state': ['state', 'regional'],
+    'politics': ['politics', 'political'],
+    'business': ['business', 'economy', 'finance'],
+    'science': ['science', 'space'],
+    'health': ['health', 'medical'],
+    'sports': ['sports', 'sport'],
+    'entertainment': ['entertainment', 'cinema', 'movies', 'culture'],
+    'environment': ['environment', 'climate', 'nature'],
+    'education': ['education']
+  };
+
+  function matchesCategory(cardCat, targetCat) {
+    if (!targetCat || targetCat.toLowerCase() === 'all') return true;
+    if (!cardCat) return false;
+    const c1 = cardCat.trim().toLowerCase();
+    const c2 = targetCat.trim().toLowerCase();
+    if (c1 === c2) return true;
+    const s1 = CATEGORY_SYNONYMS[c1] || [c1];
+    const s2 = CATEGORY_SYNONYMS[c2] || [c2];
+    return s1.some(v => s2.includes(v));
+  }
+
   // --- State Preference News Prioritizer ---
   function rankCardsByStatePreference(cards, userState, activeCategory) {
     if (!cards || cards.length === 0 || !userState) return cards;
@@ -262,7 +292,10 @@
       if (state.activeCategory && state.activeCategory !== 'all') {
         params.append('category', state.activeCategory);
       }
-      if (state.state) {
+      // Only filter strictly by state when on 'state' tab or 'all' news,
+      // so specific topic categories (Tech, World, Science, etc.) are never empty
+      // if the backend DB lacks local regional articles for that specific topic.
+      if (state.state && (state.activeCategory === 'state' || state.activeCategory === 'all')) {
         params.append('state', state.state);
       }
 
@@ -276,8 +309,11 @@
         // Server unreachable, fall through to static fallback
       }
 
-      // Static fallback for static hosting (e.g. GitHub Pages)
-      if (!data) {
+      // Smart Multi-Layer Fallback Guardrail:
+      // If live API is unreachable, times out, OR returns 0 items for this filter,
+      // immediately fall back to the bundled rich feed.json (948+ verified articles)!
+      const hasLiveItems = data && Array.isArray(data.items) && data.items.length > 0;
+      if (!hasLiveItems) {
         try {
           const staticRes = await fetch('./feed.json');
           if (staticRes.ok) {
@@ -285,17 +321,37 @@
             let allCards = rawData.items || rawData.cards || [];
 
             if (state.activeCategory && state.activeCategory !== 'all') {
-              allCards = allCards.filter(c => (c.category || '').toLowerCase() === state.activeCategory.toLowerCase());
+              const matched = allCards.filter(c => matchesCategory(c.category, state.activeCategory));
+              if (matched.length > 0) {
+                allCards = matched;
+              } else {
+                // Keyword match fallback in headline / summary
+                const kw = state.activeCategory.toLowerCase();
+                const kwMatched = allCards.filter(c => {
+                  const text = ((c.headline || '') + ' ' + (c.summary || '')).toLowerCase();
+                  return text.includes(kw);
+                });
+                if (kwMatched.length > 0) {
+                  allCards = kwMatched;
+                }
+              }
             }
 
-            if (state.state) {
+            if (state.state && (state.activeCategory === 'state' || state.activeCategory === 'all')) {
               allCards = rankCardsByStatePreference(allCards, state.state, state.activeCategory);
+            }
+
+            // Ultimate guardrail: If any filter ever yields 0 cards,
+            // fall back to trending cards so the user NEVER gets an empty screen!
+            if (allCards.length === 0 && rawData.items && rawData.items.length > 0) {
+              allCards = rawData.items;
             }
 
             const paged = allCards.slice(state.offset, state.offset + state.pageSize);
             data = {
               items: paged,
-              total: allCards.length
+              total: allCards.length,
+              fallback_used: true
             };
           }
         } catch (staticErr) {

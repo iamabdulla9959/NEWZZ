@@ -38,19 +38,31 @@ def get_feed(
     if not categories and category:
         categories = category
 
-    # Canonical category name mapping for case-insensitive lookups
-    _CAT_CANON = {
-        "tech": "Technology", "technology": "Technology",
-        "international": "World", "world": "World", "global": "World",
-        "politics": "Politics", "business": "Business", "national": "National",
-        "science": "Science", "health": "Health", "sports": "Sports",
-        "entertainment": "Entertainment", "environment": "Environment",
-        "state": "State", "education": "Education",
+    # Canonical category and synonyms mapping to guarantee matching across all DB conventions
+    _CAT_SYNONYMS = {
+        "tech": ["tech", "technology"],
+        "technology": ["tech", "technology"],
+        "international": ["international", "world", "global"],
+        "world": ["world", "international", "global"],
+        "global": ["world", "international", "global"],
+        "national": ["national", "india"],
+        "politics": ["politics", "political"],
+        "business": ["business", "economy", "finance"],
+        "science": ["science", "space"],
+        "health": ["health", "medical"],
+        "sports": ["sports", "sport"],
+        "entertainment": ["entertainment", "cinema", "movies", "culture"],
+        "environment": ["environment", "climate", "nature"],
+        "state": ["state", "regional"],
+        "education": ["education"],
     }
 
     def _canonicalize(cat: str) -> str:
         """Returns canonical category for any case-variant."""
-        return _CAT_CANON.get(cat.strip().lower(), cat.strip())
+        syns = _CAT_SYNONYMS.get(cat.strip().lower())
+        if syns:
+            return syns[0].capitalize()
+        return cat.strip().capitalize()
 
     def _build_query(wanted_cats: list[str]):
         q = (
@@ -63,9 +75,14 @@ def get_feed(
             )
         )
         if wanted_cats:
-            # Case-insensitive match: compare lower-cased DB value against lower-cased wanted list
-            lower_wanted = [c.lower() for c in wanted_cats]
-            q = q.filter(sa.func.lower(Card.category).in_(lower_wanted))
+            # Robust case-insensitive match: expand every category with all synonyms
+            lower_wanted = set()
+            for c in wanted_cats:
+                c_low = c.strip().lower()
+                lower_wanted.add(c_low)
+                for syn in _CAT_SYNONYMS.get(c_low, []):
+                    lower_wanted.add(syn.lower())
+            q = q.filter(sa.func.lower(Card.category).in_(list(lower_wanted)))
 
         # Location Filtering:
         # If user selects 'state' category tab, show news for their state (or state-neutral).

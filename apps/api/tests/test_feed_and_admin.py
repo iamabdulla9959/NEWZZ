@@ -95,11 +95,18 @@ def test_feed_excludes_dev_testing_cards(db):
 def test_feed_filters_category(db):
     _seed_card(db, "published", "tech")
     _seed_card(db, "published", "national")
+    # Short name query "tech"
     response = client.get("/feed", params={"categories": "tech"})
     assert response.status_code == 200
     body = response.json()
     assert body["total"] == 1
     assert body["items"][0]["category"].lower() in ("tech", "technology")
+    # Full name query "technology" must also match seamlessly via synonym expansion
+    response_full = client.get("/feed", params={"categories": "technology"})
+    assert response_full.status_code == 200
+    body_full = response_full.json()
+    assert body_full["total"] == 1
+    assert body_full["items"][0]["category"].lower() in ("tech", "technology")
 
 
 def test_feed_district_category_does_not_silently_return_national_fallback(db):

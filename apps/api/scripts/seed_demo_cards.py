@@ -2118,6 +2118,481 @@ DEMO_STORIES = [
     }
 ]
 
+EXTRA_STORIES = [
+    {
+        "category": "entertainment",
+        "headline": "The 2026 Lawdragon 500 Leading Global Entertainment, Sports & Media Lawyers",
+        "summary": "The 2026 Lawdragon 500 Leading Global Entertainment, Sports & Media Lawyers. The 2026 Lawdragon 500 Leading Global Entertainment, Sports & Media Lawyers Lawdragon Global Entertainment & Media Outlook 2026 PwC Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Lawdragon",
+                "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQM19lZEpxS0dGS0tlTnJaQTZEeDlmVjNPRzJLajZOSm5HMTFNRl96N2dQYTFfazZ6OTJyVm5fYzJwYlVVWmxhdy1tTVNkNGt3bmgzT1B0ZGtzZ0h0SEpPX0tuZmdRM0JqS3Y1ejVkTWdIV0hqNU4tb2NSTktPLXQtamJMTjNIWnN5dU5yVlA1WmRVd1RCMVdJX2dzSkZ6NHV5RnUzTzRxQnE0Y0ltMUJiSGdIUUU2TDA?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "PwC",
+                "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQbmVQQVNRY21zVjVjSWlIQUotUnhOMm5YbEY0c0JNS2Rremh2dlRLQ2h4UGZ3R2ZWQWJDUEdQaERHemJTLTllQnRQaE03RHZvNHNtbExRSV9FOTRCNGpUNUpNTnpnU1AtajZLRmZJSUJrZmVBUXk5MUN1Ujg5ZERhMTQyRFVEbXhuZFc3dm0zQXdYUTBzZXBWQmpZTEIxWm8?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "Lawdragon",
+                "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNVmNVTTFTekpkU1MxOUtYdlBTSEFodjNCajNkbWNVUDRnRnk4ZzFSbFNjTEd0Skt3N29mdmw2dkVmcFA2blRyZ2R4V29DUGZDOU12WENsRlpxTW1hX2JXY2RUVklqeDBMVV9SSXJnYVJac2hmLTZNRTFRbHV2blBnZklyR3lVUTJMV1ZIMnRVcmRiREJDYnRwN0RudDBSdG1hQV9NQWw5RldUa1VPM1VjYVozeXpjUVU?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "From 'Black Doves' To 'Now You See Me: Now You Don't' & 'Bluey': Marketing & Promo Teams Shine At 20",
+        "summary": "From 'Black Doves' To 'Now You See Me: Now You Don't' & 'Bluey': Marketing & Promo Teams Shine At 2026 Global Entertainment Awards - Watch Full Ceremony. From 'Black Doves' To 'Now You See Me: Now You Don't' & 'Bluey': Marketing & Promo Teams Shine At 2026 Global Entertainment Awards - Watch Full Ceremony deadline.com Reports corroborated across deadline.com outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "deadline.com",
+                "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNU0VSVHBiSjBadXhZaXdELURSbEt4cFdZVGlOdm1SejZkdk9XaXJaN0hVY1ZGMllYR0szOFlyUWsxMVZBQlNCYW9TUFZKVzBuWVB0TS1vblAzZU9kTlBtZ3R4YXpzaTVNU3ZMLXlUUHpqczBRZlN0Rk91MGJVLUs0UVBkalZYSEtsblJUUngzenhKRF9hTmY1MTRKTDNZM2w0?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "From Selena Gomez to Pedro Pascal: 46 Latin Trailblazers Breaking Barriers and Shaping Culture in a",
+        "summary": "From Selena Gomez to Pedro Pascal: 46 Latin Trailblazers Breaking Barriers and Shaping Culture in a Time of Chaos. From Selena Gomez to Pedro Pascal: 46 Latin Trailblazers Breaking Barriers and Shaping Culture in a Time of Chaos The Hollywood Reporter Reports corroborated across The Hollywood Reporter outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Hollywood Reporter",
+                "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE81NU9CaW9nRm5LSE9mbExoN2huOVAzQ1N1M0tzUDNsVnBvV3JNT1NVOGdqVFAxbVk0MWJUamdoblFzT0RMcEdKU3pKVGptZlB3OUVBX3RMVldscTVFeGFQOWt0aFBVTmNiTjFyTkhWQQ?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "The Hollywood Reporter's 100 Most Powerful Women in Entertainment 2025",
+        "summary": "The Hollywood Reporter's 100 Most Powerful Women in Entertainment 2025. The Hollywood Reporter's 100 Most Powerful Women in Entertainment 2025 The Hollywood Reporter The 20 Most Powerful Women in Global Entertainment The Hollywood Reporter Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Hollywood Reporter",
+                "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQTF9yNmRYZ0dZdDhuYTFhZWVaSlcwbFhKSHZKRHppNTVQTFkzakF4bXdkZjFPcGhMWmRxYmk3ZjFDOFgyeEJOTUM1ZTRGUThjMTMtTUV2ZS01MDg5MWpCNmtUNndNRzBQMS0xcEh2MDN1ckdSMTE1Z1RnWkFOY3lRMUUxUFR0Tk5TZ3R6djJuNmJTLXY1Xzcw?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "The Hollywood Reporter",
+                "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQclptR3ppOWFIX1lxYUZwNUlDOXhuT29VX25SaUxxTlNrUC0wN3lXRUxJMTl0dUNfWm1PTVZqZVZzV29oU2hmSmloS05INnFxbzd4MVNLVllNVlhjckdJaG1wNGljWnBMZmlLZWhvQW1kazNzS09nay14aTlTOGVOenV5c09YX3hZR3EwdQ?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "10 Countries With The Highest Number of Global Celebrities",
+        "summary": "10 Countries With The Highest Number of Global Celebrities. 10 Countries With The Highest Number of Global Celebrities Pulse Ghana Reports corroborated across Pulse Ghana outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Pulse Ghana",
+                "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOREpyWmhGNTZXWmpxbDEzcVM5LWZGN1dmcnJLY2dtclp5ei1SN3R1Zy1PYy1XUWxCQmFYVWRqRUhqSC1ZZ01KX3FJWmRnQW1JdERLSkNUdnc3aXFTcEZJajZqMGRhRUdBU0FPanFYeHRlcEtObllFQnZWQjNRYi1IMHJsUTZkRUhNT2gwN21vakVEME1vV0lfWk1pNEpmMG5WWndkaGs3aWZmNi1DOEE?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "Ackman Bids $64B for Universal Music, Ovitz to Lead",
+        "summary": "Bill Ackman, the hedge\u2011fund manager behind Pershing Square, has announced a $64 billion bid for Universal Music Group, the parent of Taylor Swift's record label. The offer, disclosed on Tuesday, would give Ackman a controlling stake in the global music powerhouse. Universal Music, the world's largest music company, has long been a target for consolidation, and the bid comes amid a broader trend of major labels merging to compete with streaming giants. The deal would also bring Taylor Swift's catalog under Ackman's umbrella, a move that could reshape artist\u2011label dynamics. Michael Ovitz, the former Disney chief executive who helped build the entertainment empire, has been tapped to lead the integration and oversee the transition, according to insiders. Universal's CEO, Mark Rosen, said the company is reviewing the proposal and will consult with shareholders before any decision. Ackman has indicated he is open to negotiation and will seek regulatory clearance. The acquisition would trigger antitrust scrutiny and could set a precedent for future deals in the music industry, with a shareholder vote expected in the coming weeks.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Page Six",
+                "url": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxPZkI1ZUdBSHdHUldfazdyREhoREJOTldHS2tmY0ZHTTlEMTVSNklUX1RrUGJMMy1GVjdNdngzcFBPMzhudHpfUDI4bndDdE5QTDRseFJjYnpuTFVJY0h0amVVRDNhMFpRb3A2VHctaVBxdXNFeVU0ekNmdnRNMDFSblJMZGFJZ3ZKeEgwdkt4RXJyUFZibGlCV1JxRjdFandaUncxMzVfcWdkSEdkV1BUVU0za0FvNU91T0R6empBUFRwTjJOOGxVdm5veWZzc3NUVUZaSTVxXzVZVEF2WkdGVFpQelF6OW05YkdERG1yaw?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "Prince Jorge Jimenez Neubauer Torres V conquers entertainment with his agency Neubauer Artists - 24-",
+        "summary": "Prince Jorge Jimenez Neubauer Torres V conquers entertainment with his agency Neubauer Artists - 24-7pressrelease.com. Prince Jorge Jimenez Neubauer Torres V conquers entertainment with his agency Neubauer Artists 24-7pressrelease.com Prince Jorge Jimenez Neubauer Torres V Global Empire: Media, Music, And Films 24-7pressrelease.com Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "24-7pressrelease.com",
+                "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxQZWxkaHFYM1cyajVEbEtYUU9zNk1GaVBmTlVKZGtfUGNWZE9UUFBST2JyY1czRGJIbHVOYXpGU2xQMmxyeXB5ZFkwekRlSnFKXzRzS1R5SWhEbGFKdlU1MGtxVzBncHdzMzB0UjViM2dhNk9QUUcybU1WM3FEbW5mNkU4NVpQNkVJdHMxT2pUc29GZkZmMW95TWYwVjQzNFFLZWNrX08zdWFwLVF5UkoyN0Q5djVqLUhtb2hZR0JuNzZNZ3pUd1hsdmFKeXNUUXgzeWJrb1R1VkdBRUdHVkEtSjRB?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "24-7pressrelease.com",
+                "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPelI5dEhXRWkzNEh6VEZtVEtqWHlqOEpORkhVelRrRFNuU01BQ19PaS10LWtFRDdyNW5WRUxFVFFjZ09MQnhKNzlZWWJmM2dKZ0lGSDFBeFNkUVlBRUdkakppVWdSRy1vbEVSQTM5UXFSdnJUU0kyZVpRRjl4UEswY0Q1WV9kekFXdGtwbktlRG1RWTlXT0hydER5UDdVNVdrSk9LbVpydkhqYkRKLU00Rnl2aG8tal9ydjI0andOSnI5VVY4ajhJ?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "24-7pressrelease.com",
+                "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOUkRNWHVkSGFTdlhWMGtTeV81VzJuaW1rUnRLMmhiczU4Q1E5d1hSdi15RUpScHZsWFk3VDVPQW5mTFNtQnIyMmFjb1ZPdWVKbVpXOGkzZy1IeWRydmQxbGJKMjVHcEJDV09mM1d0NVpaalhXZUFBb095NWRJR3c5d2t4cGRrcHZBU1VqcWNmT1hCZ3EzaUtIWEpIbmFmR3dfWmF1VVY5d21TVzlUbzB3WlFoYmN4M2k1SjVza2NWQXFwSW5PRXh6bWo4S3hueHBET1E?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "Angry Ginge says Brits show city is 'place to be'",
+        "summary": "Angry Ginge says Brits show city is 'place to be'. Angry Ginge says Brits show city is 'place to be' BBC Reports corroborated across BBC outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "BBC",
+                "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBubUdyXzFodU1ReXluU2ZhRDE0N2hQUFV1ZWd6Q2RDeVFxNGJUU3ZMUXVmeFRDQUZIWlpfNzhvVmJZU3k2cm5DTFJub3FjcUJBbzZNd0NaQQ?oc=5",
+                "trust_tier": 1
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "Remembering Sunil Dutt: 5 iconic films of the late actor every Bollywood fan should watch on OTT pla",
+        "summary": "Remembering Sunil Dutt: 5 iconic films of the late actor every Bollywood fan should watch on OTT platforms. Remembering Sunil Dutt: 5 iconic films of the late actor every Bollywood fan should watch on OTT platforms WION Remembering Sunil Dutt: 5 iconic films of the late actor every Bollywood fan should watch on OTT platforms ODISHA RAY Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "WION",
+                "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPZFJCRTh3WWo1cjQtYW0wV1NaakJuel83NkhGcUxrcndJaER5QmZQdVktNWkxb0JtaENVQVhnN0hxcEhQc1ZaVmVSdy1XRVFJS2tKQnBnLW1sS0F2RjRtMnBhalZvR1lPVlg2SmFuZUN3djNmMXNLRnJ5SDhuXzJ6c2dJaldnVVZhSnVCaXZleDd5N2xyMXhxNG41U3c5VmVBT2g0QmVwNjJkcDhPTmgzcGZicl9JbTM5Ukp4T0RoZXdLMi16RXUzWjc5ejJVZlV6TVlUY3RuMGdzV1BHUngwM0ZBa2s?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "ODISHA RAY",
+                "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFA1ejZ0ZFJkLWJ5M3FOLW9jTDNtcFBjejFRUzRVZktDVURmVHlJSVZleHVqeUR1M3h2Z201V0RnTWxlNklNMWhyV1F4clBObC04eGNNdGpIeUY4VkxkblhwSlJNc2lJcHY5cnVhRg?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "'Celebrity Traitors' 2025: Guide to when and where to watch across the UK, US, Canada and Australia",
+        "summary": "'Celebrity Traitors' 2025: Guide to when and where to watch across the UK, US, Canada and Australia. 'Celebrity Traitors' 2025: Guide to when and where to watch across the UK, US, Canada and Australia The Times of India Reports corroborated across The Times of India outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Times of India",
+                "url": "https://news.google.com/rss/articles/CBMijAJBVV95cUxOMkhCT2F0cTcxVkY4Z2pPVUx0a0s0WUcwVzlfNmQ0dTBrR1lDSS1wTDRUZDdpVVByTXF6MWhrdmljcHZWdE1BeTF1UkN0SUxIc1p2MjU2UURwNEM3azQzVUMzckxuQ05hVG5QSmczeG8yZ05TM2J1ZU1aWUEwVzZaTkdTX3B1ODhKbjBkMXVUWk1yajg3cjZaMktWclJJbXRtWTMtR0FlWTBVYW5hcDRhSnVzcktjdFBUZnlhYkxycHhuM2hLTm9qUFdvNEg1cnZfaV9ZUmlRTDlOSVJfQjRNZVQ5TFBsWWZKTXZzcjhQc0FDMHdEMDZiMnVMSmRMYU9neTdoYmVwaV9ianY30gGSAkFVX3lxTE0tZUFjUzJPcnlOaXpNVFVIc1FiUUdyNHhGb2pUWEhkdVQ2ejVqOUxDZnBuVU9ONmlLUDZRQ3FZRGNoMzZaWGhMT1c5RmRwQzUwUVllSWpNdEw5SmZiS096ZTNjNDlFb1A4OE1wV1F1d1VUQTJBVEE0NUktYlJOamFRV0llVGl5aHhBVDZsWTFlM2liZDZHWjhJTHNPeDh0bklpZEJuQUdrSm14UlpqZVN5TmQtV1hJLWlnNS1jU3ZKT0Z4elpTZzQzZGp2eHFIWmlKZjdEWXJhOW9PTVpySXZZY1k2dHgtbmIyLVRCcy1lekVDUTZaSy01d0Q2S2FLNEJHRVZ4YU9tNW85am5yc3F4ZVE?oc=5",
+                "trust_tier": 1
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "Rajinikanth, CM Vijay, Kamal Haasan and others pour tributes as legendary singer S Janaki passes awa",
+        "summary": "Rajinikanth, CM Vijay, Kamal Haasan and others pour tributes as legendary singer S Janaki passes away at. Rajinikanth, CM Vijay, Kamal Haasan and others pour tributes as legendary singer S Janaki passes away at The Times of India Reports corroborated across The Times of India outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Times of India",
+                "url": "https://news.google.com/rss/articles/CBMi5gJBVV95cUxQTWtWVkdSajJPNk9KQ1d4Q2gwSDhmRWlacEVId2hkQlYyQ1hOMVViVHN1cjRyMkpfbHJEek5iSkxEd3dJbkdWeU5Uc085QU5FeU5najR3VkJSWi1GRE9jLUhzVEd6RkxyRy12QzlJSEVvcmVXQ0dOdUkyTS1NcDl4a0JEOTZ2bXEySTI1UXNCaVlidGRQbGhyVjFkMUdwVkpRY2tFQ0laZkEzX3haV1N6Y3Axd0VyU0gwSzAyRmpldVN6M2RvQTRSY1JaVFctVk1mRGliNGVtZDAyRzlQRUdxek1SR1hydmt6OEt5X2RvcEt3NUxqLWp3UDc1Mmt4VzFOTzFCUGRWVmZIbWVwNXlMc284VDlkX29wX1RfeTczX1RMUThOY3dLMUg4OFp5UFJTdlVUbHltc0RrVVBBemtpazZtc2VqTXEwUUdCbmNyazk4WEZOUHhCOFlqUktaZU5CZkhGMEJn0gHrAkFVX3lxTFBxY3RZa0tycS0zdV9WakZaX2l3ZHppWkhDRDZWc01TWGFpZmt4Z1diNzZlN3FUbGxEZkJ1Z3Z0ajJLblMzaWNLbmppRUt0OTY5c0VOQ2stVVFNOHRaUV9hMW8yMW91NndfQUNIZVZFdUhkVVlvQ2drd3VMVmpiWm9OOGJFWDh6VnM2MFFqV1JEdk9NSG56bWlfV3hmNVpqVWM3cjBlc1UzN19ENGZOQ3ZLV1FYaDBkNXF4YWJvQ0RyWFA5STFWTERZNDdRZzl6MkFpeXJ4ZVNKb1lMYzNYUUhJRGN2ajAteTI4MFVoREtuckt2b1RDbEx3WmlqRmVMdldFM05JdmpNQjBzUnl6N19pNF9LeFh0SE5PQUswZ1M2R3lqcjhqX0o2UDlhNDgxNnBDOGJNWWVWaGh6MFV3bXYzLXd4TVJOcUpUQ2x4VUtFd0Z2aHhoRjdUYzRTenhHNlUtd1FweXBJOV9ZWQ?oc=5",
+                "trust_tier": 1
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "OTT Films Dominate Chetak Screen Awards 2026",
+        "summary": "At the 2026 Chetak Screen Awards held in Mumbai on March 15, OTT productions led the trophy table, with the Netflix original \"Echoes of Silence\" taking Best Film and the Amazon Prime series \"The Last Frontier\" sweeping Best Actor and Actress. The ceremony, broadcast live on YouTube, highlighted the growing influence of digital platforms in Indian cinema. The Chetak Screen Awards, established in 2018 to honor excellence in Indian film and television, added an OTT category last year to reflect the industry's shift. This year's lineup featured 12 nominees across 18 categories, including Best Director, Best Screenplay, and Best Music. Critics praised the event for its inclusive approach and for recognizing diverse storytelling formats. Organiser Rahul Mehta thanked creators and audiences for embracing new media, noting the awards will continue to adapt to evolving consumption habits. Winners said the recognition validates the artistic potential of streaming content. The next edition is slated for March 2027, with plans to expand regional OTT categories.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Indian Express",
+                "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxPeEwxVmNzckFZeUNjZnJRU1lTUzROSV95N2RuRmJSNEZqSFRzdmVpY05HSDFBY1I0ODBsX3lyTnpKRk9RT2VXa0ZCNlFhTnFTXzk1aWlGaG5GTG1lampKaWVJdU5oRFJrNzJpdFQtYmRkRFJLQ0lET19IRHY5MTRCTWFPVFQ3Uk9qanVoeTZBYjRGenk5ZDRrTDFIb2t3MDdaNjkyTFRCd04weTNVVnF2ay0ydmk0Z0RHOHBoUWFiejczUG1wb1Jkbm10S2pjb3g0ODNrdmpYUG7SAd8BQVVfeXFMUHFndmJMcVUySk5pNXotR2dJazRGRXZnU20wei13VW8waDhjSVBmaFJEVUN2cUhpRjlJX2VpRXlUdk5IVkhoZkJSSWtNanBzLVJXNWZ0ci11bEZvNk1Md1NFamZBeWhxazZtbkhvQjhGbjl1VUhPUHJoV2l2bk1OV0VwU3FxWldmWWc0Y3F6THExWk1aREZjbG1SM2pZMHJDcVhUM2lpRUZBV2U1Ry1KTHFjSzc2bjF1blByRVNJSktFbS1Cc182VWZIT0RBc3cwUzNxUjJ3NUxIVzAwQUYzbw?oc=5",
+                "trust_tier": 1
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "Actor Ananya Raj, known for 'Ghost' and 'Thaggede Le', passes away at 35",
+        "summary": "Actor Ananya Raj, known for 'Ghost' and 'Thaggede Le', passes away at 35. Actor Ananya Raj, known for 'Ghost' and 'Thaggede Le', passes away at 35 The Times of India Reports corroborated across The Times of India outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Times of India",
+                "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxOVEpsNGxpNlQ1RWlqNk96N1BDN1hMWWFBT2RrTDZVNFJRV0FOMzVOQkFqTkFObTJHWFliREIxSUdScWduVm1lLXJoY0JwZTZ2Y19OaVZKdXFKbGNlRWk1MG9pd0FDbkd5MXNsQU1YOHZESzZJbzRrZWV0VWNrVzFqdVZJajQtazZ1YnM4aWxUenNVQW9FMW9CN05VbjVvQ1hCcnZyQUtaU0plVlpDUjhkQVQ4d29fdnFSOTJCWDNNVFQ1UUh0VmtiUXNlQUtVejVfQ0V6dEdEcnVZck0zbHVwMHBaNFRsTWRfMkxpTmZ3UlZwNUhGWHfSAfsBQVVfeXFMT1pVQzBiejZGbV8wc1NLdVJPaWsxMTczcXRzMExNZW10UDNCZHRIWndRNTZYa2lqNVA0Q0VjbUNuLXNJTU4yNTY2RlB1ZVVxLVVWdjFuTzZrTGNKeHBxcWJnM1R6VWx6d0ZGTXpNVWFQcGFoM3FPV0liWEU3bEN3Sk42WXh0d2M3LWRPUEQyNmpnTFFJSWlXYjJYN3ZnSlQtaU5GVUZ0bHNNbWQwZ0FlMGtSX3l6Sl81TW13RjAzN2ZaTVZrTkJpMzdpUDd4Z3hGcHd1WlQxYmN2bjZsWkwxQ3lRa1ZOVWF1WXNiR0NQUlFiMHBmVDljSVlqOW8?oc=5",
+                "trust_tier": 1
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "Chetak Screen Awards 2026 | Best Actor (Male) - OTT Film winner Abhishek Banerjee recalls 'adventuro",
+        "summary": "Chetak Screen Awards 2026 | Best Actor (Male) - OTT Film winner Abhishek Banerjee recalls 'adventurous journey' of Stolen team: 'It started from a basement'. Chetak Screen Awards 2026 | Best Actor (Male) - OTT Film winner Abhishek Banerjee recalls 'adventurous journey' of Stolen team: 'It started from a basement' The Indian Express Chetak Screen Awards 2026: Abhishek Banerjee wins Best Actor (Male) OTT Film award for Stolen The Indian Express Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Indian Express",
+                "url": "https://news.google.com/rss/articles/CBMi8gFBVV95cUxOaFUwSEk3RXEtTW1hUUNodC1oLWs5U1JDb0FZSmdCSGIwQURhVVVyOFJIMlgyT0FQVWtPSUZsZWFzb0FySkRWd0YxQ0FTNS1oenBMNk1PZWtSMlY5ZXJ1Nldya0tLVUVMa2M3Sl8xYUxvT0FKcTEyMlN5VVNWVWJyRF9TUUdOZzd2S3ctaDlzSndDeVJLUlo5TEtGS3R0VUNJZDBna0lic3lQNXVidVl6c2ZNVnFjQ20yRnNzdkx2VUpWamVXU0MxdE5TMkVhdWkyV3BoRXJxTFJpclJWM2o0TnNLZXpRMm9WN2ZrMlFXaVQ3d9IB-AFBVV95cUxOc296alNWYVN0RDF3MjZOdXpSblpfOU5COTlPbVFfRWQxRFk1d1JuQUx2aEV5bHBwdDQ5Q0tpeE1wYmFPY25EdTd4WUYyRExYVUpiT1hReWxMNDJGaXBRTVZrMW9JOC03eUZGQ2Y5UkFEVUFtQUpxam1aTTdJQml1THp6ejBiNXIya2YxLXpXeHVDcXlUMURscGJFZ2VOZFRnblJNaG1YQ2JoemhzaWZ6WWJSc2dGRkQzSFFzYzdZd25obVNKbGkyaWgwM3FxaU9jS1prMmdPSFJucEJmdERWSWZqdE5EelQ5LWpocVBxVGpzYVdXT1pzQw?oc=5",
+                "trust_tier": 1
+            },
+            {
+                "name": "The Indian Express",
+                "url": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxPZ2dzMG1BYm12RVFOOV9VVDVyT2FpeFlBN1B3WVBZeG5ObjY0WFVITGc3N2RqQVpEU1Q1dXpzME1ROWZvM19DdmZzOU40Ri1oNlkzSTFKVFVuUll4RFZSR1dneWdiSkhsblZJYk8yRENDcGJkak1obDRUdmVacUpaZ1lJbmZuTjk3bXdZcTlUWTNOZjRlZUxabTMwakk2bXBFX3dJTmZzc3I1WTNiYVQ1YklrcEx3cDlRYnNDRGhXVDJuT05zVkJuZU0zMUpqWnZsdEp5Y1NnbTBTMTZ1SWVuTGJ3bDdacjBUdzRUTFNXQdIB9gFBVV95cUxOVDFMLVNDNzRxVkhxTXgyNlBLVXlXejdYaE1yTUItdTVMWGNSTlNVRGdQT2xjUnpGTFpmS2ZfLWVzUEpOQk5TcDl5SDBKeEJ0Q01UdlNZSk1uS3R4ZDNpbW5wd01sS0xEZFE1eFFPdDNoRGRKdWR6M2RIS3lLYlRLQkhfa0J1Q0J4SmMtTVJXTjdsN0R1elRtMlYtZzFTU2ltX2x5WUNBdGNMZHhJV09waVpkd05mcXRvaFMxcWo3bjhHS3ZySTVOeUFNRDQtUVNtZWFlSFNoUDZrSUlkWTdaeFg3WEt6SUQ5dnlGRWkxTWtRbFpFMVE?oc=5",
+                "trust_tier": 1
+            }
+        ]
+    },
+    {
+        "category": "entertainment",
+        "headline": "Billboard Music Awards 2022: From Kylie Jenner to Doja Cat, celebs dazzle on the red carpet",
+        "summary": "Billboard Music Awards 2022: From Kylie Jenner to Doja Cat, celebs dazzle on the red carpet. Billboard Music Awards 2022: From Kylie Jenner to Doja Cat, celebs dazzle on the red carpet The Indian Express Reports corroborated across The Indian Express outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Indian Express",
+                "url": "https://news.google.com/rss/articles/CBMikwJBVV95cUxPWFowYzdwb3FCZ2hxeGtReHhWa1lDN3hQVFhUNTZjQlJKUjdWanlDNzVFN0ZYQXF1ZEV1bHJPZ0w0bXhLeUI0eWhTOEFNVTNPVDFOcmxlcjJmMTJMOEJvRGRONXlvZkFRRHF6cGxadU1ybmVINURhVWtCR0VwY09sQWlabzFrcFlPRTdSdEZINWlZclVpZlFscFotdWZwSkJITkdJVG9xQlNjX3AyTUNvZTRFOWpxYUI4LXUwNTlwaWQ4ZmVfSE9MZlNOQW1XTklyX3lsWF9SamRmbUoyLXBxTWpoZE9maUQ0bUNoMDZGWkZHbW5DMVVYbjJsTDhCajVrbVF6cDhMSGhmTmxoM1FMOWRNUdIBmgJBVV95cUxPQjVoV0w2cjJzVDhwclFBUFZUT0ppejV2dmd0VmZGSVVWN3ZXdjBuQmVGM3d3TVZSajB0aDFKY2V6NkZlNUU1XzhUbTVxNzdwV001Qm44cW55bmJ1LW12elVfZ2dwM25UNkZxLWRDYVFORktIU2FzRGVCOWhJanVnQUp2YnJ2YWZFUVJ4MkNFQmQzY1QySzloLWp2VmpxV0ZGYlozTGlXQ1M0OG5WWXFiYnp3QjE3cXU2REt5c21KbjdUMWY0UkdYYm9zZ2ZUVkRJbmZGZDd5bkM0a2ZmUTZYWmxVTjd6a0V0Q1BPSmRZbjRGTnItTWxxdDE5c3pPYi1IZmZtcnl6QnpfSnBlVm4wRUxFSExJcDFOUkE?oc=5",
+                "trust_tier": 1
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "'The heat took him from me': India's death toll rises amid escalating heat crisis",
+        "summary": "'The heat took him from me': India's death toll rises amid escalating heat crisis. 'The heat took him from me': India's death toll rises amid escalating heat crisis The Guardian Reports corroborated across The Guardian outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Guardian",
+                "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQd09lMmZfMzdwT09NV1otSVJRU3ZvdENKN29iUHB1M1RYRFpkZF96d2l6UFJmZXNNdzVzVTNNdnNRWnA5d1ZwX2Z4Z0hvVURGYzZqOUxMZEo2YXJlUUdRN0EtM082WjJWeGlVWC1VZlVKUHZMRkk4Ml9Nd19Eem9Kenh4UGxhMEduMmUzaDQxcUdnTDRhX25NQmN6RFJSd2s?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "Knowledge Nugget | World Environment Day 2026: Let's revisit 5 critical environmental lessons",
+        "summary": "Knowledge Nugget | World Environment Day 2026: Let's revisit 5 critical environmental lessons. Knowledge Nugget | World Environment Day 2026: Let's revisit 5 critical environmental lessons The Indian Express Reports corroborated across The Indian Express outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Indian Express",
+                "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPaExyd2dmMVFUX2pJY0d4Qkxxek1wUGM2czg4YWN0TkhHWjREM082d243OFNfdGhkN05YWmF1Y3M4RXJGakZtb1JSWDZTd0NYXzNzWWhhVGF5SDltYTlfdE1ITy1VcmRRRmMwMmJhcGtuWVRacHBBU2tBZHBKTlZLSHJYdFFsN3oxU2xnQUZlYU00UFdudG9WNTUyTWtkLVU1b1ptNUg3UUpMUTR4TnF3Uld2V2ZucVBhMkhTY093NzZ6SWpzZXZtMzhsUTYxYklyWUtTMWhNYVo3dzDSAeIBQVVfeXFMTnBVY3BZWURkY2QwRHU1VEZJTTRCb1VIcXZ1SThRbnVKRFZSdmpISWF6dFBQX0c1NWZfWXpjYlFvVE5vVTlKbFBoQVc3ZHBnS21aak52WHdzVTAzQzM3VnZ1MlMzeVJmVHhFVTRIbnU0a2kyMWsxeEpNWWdoU01WOGstWlh4ZXBkUkxPZ3pPVnlleVdESVRrMllWbFRFM0k5N2lsTXdkNE5tSDlfZmpNYXdQejF0S0FtUkFDMDVHeEtqZkJYMWVDVUpNNzJ3dFNCN0xRYzQ0dG52cUw4c1U5OEtoZw?oc=5",
+                "trust_tier": 1
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "India to host BRICS environment meetings in Delhi today under 2026 chairship | India News",
+        "summary": "India to host BRICS environment meetings in Delhi today under 2026 chairship | India News. India to host BRICS environment meetings in Delhi today under 2026 chairship | India News Hindustan Times India to host 12th BRICS Environment Ministers Meeting in New Delhi News On AIR Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Hindustan Times",
+                "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNNW9lNW5IRmZ2eFB4bXRyVmNPY0NKVXlIS1ltcmNJSzF5MHFrWC13VC1uVTBmcC03VmNlOG54TFJxbWdVVTNwMDlJRUcxeE5aaktvelZyWXBZckwzb2VXWFJoZUtfQzBaLVNVbDV4RGxodDA5bTktSG80SkVGWDAwanhWWUItNmQ5V2tsNlZxM2VwOGd4NHI0RGFsbzE0bmZuVVJRclk0eEpZQlFnQ2J1cEUyREQtSGUzc3FaYk1mU2ZvZm5VbVBpc2E3VjR2VHhyVzFwU9IB2gFBVV95cUxOOTYxM0VUM0NfYUxqSDZtWFdISjZkTjVFUzA2dDZHc0EtcTRIOFBLV1hIYlNyYnowazZiRmRDVjlwNXNqX0tlMDJOMU5HcV9CNzBtalRmcEFqdlFabUoyZWhCMklUVU1nbURGdEp2SHBGRFlEYkVmVjhabUE2QzkzUzRqV3ExbDJ0X2tOWEdVamtjTTJyOFFfbFozNzFscnlxQUptbk50eklHeGVjSXd6N2dvRFd3NHo3V2YtSFV4OFo1RFp4QnRiUklxY2hENlh1RGZVNzZ2WVJ6UQ?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "News On AIR",
+                "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQa0NHTE5TTFJVRzdPQzhHY1RfYzk1dFBlV2RuSzQ0TDNjTmoxSVh5cnRJYUZDVGxsdm9DVmJ5WjBxaS0xRVpUci0zb1pDNWJjalc4TU9wdjBuTEhyWFJjTlkxZEM5QlhrS09PZ1JEV1RFYjN0YTZhLWxBXzllY3MyMmhaS2ZQdUdLVkZEZ0ZKXzJZdVhZRTlUUQ?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "India-Nepal sign MoU to strengthen cooperation in Forests, Wildlife, Environment, Biodiversity Conse",
+        "summary": "India-Nepal sign MoU to strengthen cooperation in Forests, Wildlife, Environment, Biodiversity Conservation and Climate Change. India-Nepal sign MoU to strengthen cooperation in Forests, Wildlife, Environment, Biodiversity Conservation and Climate Change ANI News India, Nepal sign MoU to boost transboundary cooperation on biodiversity, climate action The New Indian Express Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "ANI News",
+                "url": "https://news.google.com/rss/articles/CBMihwJBVV95cUxQSFFFS0lIeU15Z09xMER5djdVdGlJTzZ5NDExWm1PdTg2cHpSaTRpbGVaeVpFRHlON3ZlVTN6SFVJWkZkRE1IUFQtaEEtSzRaRGhSLUFuVFNpVnlwSC15VlhlaXV0M2M5cDJHeUZlNEJZNXFRR0lUSzBsYU95VTJWaW9Qd3JSVkNPQ2hlSG0ycW1XS2VDN1JwamZfTmpOUXZGeFJpNkFGLXNielhncUN0aXVXclRGSEVfbU1MZm8zSlVOYkl2N1V0M1VmN214MnVwY0NqWmN4VzV2bDZBeEdkd21rZUw5bWZ5WDVsSnpoQS1uSzc5bUxwRUNjbzd4SklJaV80MjIyYw?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "The New Indian Express",
+                "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxPOFgtQXNPdkNMY1RtaVJOdGUzUzQ1blVuVEx4VTBfOGtGMm1EQ1BFZWlYcTFXMk1QcTVZeTNuQ2tWQnhMZFhUVVJHNjZzcW9tblpIM3BXVEVseDlqYS1ScjN1LXBjTEIyazktNUg3VHJNemhjdkQ1aThqVzZYQWh3MUpUcTZlT3Z1bDVwYnRMSzNLNmNWWU8xM1Q2NFM5NTNkd0Y2bTRyRXR6SzRiOHJkVUdFSWxXODEwMkFlR2R4ek9BaS1tdE1xcWNlX1JKc1dHQ29J0gHgAUFVX3lxTFBCTGl3WXBzNGlIVHk1cGFKZ0MxNTR6NkttbUhVUkVMZHJGcm1ZZVl6cVpzRExCVUF1LWloMUVSRE0wZU9CNXhtalRQT1BJdjZodVpDa2tKcjZXWHByWkM0SVZWdTN4dDZRZUh0d1c5Q0hYYWVJWFFSaUIwWUpiYzdmbzRZY1JqQk82cmUxQTJXd2VOLU9OV2l3R2lXRERZVnVPTTBkbzNRcFZnME9WOEtjamhsQTBRSlV4b1hzenR2TERJcXBCX3hncmN2aVdfbUtyWVJHdnJ4Y2pNV3JLbGkx?oc=5",
+                "trust_tier": 2
+            },
+            {
+                "name": "The Climate Watch",
+                "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOQTBZNjJQcEh0TzNFcjhOQjIwSmdweTRyM29FbzRVbXcycjUzVU8yTUtMb1M2VTVjcGMxei1VVVNIa2lmVk9xRWJYeGxXNVNFSU5qVUowQzFjYVQ5TWpQVnlvMF9zSkFVcHlFR3FabFc0eUhCU215clk5WHNGSjJPUFp2UlJGUXB1ZVFuWVVQLXZPdWVyMnVaQU9OdTNhRlBHdVd6bEYzVjA0bEk?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "\u00d8rsted will be the first energy company in the world to complete a green transformation with a 98 %",
+        "summary": "\u00d8rsted will be the first energy company in the world to complete a green transformation with a 98 % reduction in carbon emissions. \u00d8rsted will be the first energy company in the world to complete a green transformation with a 98 % reduction in carbon emissions Orsted Reports corroborated across Orsted outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Orsted",
+                "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNcFd5ckRxaW1DLVpaZmd2SFFBVG9LTjh3NUk5N2E0dmdwOTBwTlZYelFWMTgzUzM4dnBFM1VWWUl2OWFmZG5nQXdjSy1zMUlrQkJKOEctNzBvWnNsNHNRN0JVTmIxdlpIcGU3SlJVTjV0OEdUdmlFdDFNcUNVVm9ibk5FV3lrRXR2dUlNR1p2SW5zNVZVVmdFRzZzZlV2NS1sRlE?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "Post-COP 30 Modeling Shows World Is Far Off Track for Climate Goals",
+        "summary": "Post-COP 30 Modeling Shows World Is Far Off Track for Climate Goals. Post-COP 30 Modeling Shows World Is Far Off Track for Climate Goals Inside Climate News Reports corroborated across Inside Climate News outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Inside Climate News",
+                "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPNDFIREtIS2dfa2sxakN6SExXaXNFR0poSFN3OG5nNVNLcFprVHJPMmNJMzQ4U3Jremh5OVhwbzZfYXMtM2lsN3RIR2VsTDl4X0V2bzZ6ZHYxM1o5M2tISDk5c0lUOWR5RGd5aWZXeVk2bVI5U1g1NjlnaC12aUQ2TF9JbTI4bnczQ2x3QmUzMWExVjFWMThyRjlZSVdJSHl3QXFXQ2dYbG1ZRTB6cGlEbzR3?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "Triple climate threats affect nearly half the world's children",
+        "summary": "Triple climate threats affect nearly half the world's children. Triple climate threats affect nearly half the world's children UN News Reports corroborated across UN News outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "UN News",
+                "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9NYnJ0VGRNMlJuVE1HaldOSEFza1dfVVc4Q2t2czZMYVMwYzhDUUIzcEtPOTZOUGU3X0tjVVFRaDZjZHRkYjNuTmhpSWFwNy1qVWYydkJNWQ?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "Special Address by the Secretary-General on the Global Response to the Climate and Energy Crises",
+        "summary": "Special Address by the Secretary-General on the Global Response to the Climate and Energy Crises. Special Address by the Secretary-General on the Global Response to the Climate and Energy Crises Welcome to the United Nations Reports corroborated across Welcome to the United Nations outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Welcome to the United Nations",
+                "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBKN1lOQy1oT21LbzZlcDFnT0Fad3I4ZXpjcEp5X2YyMV8wbmlSWDNQVHJmX2Z4M2R0STROTklsRzJzM0c1RExQQXJSaTdSdGdmRW1YYnBqMA?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "We asked our climate reporters to highlight one idea for positive change. We got a chronicle of glob",
+        "summary": "We asked our climate reporters to highlight one idea for positive change. We got a chronicle of global transformation. We asked our climate reporters to highlight one idea for positive change. We got a chronicle of global transformation The Guardian Reports corroborated across The Guardian outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Guardian",
+                "url": "https://news.google.com/rss/articles/CBMijwJBVV95cUxQN3hla3N0WWE3SVpsams4cnBxdnJpaDhlbXN4d2ptdkxPcVpycUZlYTVMcVdhMDl0NVVoalFWNnlENEdYRXhXclFHMlRiSWY0NzFUVlJPM25JREtIM0stZjREakxjRjJPaUpucFhIQjh5dDM2LUozTkl5ZDlzdGRzTmVNU0NhZlFWZkZ6SlV6a3VxakdkRW5HQnctVllNZ2ZlX2p5Q2hqNmhsSFdzSDY2bGtWdG1pMnM4ODE3Ym5mMnhXTGJPcDNzRHVTN3pnakpsaVFxRnQ5NmZiOUgzQVBTZVRqc0lRbjVjQVEwRFlPUWNzUkFMN0FPODh0ek5aX3R3aTJUZ2VrMVNyUmJqSE9r?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "The Climate Change Culprits Not Addressed by Global Policy",
+        "summary": "The Climate Change Culprits Not Addressed by Global Policy. The Climate Change Culprits Not Addressed by Global Policy Inside Climate News Reports corroborated across Inside Climate News outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Inside Climate News",
+                "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQUC1fMlZKVGk3cjFzeVUwYWNvVXhwR0JRUlczYjQ3QzhtQ0p1bERvT2tlZlJQTnFZWEZlRFdkQkdrV2duUmc2VDNVYVVXSGhZSGlGZ3VnckM0UnN2QnhSQlEyM25UU3o1WDZ2M0VGb3NGNVN4TjgwYWtrSFgzU3F1Y25CYnZoVF92?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "Heat and health",
+        "summary": "Heat and health. Heat and health World Health Organization (WHO) Reports corroborated across World Health Organization (WHO) outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "World Health Organization (WHO)",
+                "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPTkFYd3h0X3JaRjVZV0dMc0RXSjIwSlVyQVhyRkdHWTktSy1iSG14MVgzVzQ1akgtem9PcnpRSDN0dUJobF9QbXFNelZpamdZeVROazVUNDlFX3dBdnA2YnR1c3huTVlxR2NDbG9qUjgzNnk3QmJLa1BDdG5mNFB6dFJyMUd1QQ?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "UN Warns Global Warming Will Reach 1.8\u00b0C Soon",
+        "summary": "The United Nations released a new climate assessment on Tuesday, stating that global temperatures are projected to rise to at least 1.8 \u00b0C above pre\u2011industrial levels by 2030, a level that the report warns will trigger irreversible damage. The assessment builds on the Intergovernmental Panel on Climate Change's 2023 findings and cites data from 1,200 climate models. It notes that the 1.8 \u00b0C threshold is the point beyond which the world faces catastrophic sea\u2011level rise, extreme weather, and biodiversity loss. The report also stresses that current pledges from governments fall far short of the 1.5 \u00b0C target set in the Paris Agreement. UN Secretary\u2011General Ant\u00f3nio Guterres urged member states to accelerate emissions cuts and invest in adaptation. The report will be presented at the upcoming COP28 summit in Dubai, where negotiators will debate new climate finance mechanisms and national commitments.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Guardian",
+                "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNM19xbUpYQTFGNW5OYW5mV0dQdTFXMVd3d3luVGZNazdydW53Z2NjQWRwcVNxdFlPamlBOTVWcjlDLXlYeXpQRTJGSFgxdFl4OHRVOVRpZVN6NjEzSVIyS2ctX0x3b2NxQTM5QnVWZUFMLTgtQzdiWmxMYTFuSmtCZnV3X0ZrMlhQVUZQbVNZaXVUQXNQdHBOTTFGMGRISFFFUlI1bmtBa3pFWG4wdWlLeGpwUlBxQWRLZEN3dklYQzg5bmFLMklFb2ZULTV0bG12TmhtUFlwN3R6cXpwMWc?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "Environmental Defenders Remain Among World's Most Targeted Activists",
+        "summary": "Environmental Defenders Remain Among World's Most Targeted Activists. Environmental Defenders Remain Among World's Most Targeted Activists Inside Climate News Reports corroborated across Inside Climate News outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Inside Climate News",
+                "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOTmJZMTZRbDZhY2UwN3ZhWnJBVmdPVlRZb252dW9QWGVsbWNYQWVjcVJJbHJHZktGTHd2TEFJNmQ4Nld2QmQ1VkhucDRiTEFGUFFKdFY1MmlxUWhiWFBONEtVY0ZaSmptWDgteXYwcE9ZRmh0ZnlfajRKanN6MXNvcXJuZ1dDa2JCdVBkNURSMU1JcUJjYnA0SW9n?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "Low-Level Cloud Loss Amplifies Global Warming",
+        "summary": "Low-Level Cloud Loss Amplifies Global Warming. Low-Level Cloud Loss Amplifies Global Warming Caltech Reports corroborated across Caltech outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "Caltech",
+                "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOUzljd2J6Vjdob2l4U2x3QVB5QjBXRE5yLVhnVk9BR0toUTV3MjQySVlFaVlXTGpJcU5kdE9yWE9MOE9IOVpWVlFDUk84WkVQWlNPQnB5VjZ2bXc1dkFNaWQ3enQ0RXZlQzFlZk01N3A1b2FHNy14MHEzSnpfeWhTNFdZUGsxV0E?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    },
+    {
+        "category": "environment",
+        "headline": "Climate 'feedback loops' could worsen global warming by 30%, study finds",
+        "summary": "Climate 'feedback loops' could worsen global warming by 30%, study finds. Climate 'feedback loops' could worsen global warming by 30%, study finds The Guardian Reports corroborated across The Guardian outline key details regarding the development, highlighting ongoing investigations and regional significance. Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges.",
+        "district": null,
+        "state": null,
+        "sources": [
+            {
+                "name": "The Guardian",
+                "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPTlBoQlQtX3gzbDZxRGZYc2UyVFdMMElyaHhFRzFkcHdpLV9raHRkQjBER0NzRFlBcTlBSENjR1JFbFZvWXZka29oNHo5QzM3c3ZmZ0wxY0RZeEt2OVVQUmZPVGhXbU9vNXFack5FT0ZFQmQzYkRCZ0lYVm81bFRvZ2x2dUxrMGJzdXhwSVhIMHJ3QVdSZWlkTTQ4Zw?oc=5",
+                "trust_tier": 2
+            }
+        ]
+    }
+]
+
+DEMO_STORIES.extend(EXTRA_STORIES)
+
 def seed_demo():
     db = SessionLocal()
 
