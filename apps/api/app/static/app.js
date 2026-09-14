@@ -66,7 +66,28 @@
 
   // Instant Fallback Lead Story (rendered in 0ms on initial boot for zero perceived lag)
 
-  const INSTANT_FALLBACK_CARD = {
+    function getDynamicInstantCard(userState) {
+    const st = userState || 'Telangana';
+    return {
+      id: "lead-instant-" + Date.now(),
+      headline: `${st} Regional Desk: Live Verified Dispatches Calibrated for Today`,
+      summary: `Continuous verified monitoring of legislative decisions, state administrative policies, and civic infrastructure across ${st}.`,
+      category: "state",
+      state: st,
+      published_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      source_name: `${st} Bureau`,
+      canonical_url: "https://newszzzz.netlify.app",
+      verification_type: "cross_verified",
+      importance_score: 92.0,
+      verification_score: 96.0,
+      personal_relevance_score: 95.0,
+      final_feed_score: 92.0,
+      priority_reason: `Active regional desk calibration for ${st}.`
+    };
+  }
+
+const INSTANT_FALLBACK_CARD = {
 
     id: "lead-instant-01",
 
@@ -559,6 +580,7 @@
   function rankCardsByUserPreferencesAndPriority(cards, interests, priorityOrder, userState, activeCategory) {
     if (!cards || cards.length === 0) return [];
 
+    const targetState = (userState || '').trim().toLowerCase();
     let filtered = cards;
 
     // Tab isolation
@@ -609,8 +631,6 @@
         if (!priorityIndexMap.has(s)) priorityIndexMap.set(s, idx);
       });
     });
-
-    const targetState = (userState || '').trim().toLowerCase();
 
     function getCardPriorityTier(card) {
       const cat = (card.category || '').trim().toLowerCase();
@@ -1608,7 +1628,11 @@
 
 
 
-      if (!rawItems || rawItems.length === 0) return;
+      if (!rawItems || rawItems.length === 0) {
+        state.isInitialLoading = false;
+        renderAllEditorialSections();
+        return;
+      }
 
 
 
