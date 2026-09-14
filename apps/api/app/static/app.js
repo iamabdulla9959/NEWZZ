@@ -386,7 +386,7 @@
 
     } catch (_) {}
 
-    return ['Politics', 'Technology', 'National', 'Business'];
+    return ['State', 'Politics', 'Technology', 'National', 'Business'];
 
   }
 
@@ -410,7 +410,7 @@
 
     const interests = getStoredInterests();
 
-    return interests && interests.length > 0 ? [...interests] : ['Politics', 'Technology', 'National', 'Business'];
+    return interests && interests.length > 0 ? [...interests] : ['State', 'Politics', 'Technology', 'National', 'Business'];
 
   }
 
@@ -578,10 +578,15 @@
         }
       }
     } else {
-      // In 'All News / For You', filter to user's selected interests if any
+      // In 'All News / For You', ensure cards matching the user's selected state are ALWAYS included alongside user interests!
       if (interests && Array.isArray(interests) && interests.length > 0) {
         const matchingInterests = cards.filter(c => {
-          return interests.some(pref => matchesCategory(c.category, pref));
+          const cState = (c.state || '').trim().toLowerCase();
+          const head = (c.headline || '').toLowerCase();
+          const isStateMatch = targetState && (cState === targetState || (targetState.includes('delhi') && cState.includes('delhi')) || head.includes(targetState));
+          if (isStateMatch) return true; // ALWAYS preserve user's state news!
+
+          return interests.some(pref => matchesCategory(c.category, pref)) || matchesCategory(c.category, 'state');
         });
         if (matchingInterests.length > 0) {
           filtered = matchingInterests;
@@ -634,29 +639,50 @@
 
     function getRecencyScore(card) {
       const ts = card.published_at || card.event_time || card.created_at;
-      if (!ts) return 30;
+      if (!ts) return 20;
       const ms = Date.parse(ts);
-      if (isNaN(ms)) return 30;
+      if (isNaN(ms)) return 20;
       const now = Date.now();
       const diffHours = (now - ms) / (1000 * 60 * 60);
-      if (diffHours < 0) return 100; // future or just published
-      if (diffHours <= 1) return 100; // < 1 hour: 100 pts
-      if (diffHours <= 3) return 95;  // < 3 hours: 95 pts
-      if (diffHours <= 6) return 90;  // < 6 hours: 90 pts
-      if (diffHours <= 12) return 80; // < 12 hours: 80 pts
-      if (diffHours <= 24) return 70; // < 24 hours: 70 pts
-      if (diffHours <= 48) return 50; // < 48 hours: 50 pts
-      if (diffHours <= 168) return 20; // < 7 days: 20 pts
-      return 0; // > 7 days gets 0 points!
+      if (diffHours < 0) return 120; // future or just published wire
+      if (diffHours <= 1) return 120; // < 1 hour: 120 pts
+      if (diffHours <= 3) return 115; // < 3 hours: 115 pts
+      if (diffHours <= 6) return 110; // < 6 hours: 110 pts
+      if (diffHours <= 12) return 100; // < 12 hours: 100 pts
+      if (diffHours <= 24) return 90;  // < 24 hours (Today): 90 pts
+      if (diffHours <= 48) return 50;  // Yesterday: 50 pts
+      if (diffHours <= 168) return 20; // Last 7 days: 20 pts
+      return 0; // Older than 7 days
+    }
+
+    function getStateMatchScore(card) {
+      if (!targetState) return 0;
+      const cState = (card.state || '').trim().toLowerCase();
+      if (cState === targetState) return 100;
+      if (targetState.includes('delhi') && cState.includes('delhi')) return 100;
+      if ((card.headline || '').toLowerCase().includes(targetState)) return 60;
+      return 0;
     }
 
     function calculateCompositeScore(card) {
       const recency = getRecencyScore(card);
       const tier = getCardPriorityTier(card);
-      const priorityPoints = tier === 0 ? 50 : (tier === 1 ? 40 : (tier === 2 ? 25 : (tier === 3 ? 15 : 0)));
+      const priorityPoints = tier === 0 ? 60 : (tier === 1 ? 45 : (tier === 2 ? 30 : (tier === 3 ? 15 : 0)));
       const stateMatch = getStateMatchScore(card);
-      // High state boost: 120 points for user's configured state news so local breaking news leads the feed
-      const statePoints = stateMatch === 100 ? 120 : (stateMatch === 50 ? 60 : 0);
+
+      // Determine if published today (within 24 hours)
+      const ts = card.published_at || card.event_time || card.created_at;
+      const ms = ts ? Date.parse(ts) : NaN;
+      const isToday = !isNaN(ms) && ((Date.now() - ms) <= 24 * 60 * 60 * 1000);
+
+      // Today's State News gets supreme priority (+180 pts), guaranteeing it leads the feed
+      let statePoints = 0;
+      if (stateMatch === 100) {
+        statePoints = isToday ? 180 : 100;
+      } else if (stateMatch === 60) {
+        statePoints = isToday ? 90 : 50;
+      }
+
       const qualityScore = Number(card.final_feed_score) || 50;
 
       // Composite Score: Recency (2x) + State Priority Boost + Category Tier + Quality
