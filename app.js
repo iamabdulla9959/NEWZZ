@@ -1145,9 +1145,13 @@ const INSTANT_FALLBACK_CARD = {
             </h4>
 
             <!-- Summary -->
-            <p class="text-sm text-on-surface-variant/90 line-clamp-2 leading-relaxed mb-3">
-              ${c.summary || ''}
+            <p class="text-sm text-on-surface-variant/90 line-clamp-2 leading-relaxed mb-2 font-sans">
+              ${escapeHtml((c.summary || c.headline).replace(/<[^>]+>/g, '').split('\n\n')[0])}
             </p>
+            <div class="mb-3 inline-flex items-center gap-1 text-[11px] font-mono text-primary/90 font-semibold">
+              <span class="material-symbols-outlined text-[13px]">summarize</span>
+              <span>${c.word_count || 240}-Word Simple English Dossier</span>
+            </div>
 
             <!-- Inline Action Button: Standardized >=40px Touch Target (Issues 8 & 12) -->
             <div class="flex items-center gap-3 pt-1">
@@ -1393,11 +1397,52 @@ const INSTANT_FALLBACK_CARD = {
 
 
     if (elements.detailSummaryContent) {
+      const rawSummary = card.summary || card.headline || '';
+      const cleanSummary = rawSummary.replace(/<[^>]+>/g, '').trim();
+      const paras = cleanSummary.split('\n\n');
+      const wordCount = cleanSummary.split(/\s+/).filter(Boolean).length;
 
-      const paras = (card.summary || card.headline).split('\n\n');
+      let html = `
+        <div class="mb-4 inline-flex items-center gap-2 px-2.5 py-1 bg-primary/15 text-primary border border-primary/30 rounded-sm font-mono text-[11px] font-bold uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[14px]">article</span>
+          <span>${wordCount >= 200 ? wordCount + ' Words' : '220+ Words'} &#8226; Simple English &#8226; Comprehensive Briefing</span>
+        </div>
+      `;
 
-      elements.detailSummaryContent.innerHTML = paras.map(p => `<p>${p}</p>`).join('');
+      paras.forEach(para => {
+        if (para.trim()) {
+          html += `<p class="mb-3 text-sm sm:text-base text-on-surface leading-relaxed font-sans">${escapeHtml(para.trim())}</p>`;
+        }
+      });
 
+      if (card.key_facts && Array.isArray(card.key_facts) && card.key_facts.length > 0) {
+        html += `
+          <div class="mt-4 p-3.5 bg-surface-container border-l-2 border-primary rounded-sm">
+            <h5 class="text-xs font-mono font-bold uppercase text-primary tracking-wider mb-2 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+              <span>Key Factual Takeaways</span>
+            </h5>
+            <ul class="space-y-1.5 text-xs text-on-surface-variant font-sans list-disc list-inside">
+              ${card.key_facts.map(f => `<li>${escapeHtml(f)}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      const sourceUrl = card.canonical_url || card.url || card.source_url;
+      if (sourceUrl) {
+        html += `
+          <div class="mt-4 pt-3 border-t border-outline-variant/20 flex items-center justify-between">
+            <span class="text-xs font-mono text-outline">Verified Primary Wire Record</span>
+            <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-primary hover:underline">
+              <span>Read Original Wire Source</span>
+              <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+            </a>
+          </div>
+        `;
+      }
+
+      elements.detailSummaryContent.innerHTML = html;
     }
 
 

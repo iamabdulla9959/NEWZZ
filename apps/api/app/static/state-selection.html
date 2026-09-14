@@ -183,7 +183,7 @@
             Regional desk: Hyderabad &amp; South Deccan &#8212; Continuous coverage on IT corridor policy, Kaleshwaram hydrology updates, and regional energy sector dispatches.
           </p>
         </div>
-        <div class="flex items-center gap-6 shrink-0 pt-2 md:pt-0 font-mono text-xs">
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6 shrink-0 pt-2 md:pt-0 font-mono text-xs">
           <div>
             <div class="text-lg font-bold text-on-surface" id="showcase-dispatches-count">62</div>
             <div class="text-[10px] text-outline uppercase">DISPATCHES</div>
@@ -193,6 +193,10 @@
             <div class="text-lg font-bold text-secondary">100%</div>
             <div class="text-[10px] text-outline uppercase">FACT-CHECKED</div>
           </div>
+          <button id="showcase-btn-continue" type="button" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-on-primary font-mono text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-md shadow-primary/20">
+            <span id="showcase-continue-label">CONTINUE WITH TELANGANA</span>
+            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+          </button>
         </div>
       </div>
     </div>
@@ -247,7 +251,7 @@
   </main>
 
   <!-- STICKY BOTTOM ACTION DOCK -->
-  <div class="sticky bottom-0 z-40 bg-[#141311]/95 backdrop-blur-md border-t border-outline-variant/30 pt-3 pb-16 sm:pb-4 px-4 md:px-8 shadow-2xl">
+  <div id="floating-action-dock" class="fixed bottom-0 left-0 right-0 z-50 bg-[#141311]/95 backdrop-blur-md border-t border-outline-variant/40 py-3.5 px-4 md:px-8 shadow-2xl">
     <div class="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3 text-xs text-outline">
         <span class="font-mono uppercase text-primary font-semibold">INTEGRITY PROTOCOL:</span>
@@ -337,6 +341,16 @@
 
       const mastStateEl = document.getElementById('masthead-current-state');
       if (mastStateEl) mastStateEl.textContent = item.name;
+
+      // Update Continue button labels dynamically
+      const btnCont = document.getElementById('btn-save-and-continue');
+      if (btnCont) {
+        btnCont.innerHTML = `<span>CONTINUE WITH ${item.name.toUpperCase()}</span><span class="material-symbols-outlined text-[16px]">arrow_forward</span>`;
+      }
+      const showcaseLabel = document.getElementById('showcase-continue-label');
+      if (showcaseLabel) {
+        showcaseLabel.textContent = `CONTINUE WITH ${item.name.toUpperCase()}`;
+      }
     }
 
     function renderGrid(query = '') {
@@ -444,12 +458,18 @@
     }
 
     // Save and continue to step 2 (topic-selection.html)
+    const proceedToTopics = () => {
+      localStorage.setItem('newsreels_state', selectedState);
+      window.location.href = 'topic-selection.html';
+    };
+
     const btnContinue = document.getElementById('btn-save-and-continue');
     if (btnContinue) {
-      btnContinue.addEventListener('click', () => {
-        localStorage.setItem('newsreels_state', selectedState);
-        window.location.href = 'topic-selection.html';
-      });
+      btnContinue.addEventListener('click', proceedToTopics);
+    }
+    const showcaseBtn = document.getElementById('showcase-btn-continue');
+    if (showcaseBtn) {
+      showcaseBtn.addEventListener('click', proceedToTopics);
     }
   </script>
 </body>
