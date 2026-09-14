@@ -3,6 +3,24 @@
 <html class="dark" lang="en">
 
 <head>
+  <!-- First-Time Visitor Onboarding Gate -->
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('onboarding') === 'reset') {
+          localStorage.removeItem('newsreels_onboarding_complete');
+        }
+        var completed = localStorage.getItem('newsreels_onboarding_complete');
+        if (completed !== 'true' && params.get('skip') !== '1') {
+          window.location.replace('state-selection.html');
+        }
+      } catch (e) {
+        console.warn('Onboarding check failed:', e);
+      }
+    })();
+  </script>
+
 
   <meta charset="utf-8"/>
 
@@ -452,7 +470,19 @@
 
     }
 
-  </style>
+  
+    /* Auto-scaling viewport and dynamic mobile adjustments */
+    html, body {
+      min-height: 100dvh;
+      -webkit-text-size-adjust: 100%;
+    }
+    @supports (min-height: 100dvh) {
+      .min-h-screen { min-height: 100dvh; }
+    }
+    .safe-bottom {
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    }
+</style>
 
   <link rel="stylesheet" href="style.css"/>
 
@@ -579,7 +609,7 @@
 
       <!-- TOP PERSONALIZATION & MASTHEAD BANNER -->
 
-      <section class="w-full pb-space-lg mb-space-lg bg-surface-container-lowest/60 p-space-lg md:p-space-xl border border-outline-variant/15">
+      <section class="w-full mb-4 sm:mb-6 bg-surface-container-lowest/60 p-3 sm:p-5 md:p-6 border border-outline-variant/15 rounded-sm">
 
         <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-md">
 

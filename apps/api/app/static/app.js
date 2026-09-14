@@ -417,27 +417,7 @@
 
 
   function formatTimeAgo(isoString) {
-
-    if (!isoString) return 'Just now';
-
-    try {
-
-      const diffSec = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
-
-      if (diffSec < 60) return 'Just now';
-
-      if (diffSec < 3600) return `${Math.floor(diffSec / 60)} mins ago`;
-
-      if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`;
-
-      return `${Math.floor(diffSec / 86400)}d ago`;
-
-    } catch {
-
-      return 'Recent';
-
-    }
-
+    return 'Verified Wire';
   }
 
 
@@ -577,195 +557,115 @@
   // --- Multi-Dimensional Ranking Engine ---
 
   function rankCardsByUserPreferencesAndPriority(cards, interests, priorityOrder, userState, activeCategory) {
-
     if (!cards || cards.length === 0) return [];
-
-
 
     let filtered = cards;
 
-
-
     // Tab isolation
-
     if (activeCategory && activeCategory.toLowerCase() !== 'all') {
-
       filtered = cards.filter(c => matchesCategory(c.category, activeCategory));
-
       if (filtered.length === 0) {
-
         const kw = activeCategory.toLowerCase();
-
         filtered = cards.filter(c => ((c.headline || '') + ' ' + (c.summary || '')).toLowerCase().includes(kw));
-
       }
-
     } else {
-
       // In 'All News / For You', filter to user's selected interests if any
-
       if (interests && Array.isArray(interests) && interests.length > 0) {
-
         const matchingInterests = cards.filter(c => {
-
           return interests.some(pref => matchesCategory(c.category, pref));
-
         });
-
         if (matchingInterests.length > 0) {
-
           filtered = matchingInterests;
-
         }
-
       }
-
     }
-
-
 
     if (filtered.length === 0 && cards.length > 0) {
-
       filtered = cards;
-
     }
 
-
-
     // Build Priority Tier lookup
-
     const activePriority = (priorityOrder && priorityOrder.length > 0) ? priorityOrder : (interests || []);
-
     const priorityIndexMap = new Map();
-
     activePriority.forEach((cat, idx) => {
-
       const cLow = cat.trim().toLowerCase();
-
       priorityIndexMap.set(cLow, idx);
-
       const syns = CATEGORY_SYNONYMS[cLow] || [];
-
       syns.forEach(s => {
-
         if (!priorityIndexMap.has(s)) priorityIndexMap.set(s, idx);
-
       });
-
     });
-
-
 
     const targetState = (userState || '').trim().toLowerCase();
 
-
-
     function getCardPriorityTier(card) {
-
       const cat = (card.category || '').trim().toLowerCase();
-
       if (priorityIndexMap.has(cat)) return priorityIndexMap.get(cat);
-
       const syns = CATEGORY_SYNONYMS[cat] || [];
-
       for (const s of syns) {
-
         if (priorityIndexMap.has(s)) return priorityIndexMap.get(s);
-
       }
-
       return 999;
-
     }
-
-
 
     function getStateMatchScore(card) {
-
       if (!targetState) return 0;
-
       const cState = (card.state || '').trim().toLowerCase();
-
       if (cState === targetState) return 100;
-
       if ((card.headline || '').toLowerCase().includes(targetState)) return 50;
-
       return 0;
-
     }
-
-
 
     function getCardTimestamp(card) {
-
       const ts = card.published_at || card.event_time || card.created_at;
-
       if (!ts) return 0;
-
       const ms = Date.parse(ts);
-
       return isNaN(ms) ? 0 : ms;
-
     }
 
+    function getRecencyScore(card) {
+      const ts = card.published_at || card.event_time || card.created_at;
+      if (!ts) return 30;
+      const ms = Date.parse(ts);
+      if (isNaN(ms)) return 30;
+      const now = Date.now();
+      const diffHours = (now - ms) / (1000 * 60 * 60);
+      if (diffHours < 0) return 100; // future or just published
+      if (diffHours <= 1) return 100; // < 1 hour: 100 pts
+      if (diffHours <= 3) return 95;  // < 3 hours: 95 pts
+      if (diffHours <= 6) return 90;  // < 6 hours: 90 pts
+      if (diffHours <= 12) return 80; // < 12 hours: 80 pts
+      if (diffHours <= 24) return 70; // < 24 hours: 70 pts
+      if (diffHours <= 48) return 50; // < 48 hours: 50 pts
+      if (diffHours <= 168) return 20; // < 7 days: 20 pts
+      return 0; // > 7 days gets 0 points!
+    }
 
+    function calculateCompositeScore(card) {
+      const recency = getRecencyScore(card);
+      const tier = getCardPriorityTier(card);
+      const priorityPoints = tier === 0 ? 60 : (tier === 1 ? 45 : (tier === 2 ? 30 : (tier === 3 ? 15 : 0)));
+      const stateMatch = getStateMatchScore(card);
+      const statePoints = stateMatch > 0 ? (stateMatch === 100 ? 50 : 25) : 0;
+      const qualityScore = Number(card.final_feed_score) || 50;
 
-    // Deterministic Multi-Layer Sorting:
+      // Composite Score: Recency (2x) + User Category Priority + Regional State Match + Quality
+      return (recency * 2.0) + priorityPoints + statePoints + (qualityScore * 0.1);
+    }
 
     return [...filtered].sort((a, b) => {
-
       if (activeCategory === 'state') {
-
         const aState = getStateMatchScore(a);
-
         const bState = getStateMatchScore(b);
-
         if (aState !== bState) return bState - aState;
-
       }
 
+      const scoreA = calculateCompositeScore(a);
+      const scoreB = calculateCompositeScore(b);
+      if (scoreA !== scoreB) return scoreB - scoreA;
 
-
-      // 1. Priority Tier: #1 category appears first, #2 second, etc.
-
-      const tierA = getCardPriorityTier(a);
-
-      const tierB = getCardPriorityTier(b);
-
-      if (tierA !== tierB) return tierA - tierB;
-
-
-
-      // 2. State Boost within same category
-
-      if (targetState) {
-
-        const aState = getStateMatchScore(a);
-
-        const bState = getStateMatchScore(b);
-
-        if (aState !== bState) return bState - aState;
-
-      }
-
-
-
-      // 3. Freshness / Recency
-
-      const timeA = getCardTimestamp(a);
-
-      const timeB = getCardTimestamp(b);
-
-      if (timeA !== timeB) return timeB - timeA;
-
-
-
-      // 4. Quality feed score fallback
-
-      return (Number(b.final_feed_score) || 0) - (Number(a.final_feed_score) || 0);
-
+      return getCardTimestamp(b) - getCardTimestamp(a);
     });
-
   }
 
 
@@ -812,11 +712,7 @@
 
           <div class="flex items-center gap-space-sm text-outline font-label-sm text-label-sm">
 
-            <span>${timeAgo}</span>
-
-            <span>&#8226;</span>
-
-            <span>Verified Wire</span>
+            <span>Verified Wire</span><span>&#8226;</span><span>${source}</span>
 
           </div>
 
@@ -946,7 +842,7 @@
 
             </span>
 
-            <span class="font-label-sm text-label-sm text-outline">${timeAgo}</span>
+            <span class="font-label-sm text-label-sm text-outline">${source}</span>
 
           </div>
 
@@ -1068,9 +964,7 @@
 
             <span>${source}</span>
 
-            <span>&#8226;</span>
-
-            <span>${timeAgo}</span>
+            
 
           </div>
 
@@ -1174,9 +1068,7 @@
 
             <span>${source}</span>
 
-            <span>&#8226;</span>
-
-            <span>${timeAgo}</span>
+            
 
           </div>
 
@@ -1398,7 +1290,7 @@
 
     if (elements.detailSourceAuthor) elements.detailSourceAuthor.textContent = card.source_name || (card.sources && card.sources[0]?.name) || 'Verified Primary Wire';
 
-    if (elements.detailTime) elements.detailTime.textContent = formatTimeAgo(card.published_at || card.event_time);
+    if (elements.detailTime) elements.detailTime.textContent = "Verified Live Wire";
 
 
 

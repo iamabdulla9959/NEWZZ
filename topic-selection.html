@@ -52,7 +52,16 @@
       background-color: #201b13 !important;
       box-shadow: 0 0 0 1px #EB7D00, 0 6px 20px rgba(235, 125, 0, 0.14);
     }
-  </style>
+  
+    /* Screen Auto-Scaling and Dynamic Mobile Adjustments */
+    html, body {
+      min-height: 100dvh;
+      -webkit-text-size-adjust: 100%;
+    }
+    .mobile-dock-clearance {
+      padding-bottom: max(3.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)));
+    }
+</style>
 </head>
 <body class="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary selection:text-on-primary">
 
@@ -81,9 +90,7 @@
           <span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
           <span id="masthead-current-state" class="font-semibold uppercase tracking-wider text-on-surface">Telangana</span>
         </a>
-        <div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 flex items-center justify-center font-serif font-bold text-primary text-xs">
-          N
-        </div>
+        <div class="w-8 h-8 rounded-full bg-surface-container border border-outline-variant/30 flex items-center justify-center text-outline"><span class="material-symbols-outlined text-[16px]">person</span></div>
       </div>
     </div>
   </header>
@@ -170,7 +177,7 @@
   </main>
 
   <!-- STICKY BOTTOM ACTION DOCK -->
-  <div class="sticky bottom-0 z-40 bg-[#141311] border-t border-outline-variant/30 py-4 px-4 md:px-8 shadow-2xl">
+  <div class="sticky bottom-0 z-40 bg-[#141311]/95 backdrop-blur-md border-t border-outline-variant/30 pt-3 pb-16 sm:pb-4 px-4 md:px-8 shadow-2xl">
     <div class="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <a href="state-selection.html" class="text-xs font-mono text-outline hover:text-on-surface uppercase flex items-center gap-1.5 transition-colors">
         <span class="material-symbols-outlined text-[16px]">arrow_back</span>

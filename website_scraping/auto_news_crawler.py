@@ -151,83 +151,55 @@ INDIAN_STATES: List[str] = [
 # Canonical category names used throughout.
 # ────────────────────────────────────────────────────────
 INDIA_CATEGORY_FEEDS: List[Tuple[str, str]] = [
-    # National
-    ("National", "https://news.google.com/rss/search?q=India+national+news&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("National", "https://news.google.com/rss/search?q=India+government+policy+news&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("National", "https://news.google.com/rss/search?q=India+breaking+news+today&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("National", "https://news.google.com/rss/search?q=India+parliament+Supreme+Court&hl=en-IN&gl=IN&ceid=IN:en"),
+    # National Top Stories & Topic Feeds (Real-time 15m cadence)
+    ("National", "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en"),
+    ("National", "https://news.google.com/rss/headlines/section/topic/NATION?hl=en-IN&gl=IN&ceid=IN:en"),
+    ("National", "https://news.google.com/rss/search?q=India+breaking+news+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("National", "https://news.google.com/rss/search?q=India+government+policy+news+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
     # Technology
-    ("Technology", "https://news.google.com/rss/search?q=Technology+tech+news+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Technology", "https://news.google.com/rss/search?q=Artificial+Intelligence+India+startup&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Technology", "https://news.google.com/rss/search?q=India+digital+cyber+mobile+tech&hl=en-IN&gl=IN&ceid=IN:en"),
-    # Science
-    ("Science", "https://news.google.com/rss/search?q=Science+news+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Science", "https://news.google.com/rss/search?q=ISRO+space+research+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Science", "https://news.google.com/rss/search?q=India+space+astronomy+scientific+discovery&hl=en-IN&gl=IN&ceid=IN:en"),
-    # Politics
-    ("Politics", "https://news.google.com/rss/search?q=Indian+politics+news&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Politics", "https://news.google.com/rss/search?q=BJP+Congress+India+election+politics&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Politics", "https://news.google.com/rss/search?q=India+PM+Modi+government+cabinet&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Technology", "https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Technology", "https://news.google.com/rss/search?q=Technology+AI+India+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Technology", "https://news.google.com/rss/search?q=India+digital+cyber+mobile+tech+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
     # Business
-    ("Business", "https://news.google.com/rss/search?q=Business+economy+news+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Business", "https://news.google.com/rss/search?q=India+stock+market+economy+RBI&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Business", "https://news.google.com/rss/search?q=India+GDP+trade+corporate+startup&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Business", "https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Business", "https://news.google.com/rss/search?q=India+stock+market+economy+RBI+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Business", "https://news.google.com/rss/search?q=India+GDP+trade+corporate+startup+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    # Politics
+    ("Politics", "https://news.google.com/rss/search?q=Indian+politics+news+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Politics", "https://news.google.com/rss/search?q=BJP+Congress+India+election+politics+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Politics", "https://news.google.com/rss/search?q=India+PM+Modi+government+cabinet+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    # Science
+    ("Science", "https://news.google.com/rss/headlines/section/topic/SCIENCE?hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Science", "https://news.google.com/rss/search?q=Science+news+India+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Science", "https://news.google.com/rss/search?q=ISRO+space+research+India+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
     # Health
-    ("Health", "https://news.google.com/rss/search?q=Health+medical+news+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Health", "https://news.google.com/rss/search?q=India+hospital+disease+medicine+healthcare&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Health", "https://news.google.com/rss/search?q=India+WHO+AIIMS+public+health&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Health", "https://news.google.com/rss/headlines/section/topic/HEALTH?hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Health", "https://news.google.com/rss/search?q=Health+medical+news+India+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Health", "https://news.google.com/rss/search?q=India+hospital+disease+medicine+healthcare+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
     # Sports
-    ("Sports", "https://news.google.com/rss/search?q=Sports+news+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Sports", "https://news.google.com/rss/search?q=Cricket+India+IPL+BCCI&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Sports", "https://news.google.com/rss/search?q=India+Olympics+athlete+football+kabaddi&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Sports", "https://news.google.com/rss/headlines/section/topic/SPORTS?hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Sports", "https://news.google.com/rss/search?q=Sports+news+India+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Sports", "https://news.google.com/rss/search?q=Cricket+India+IPL+BCCI+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
     # Entertainment
-    ("Entertainment", "https://news.google.com/rss/search?q=Entertainment+Bollywood+cinema+news+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Entertainment", "https://news.google.com/rss/search?q=Bollywood+film+actor+OTT+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Entertainment", "https://news.google.com/rss/search?q=India+music+awards+celebrity+streaming&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Entertainment", "https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Entertainment", "https://news.google.com/rss/search?q=Entertainment+Bollywood+cinema+news+India+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Entertainment", "https://news.google.com/rss/search?q=Bollywood+film+actor+OTT+India+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
     # Environment
-    ("Environment", "https://news.google.com/rss/search?q=Environment+climate+news+India&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Environment", "https://news.google.com/rss/search?q=India+pollution+climate+change+green&hl=en-IN&gl=IN&ceid=IN:en"),
-    ("Environment", "https://news.google.com/rss/search?q=India+wildlife+forest+biodiversity+ecology&hl=en-IN&gl=IN&ceid=IN:en"),
-    # Education (internal support)
-    ("Education", "https://news.google.com/rss/search?q=Education+exam+admission+news+India&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Environment", "https://news.google.com/rss/search?q=Environment+climate+news+India+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
+    ("Environment", "https://news.google.com/rss/search?q=India+pollution+climate+change+green+when:1d&hl=en-IN&gl=IN&ceid=IN:en"),
 ]
 
 # ────────────────────────────────────────────────────────
 # GLOBAL CATEGORY FEEDS
 # ────────────────────────────────────────────────────────
 GLOBAL_CATEGORY_FEEDS: List[Tuple[str, str]] = [
-    # World
-    ("World", "https://news.google.com/rss/search?q=International+world+news&hl=en-US&gl=US&ceid=US:en"),
-    ("World", "https://news.google.com/rss/search?q=World+affairs+diplomacy+UN&hl=en-US&gl=US&ceid=US:en"),
-    ("World", "https://news.google.com/rss/search?q=Global+breaking+news+world&hl=en-US&gl=US&ceid=US:en"),
-    # Technology
-    ("Technology", "https://news.google.com/rss/search?q=Global+technology+news&hl=en-US&gl=US&ceid=US:en"),
-    ("Technology", "https://news.google.com/rss/search?q=AI+machine+learning+Silicon+Valley&hl=en-US&gl=US&ceid=US:en"),
-    ("Technology", "https://news.google.com/rss/search?q=cybersecurity+tech+innovation+2024&hl=en-US&gl=US&ceid=US:en"),
-    # Science
-    ("Science", "https://news.google.com/rss/search?q=Global+science+space+news&hl=en-US&gl=US&ceid=US:en"),
-    ("Science", "https://news.google.com/rss/search?q=NASA+space+astronomy+discovery&hl=en-US&gl=US&ceid=US:en"),
-    ("Science", "https://news.google.com/rss/search?q=scientific+research+biology+physics&hl=en-US&gl=US&ceid=US:en"),
-    # Politics
-    ("Politics", "https://news.google.com/rss/search?q=Global+politics+world+politics&hl=en-US&gl=US&ceid=US:en"),
-    ("Politics", "https://news.google.com/rss/search?q=US+EU+China+geopolitics+election&hl=en-US&gl=US&ceid=US:en"),
-    # Business
-    ("Business", "https://news.google.com/rss/search?q=Global+business+world+economy&hl=en-US&gl=US&ceid=US:en"),
-    ("Business", "https://news.google.com/rss/search?q=global+markets+stock+GDP+trade&hl=en-US&gl=US&ceid=US:en"),
-    # Health
-    ("Health", "https://news.google.com/rss/search?q=Global+health+WHO+medical+news&hl=en-US&gl=US&ceid=US:en"),
-    ("Health", "https://news.google.com/rss/search?q=pandemic+vaccine+disease+global+health&hl=en-US&gl=US&ceid=US:en"),
-    # Sports
-    ("Sports", "https://news.google.com/rss/search?q=World+sports+news&hl=en-US&gl=US&ceid=US:en"),
-    ("Sports", "https://news.google.com/rss/search?q=FIFA+Olympics+Formula1+tennis+world+sports&hl=en-US&gl=US&ceid=US:en"),
-    # Entertainment
-    ("Entertainment", "https://news.google.com/rss/search?q=Global+entertainment+Hollywood+music+film&hl=en-US&gl=US&ceid=US:en"),
-    ("Entertainment", "https://news.google.com/rss/search?q=Oscar+Grammy+Netflix+streaming+celebrity&hl=en-US&gl=US&ceid=US:en"),
-    # Environment
-    ("Environment", "https://news.google.com/rss/search?q=Global+environment+climate+change+news&hl=en-US&gl=US&ceid=US:en"),
-    ("Environment", "https://news.google.com/rss/search?q=COP+carbon+emissions+renewable+energy&hl=en-US&gl=US&ceid=US:en"),
-    # Education (internal)
-    ("Education", "https://news.google.com/rss/search?q=Global+education+university+news&hl=en-US&gl=US&ceid=US:en"),
+    ("World", "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en"),
+    ("World", "https://news.google.com/rss/search?q=International+world+news+when:1d&hl=en-US&gl=US&ceid=US:en"),
+    ("Technology", "https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-US&gl=US&ceid=US:en"),
+    ("Business", "https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-US&gl=US&ceid=US:en"),
+    ("Science", "https://news.google.com/rss/headlines/section/topic/SCIENCE?hl=en-US&gl=US&ceid=US:en"),
+    ("Health", "https://news.google.com/rss/headlines/section/topic/HEALTH?hl=en-US&gl=US&ceid=US:en"),
+    ("Sports", "https://news.google.com/rss/headlines/section/topic/SPORTS?hl=en-US&gl=US&ceid=US:en"),
 ]
 
 # Major Global Outlets (Baseline feeds — classified as World / National as appropriate)
@@ -319,8 +291,24 @@ def parse_feed_articles(
             summary = re.sub(r"<[^>]+>", " ", summary).strip()
 
             author = str(getattr(entry, "author", extract_publisher(entry, default_source))).strip()
-            pub_date = str(getattr(entry, "published", getattr(entry, "updated", ""))).strip()
+            pub_date_raw = str(getattr(entry, "published", getattr(entry, "updated", ""))).strip()
+            pub_date_iso = None
+            if hasattr(entry, "published_parsed") and entry.published_parsed:
+                try:
+                    pub_dt = datetime.fromtimestamp(time.mktime(entry.published_parsed), tz=timezone.utc)
+                    pub_date_iso = pub_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+                except Exception:
+                    pass
+            if not pub_date_iso and pub_date_raw:
+                try:
+                    import email.utils
+                    dt = email.utils.parsedate_to_datetime(pub_date_raw)
+                    if dt:
+                        pub_date_iso = dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+                except Exception:
+                    pass
             now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+            published_final = pub_date_iso or now_iso
 
             article = {
                 "scope": scope,
@@ -331,7 +319,7 @@ def parse_feed_articles(
                 "link": link,
                 "summary": summary,
                 "author": author,
-                "published_date": pub_date or now_iso,
+                "published_date": published_final,
                 "fetched_at": now_iso,
             }
 
@@ -470,7 +458,7 @@ def run_crawl_cycle(seen_links: Set[str]) -> int:
     states_new_count = 0
     for state in INDIAN_STATES:
         # Primary query
-        query_url_1 = f"https://news.google.com/rss/search?q={urllib.parse.quote(state)}+news&hl=en-IN&gl=IN&ceid=IN:en"
+        query_url_1 = f"https://news.google.com/rss/search?q={urllib.parse.quote(state)}+news+when:1d&hl=en-IN&gl=IN&ceid=IN:en"
         fresh1 = parse_feed_articles(
             query_url_1, scope="India", category="State", state=state,
             default_source=f"{state} News", seen_links=seen_links, max_items=15
@@ -482,7 +470,7 @@ def run_crawl_cycle(seen_links: Set[str]) -> int:
         time.sleep(0.15)
 
         # Secondary query for additional depth
-        query_url_2 = f"https://news.google.com/rss/search?q={urllib.parse.quote(state)}+latest+news+today&hl=en-IN&gl=IN&ceid=IN:en"
+        query_url_2 = f"https://news.google.com/rss/search?q={urllib.parse.quote(state)}+breaking+news+when:1d&hl=en-IN&gl=IN&ceid=IN:en"
         fresh2 = parse_feed_articles(
             query_url_2, scope="India", category="State", state=state,
             default_source=f"{state} News", seen_links=seen_links, max_items=10
