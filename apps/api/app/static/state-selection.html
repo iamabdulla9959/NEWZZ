@@ -310,37 +310,38 @@
     const INDIAN_STATES_DATA = ALL_JURISDICTIONS_DATA;
 
     let selectedState = localStorage.getItem('newsreels_state') || 'Telangana';
-
-    function renderShowcase(stName) {
-      const item = INDIAN_STATES_DATA.find(s => s.name.toLowerCase() === stName.toLowerCase()) || INDIAN_STATES_DATA[23];
-      document.getElementById('showcase-focus-badge').innerHTML = `
-        <span class="w-2 h-2 bg-primary inline-block"></span>
-        PRIMARY FOCUS AREA: ${item.name.toUpperCase()} &#8212; ACTIVE DESK CALIBRATION
-      `;
-      document.getElementById('showcase-state-name').textContent = item.name;
-      document.getElementById('showcase-state-desc').textContent = item.desc;
-      document.getElementById('showcase-dispatches-count').textContent = item.dispatches;
-      document.getElementById('bureau-sync-label').textContent = item.desk;
-      document.getElementById('masthead-current-state').textContent = item.name;
-    }
-
     let activeFilter = 'all';
 
     function renderShowcase(stName) {
       const item = ALL_JURISDICTIONS_DATA.find(s => s.name.toLowerCase() === stName.toLowerCase()) || ALL_JURISDICTIONS_DATA[0];
-      document.getElementById('showcase-focus-badge').innerHTML = `
-        <span class="w-2 h-2 bg-primary inline-block"></span>
-        PRIMARY FOCUS AREA: ${item.name.toUpperCase()} &#8212; ACTIVE DESK CALIBRATION
-      `;
-      document.getElementById('showcase-state-name').textContent = item.name;
-      document.getElementById('showcase-desk-desc').textContent = `${item.desk} (${item.capital}) — ${item.desc}`;
-      document.getElementById('showcase-dispatches').textContent = item.dispatches;
-      document.getElementById('bureau-sync-label').textContent = item.desk;
-      document.getElementById('masthead-current-state').textContent = item.name;
+      
+      const badge = document.getElementById('showcase-focus-badge');
+      if (badge) {
+        badge.innerHTML = `
+          <span class="w-2 h-2 bg-primary inline-block"></span>
+          PRIMARY FOCUS AREA: ${item.name.toUpperCase()} &#8212; ACTIVE DESK CALIBRATION
+        `;
+      }
+
+      const nameEl = document.getElementById('showcase-state-name');
+      if (nameEl) nameEl.textContent = item.name;
+
+      const descEl = document.getElementById('showcase-state-desc');
+      if (descEl) descEl.textContent = `Regional Desk: ${item.desk} (${item.capital}) &#8212; ${item.desc}`;
+
+      const countEl = document.getElementById('showcase-dispatches-count');
+      if (countEl) countEl.textContent = item.dispatches;
+
+      const bureauEl = document.getElementById('bureau-sync-label');
+      if (bureauEl) bureauEl.textContent = item.desk;
+
+      const mastStateEl = document.getElementById('masthead-current-state');
+      if (mastStateEl) mastStateEl.textContent = item.name;
     }
 
     function renderGrid(query = '') {
       const container = document.getElementById('states-grid');
+      if (!container) return;
       container.innerHTML = '';
       const q = query.trim().toLowerCase();
 
@@ -358,7 +359,10 @@
         return matchesQuery && matchesFilter;
       });
 
-      document.getElementById('states-count-display').textContent = `Showing ${filtered.length} of ${ALL_JURISDICTIONS_DATA.length} Jurisdictions`;
+      const countDisplay = document.getElementById('states-count-display');
+      if (countDisplay) {
+        countDisplay.textContent = `Showing ${filtered.length} of ${ALL_JURISDICTIONS_DATA.length} Jurisdictions`;
+      }
 
       filtered.forEach((s) => {
         const numStr = String(s.id).padStart(2, '0');
@@ -367,7 +371,7 @@
         card.className = `state-card bg-surface-container-low p-4 border rounded-sm ${isSel ? 'selected' : 'border-outline-variant/25'}`;
         card.innerHTML = `
           <div class="flex items-center justify-between text-xs font-mono mb-1.5">
-            <span class="text-outline uppercase text-[10px] tracking-wider">${s.type === 'Union Territory' ? 'UT' : 'STATE'} • ${s.region}</span>
+            <span class="text-outline uppercase text-[10px] tracking-wider">${s.type === 'Union Territory' ? 'UT' : 'STATE'} &#8226; ${s.region}</span>
             <span class="${isSel ? 'text-primary font-bold' : 'text-outline'} text-[11px]">${s.dispatches} dispatches</span>
           </div>
           <div class="flex items-start justify-between gap-2 mb-1.5">
@@ -388,7 +392,8 @@
           selectedState = s.name;
           localStorage.setItem('newsreels_state', selectedState);
           renderShowcase(selectedState);
-          renderGrid(document.getElementById('input-state-search').value);
+          const searchInput = document.getElementById('input-state-search');
+          renderGrid(searchInput ? searchInput.value : '');
         });
         container.appendChild(card);
       });
@@ -404,10 +409,10 @@
         tab.classList.add('active', 'bg-primary', 'text-on-primary', 'font-bold');
         tab.classList.remove('bg-surface-container', 'text-outline');
         activeFilter = tab.getAttribute('data-filter') || 'all';
-        renderGrid(document.getElementById('input-state-search').value);
+        const searchInput = document.getElementById('input-state-search');
+        renderGrid(searchInput ? searchInput.value : '');
       });
     });
-
 
     // Initialize
     renderShowcase(selectedState);
@@ -416,27 +421,36 @@
     // Search filter listener
     const searchInput = document.getElementById('input-state-search');
     const clearBtn = document.getElementById('btn-clear-search');
-    searchInput.addEventListener('input', (e) => {
-      const val = e.target.value;
-      if (val.length > 0) {
-        clearBtn.classList.remove('hidden');
-      } else {
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (clearBtn) {
+          if (val.length > 0) {
+            clearBtn.classList.remove('hidden');
+          } else {
+            clearBtn.classList.add('hidden');
+          }
+        }
+        renderGrid(val);
+      });
+    }
+
+    if (clearBtn && searchInput) {
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
         clearBtn.classList.add('hidden');
-      }
-      renderGrid(val);
-    });
+        renderGrid();
+      });
+    }
 
-    clearBtn.addEventListener('click', () => {
-      searchInput.value = '';
-      clearBtn.classList.add('hidden');
-      renderGrid();
-    });
-
-    // Save and continue to step 2
-    document.getElementById('btn-save-and-continue').addEventListener('click', () => {
-      localStorage.setItem('newsreels_state', selectedState);
-      window.location.href = 'topic-selection.html';
-    });
+    // Save and continue to step 2 (topic-selection.html)
+    const btnContinue = document.getElementById('btn-save-and-continue');
+    if (btnContinue) {
+      btnContinue.addEventListener('click', () => {
+        localStorage.setItem('newsreels_state', selectedState);
+        window.location.href = 'topic-selection.html';
+      });
+    }
   </script>
 </body>
 </html>

@@ -346,7 +346,7 @@
         }
       } catch (e) {}
 
-      return ["Technology", "National", "Politics", "Business", "Science"];
+      return ["State", "Politics", "Technology", "National", "Business"];
     }
 
     let activeRanks = getStoredPriorityOrder();
@@ -473,7 +473,7 @@
     }
 
     document.getElementById('btn-reset-default').addEventListener('click', () => {
-      activeRanks = ["Technology", "National", "Politics", "Business", "Science"];
+      activeRanks = ["State", "Politics", "Technology", "National", "Business"];
       persistAndRender();
     });
 
