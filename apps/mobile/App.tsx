@@ -46,7 +46,7 @@ export default function App() {
   if (!prefs || gate === "boot") {
     return (
       <View style={styles.boot}>
-        <ActivityIndicator color="#7CDBD5" />
+        <ActivityIndicator color="#EB7D00" />
       </View>
     );
   }
@@ -93,7 +93,7 @@ export default function App() {
 const styles = StyleSheet.create({
   boot: {
     flex: 1,
-    backgroundColor: "#0B0F14",
+    backgroundColor: "#2E2910",
     alignItems: "center",
     justifyContent: "center",
   },

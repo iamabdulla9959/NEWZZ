@@ -1,3 +1,29 @@
+
+/* ==========================================================================
+   High-Performance Scrolling & Hardware Acceleration Tokens
+   ========================================================================== */
+html, body {
+  scroll-behavior: auto !important;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+header.sticky {
+  background-color: #141311 !important;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+
+article, section {
+  contain: content;
+}
+
+.modal-backdrop {
+  background: rgba(10, 9, 8, 0.88) !important;
+}
+
 /* ==========================================================================
    News Reels — Premium Dark Editorial Design System
    Color Palette:
@@ -72,7 +98,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -129,8 +155,8 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  
+  
   background: rgba(10, 13, 19, 0.88);
   border-bottom: 1px solid var(--border-subtle);
   width: 100%;
@@ -269,8 +295,8 @@ body {
 .category-nav {
   border-top: 1px solid rgba(255, 255, 255, 0.04);
   background: rgba(8, 11, 16, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  
+  
   width: 100%;
 }
 
@@ -347,7 +373,7 @@ body {
   flex: 1;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
   position: relative;
 }
@@ -358,8 +384,8 @@ body {
   bottom: 1.5rem;
   right: 1.5rem;
   background: rgba(10, 13, 19, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  
+  
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-full);
   padding: 0.4rem 0.95rem;
@@ -398,8 +424,8 @@ body {
 
 .scroll-card-inner {
   background: var(--bg-card);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  
+  
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 2rem 2.25rem;
@@ -646,8 +672,8 @@ body {
   position: fixed;
   inset: 0;
   background: var(--bg-overlay);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  
+  
   z-index: 100;
   display: flex;
   align-items: center;
@@ -1318,3 +1344,59 @@ body {
   }
 }
 
+
+
+/* ==========================================================================
+   Form Select, Refresh Animation & Live Feed Toast
+   ========================================================================== */
+select.form-input,
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.2rem;
+}
+
+select.form-input option,
+.form-select option {
+  background-color: #0d1117;
+  color: #f0f6fc;
+  padding: 0.5rem;
+}
+
+.action-btn.refreshing svg,
+.action-btn.refreshing .btn-icon {
+  animation: spinFeed 0.75s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes spinFeed {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.feed-toast {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(16, 185, 129, 0.95);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.feed-toast.hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px);
+  pointer-events: none;
+}

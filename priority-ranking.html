@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEWZZ — Priority Order Ranking | Algorithmic Calibration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: "#141311",
+            "surface-container-lowest": "#0d0c0a",
+            "surface-container-low": "#181613",
+            "surface-container": "#201d19",
+            "surface-container-high": "#282520",
+            "surface-bright": "#332f29",
+            "on-surface": "#F2EEDC",
+            "on-surface-variant": "#C2BDAA",
+            primary: "#EB7D00",
+            "primary-container": "#EB7D00",
+            "on-primary": "#141311",
+            secondary: "#4E8268",
+            outline: "#7A7565",
+            "outline-variant": "#4A4639",
+          },
+          fontFamily: {
+            serif: ["Newsreader", "serif"],
+            sans: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .priority-item {
+      transition: all 0.15s ease-out;
+    }
+    .priority-item:hover {
+      background-color: #211e18;
+      border-color: #7A7565;
+    }
+    .btn-bump {
+      transition: all 0.12s;
+    }
+    .btn-bump:hover:not(:disabled) {
+      background-color: #EB7D00;
+      color: #141311;
+    }
+  </style>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary selection:text-on-primary">
+
+  <!-- TOP HEADER MASTHEAD -->
+  <header class="sticky top-0 z-50 w-full bg-[#141311] border-b border-outline-variant/30">
+    <div class="h-16 max-w-[1440px] mx-auto px-4 md:px-8 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a class="flex items-center gap-2 group" href="index.html">
+          <span class="font-serif text-2xl font-bold tracking-tight uppercase text-on-surface group-hover:text-primary transition-colors">NEWZZ</span>
+        </a>
+        <div class="h-4 w-px bg-outline-variant/40 hidden sm:block"></div>
+        <span class="hidden md:inline-block text-[11px] uppercase tracking-widest text-outline">KNOW WHAT MATTERS.</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-[13px] font-medium tracking-wide">
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Home</a>
+        <a class="text-on-surface border-b-2 border-primary py-2 font-semibold" href="index.html">For You</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Latest</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="topic-selection.html">Categories</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="state-selection.html">State News</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Editorial Method</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="state-selection.html" class="flex items-center gap-1.5 px-3 py-1 bg-surface-container-low border border-outline-variant/30 text-xs hover:border-primary transition-colors">
+          <span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+          <span id="masthead-current-state" class="font-semibold uppercase tracking-wider text-on-surface">Telangana</span>
+        </a>
+        <div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 flex items-center justify-center font-serif font-bold text-primary text-xs">
+          N
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN PRIORITY ORDER CANVAS -->
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-8 py-8">
+    
+    <!-- STEPPER & HERO HEADLINE -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-outline-variant/20 mb-8">
+      <div>
+        <div class="flex items-center gap-2 font-mono text-[11px] text-primary uppercase tracking-widest font-semibold mb-2">
+          <span>STEP 3 OF 3</span>
+          <span class="text-outline">&#8226;</span>
+          <span>ALGORITHMIC CALIBRATION</span>
+          <span class="text-outline">&#8226;</span>
+          <span class="text-outline">FACTUAL EPHEMERA</span>
+        </div>
+        <h1 class="font-serif text-3xl md:text-5xl font-medium tracking-tight text-on-surface mb-3">
+          What should come first?
+        </h1>
+        <p class="text-on-surface-variant text-sm md:text-base max-w-3xl leading-relaxed">
+          Arrange your selected topics by priority order. Bump to reorder. NEWZZ weights your ranking to determine personalized feed positioning without sacrificing public record integrity.
+        </p>
+      </div>
+
+      <div class="bg-surface-container-low p-3.5 border border-outline-variant/30 flex items-center gap-4 shrink-0 font-mono text-xs">
+        <span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+        <span id="active-desks-badge" class="font-bold text-on-surface">5 Active Desks Configured</span>
+      </div>
+    </div>
+
+    <!-- CRITICAL INTEGRITY PRINCIPLE BANNER -->
+    <div class="bg-surface-container-low border-l-4 border-primary p-4 md:p-5 mb-8 border-r border-t border-b border-outline-variant/30">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-[20px] text-primary shrink-0 mt-0.5">policy</span>
+        <div>
+          <h4 class="font-mono text-[11px] text-primary font-bold uppercase tracking-wider mb-1">
+            CRITICAL INTEGRITY PRINCIPLE
+          </h4>
+          <p class="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+            Your priority order changes personal relevance only &#8212; it <strong class="text-on-surface">never suppresses or filters</strong> an event's objective societal importance, urgent national alerts, or factual verification rating.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12-COLUMN MAIN LAYOUT -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+      
+      <!-- LEFT 8 COLUMNS: PRIORITY ORDER LIST -->
+      <div class="lg:col-span-8 flex flex-col gap-6">
+        <div>
+          <div class="flex items-center justify-between pb-2 mb-3 border-b border-outline-variant/15 font-mono text-xs">
+            <span class="text-outline uppercase tracking-wider">
+              ACTIVE CALIBRATED RANKS (USE ARROWS TO PRIORITIZE)
+            </span>
+            <span class="text-primary font-semibold">Top Desk Leads Feed</span>
+          </div>
+
+          <!-- Priority Items Container -->
+          <div class="flex flex-col gap-2.5" id="priority-list-container">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+
+        <!-- Secondary Desks Available To Add -->
+        <div class="bg-surface-container-low p-5 border border-outline-variant/25">
+          <div class="flex items-center justify-between font-mono text-xs mb-3">
+            <span class="text-outline uppercase tracking-wider">SECONDARY DESKS (AVAILABLE TO ADD)</span>
+            <span class="text-outline">Click to add into active rank stack</span>
+          </div>
+          <div class="flex flex-wrap gap-2" id="secondary-desks-pool">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+
+        <!-- Reset & Build Feed Actions -->
+        <div class="flex items-center justify-between pt-2">
+          <button id="btn-reset-default" class="text-xs font-mono text-outline hover:text-primary transition-colors cursor-pointer underline underline-offset-4">
+            Reset to Default Editorial Balance
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT 4 COLUMNS: LIVE FEED PREVIEW & ANALYTICS -->
+      <div class="lg:col-span-4 flex flex-col gap-6">
+        
+        <!-- 1. PERSONAL FEED PREVIEW CARD -->
+        <div class="bg-surface-container-low p-5 border border-outline-variant/30">
+          <div class="flex items-center justify-between font-mono text-[10px] text-outline uppercase tracking-wider mb-4 pb-2 border-b border-outline-variant/15">
+            <span>PERSONAL FEED PREVIEW</span>
+            <span class="text-secondary font-semibold">LIVE</span>
+          </div>
+
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant/40 flex items-center justify-center font-serif font-bold text-primary text-base">
+              N
+            </div>
+            <div>
+              <div class="font-serif font-semibold text-base text-on-surface">Nideesh Reader</div>
+              <div class="text-[11px] font-mono text-outline" id="preview-edition-text">Telangana Edition &#8226; 5 Desks</div>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-lowest p-3.5 border border-outline-variant/20 mb-3">
+            <div class="flex items-center justify-between font-mono text-[10px] mb-1.5">
+              <span class="text-primary uppercase font-bold" id="preview-lead-category">TECHNOLOGY</span>
+              <span class="text-outline">TOP STREAM LEAD</span>
+            </div>
+            <p class="font-serif text-sm font-medium text-on-surface line-clamp-2" id="preview-lead-headline">
+              India Clears ₹1,76,000-Crore Semiconductor Expansion: Advanced Wafer Fabrication Cluster Gets Cabinet Nod
+            </p>
+          </div>
+
+          <p class="text-[11px] text-outline italic">
+            Top calibrated story is guaranteed 0ms instant display on application launch.
+          </p>
+        </div>
+
+        <!-- 2. FEED WEIGHT DISTRIBUTION FORMULA CARD -->
+        <div class="bg-surface-container-low p-5 border border-outline-variant/30">
+          <div class="flex items-center justify-between font-mono text-[10px] text-outline uppercase tracking-wider mb-3">
+            <span>FEED WEIGHT DISTRIBUTION FORMULA</span>
+          </div>
+          <p class="text-xs text-on-surface-variant leading-relaxed mb-4">
+            Every dispatch in NEWZZ is mathematically calibrated across personal and factual dimensions.
+          </p>
+
+          <div class="space-y-3 font-mono text-xs mb-4">
+            <div>
+              <div class="flex justify-between text-[11px] text-on-surface mb-1">
+                <span>Objective Importance</span>
+                <span class="font-semibold">80%</span>
+              </div>
+              <div class="w-full bg-surface-container-lowest h-1">
+                <div class="bg-primary h-1" style="width: 80%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] text-on-surface mb-1">
+                <span>Urgency / Breaking Alerts</span>
+                <span class="font-semibold">20%</span>
+              </div>
+              <div class="w-full bg-surface-container-lowest h-1">
+                <div class="bg-primary h-1" style="width: 20%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] text-secondary mb-1">
+                <span>Fact Verification Rating</span>
+                <span class="font-semibold">100%</span>
+              </div>
+              <div class="w-full bg-surface-container-lowest h-1">
+                <div class="bg-secondary h-1" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] text-primary mb-1">
+                <span>Personal Priority Order</span>
+                <span class="font-semibold">100%</span>
+              </div>
+              <div class="w-full bg-surface-container-lowest h-1">
+                <div class="bg-primary h-1" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-2.5 bg-surface-container-lowest border border-outline-variant/15 text-[11px] text-outline leading-relaxed">
+            Stories with high breaking societal weight will supersede personal rank to guarantee truth in public record.
+          </div>
+        </div>
+
+        <!-- 3. REGIONAL CONTEXT BUREAU CARD -->
+        <div class="bg-surface-container-low p-5 border border-outline-variant/30 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] font-mono text-outline uppercase tracking-wider mb-1">REGIONAL CONTEXT BUREAU</div>
+            <div class="font-serif text-lg font-semibold text-on-surface" id="preview-bureau-title">Hyderabad &amp; South Deccan</div>
+          </div>
+          <span class="material-symbols-outlined text-[24px] text-secondary">hub</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- STICKY BOTTOM ACTION DOCK -->
+  <div class="sticky bottom-0 z-40 bg-[#141311] border-t border-outline-variant/30 py-4 px-4 md:px-8 shadow-2xl">
+    <div class="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <a href="topic-selection.html" class="text-xs font-mono text-outline hover:text-on-surface uppercase flex items-center gap-1.5 transition-colors">
+        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+        <span>Back to Topic Selection</span>
+      </a>
+
+      <div class="flex items-center gap-4 w-full sm:w-auto justify-end">
+        <button id="btn-build-feed" class="w-full sm:w-auto px-8 py-3 bg-primary hover:bg-primary/90 text-on-primary text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-primary/15">
+          <span>BUILD MY FEED</span>
+          <span class="material-symbols-outlined text-[16px]">done_all</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ALL_DESKS_METADATA = {
+      "Technology": { sub: "Pioneer AI, semiconductors & digital economy", sampleLead: "India Clears ₹1,76,000-Crore Semiconductor Expansion: Advanced Wafer Fabrication Cluster Gets Cabinet Nod" },
+      "Politics": { sub: "Parliamentary proceedings, cabinet decisions, election coverage", sampleLead: "Modi Cabinet Reshuffle Likely, Women and Youth Leaders to Anchor Critical Infrastructure Desks" },
+      "Business": { sub: "Macroeconomics, RBI policy, industrial manufacturing corridors", sampleLead: "RBI Keeps Benchmark Repo Rate Steady at 6.5%, Forecasts Robust 7.2% Fiscal Growth" },
+      "National": { sub: "Federal governance, Supreme Court rulings, interstate treaties", sampleLead: "Supreme Court Upholds Constitutional Bench Precedents on Interstate Water Arbitration" },
+      "World": { sub: "Global geopolitics, multilateral summits, international trade", sampleLead: "Global Trade Corridors Shift Toward Indo-Pacific Supply Chains Amid Supply Realignment" },
+      "Science": { sub: "Space missions, deep tech, clean physics, biotechnology", sampleLead: "ISRO Prepares Next Planetary Orbital Science Mission with Advanced Cryogenic Stages" },
+      "Health": { sub: "Public healthcare infrastructure, ICMR protocols, epidemiology", sampleLead: "National Health Authority Expands Digital Tele-Medicine Corridors to 40,000 Rural Primary Clinics" },
+      "Sports": { sub: "National athletics, cricket governance, Olympic preparation", sampleLead: "India Finalizes 2036 Olympic Bid Blueprint with Multi-City Sports Cluster Infrastructure" },
+      "Entertainment": { sub: "Cinema, cultural arts, creative economy, media IP", sampleLead: "National Film Archive Launches AI-Powered High-Definition Preservation Initiative" },
+      "Environment": { sub: "Himalayan ecology, climate resilience, water security", sampleLead: "Clean Energy Grid Reaches 45% Non-Fossil Fuel Milestone Three Years Ahead of Schedule" }
+    };
+
+    const WEIGHT_DISTRIBUTION = ["50% Feed Weight", "25% Feed Weight", "15% Feed Weight", "10% Feed Weight", "5% Feed Weight", "3% Feed Weight", "2% Feed Weight"];
+
+    const curState = localStorage.getItem('newsreels_state') || 'Telangana';
+    document.getElementById('masthead-current-state').textContent = curState;
+    document.getElementById('preview-edition-text').textContent = `${curState} Edition`;
+    document.getElementById('preview-bureau-title').textContent = `${curState} Bureau`;
+
+    function getStoredPriorityOrder() {
+      try {
+        const raw = localStorage.getItem('newsreels_priority_order');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+
+      // Fallback from interests
+      try {
+        const rawInt = localStorage.getItem('newsreels_interests');
+        if (rawInt) {
+          const parsedInt = JSON.parse(rawInt);
+          if (Array.isArray(parsedInt) && parsedInt.length > 0) return parsedInt;
+        }
+      } catch (e) {}
+
+      return ["Technology", "National", "Politics", "Business", "Science"];
+    }
+
+    let activeRanks = getStoredPriorityOrder();
+
+    function renderPriorityList() {
+      const container = document.getElementById('priority-list-container');
+      container.innerHTML = '';
+
+      document.getElementById('active-desks-badge').textContent = `${activeRanks.length} Active Desks Configured`;
+      document.getElementById('preview-edition-text').textContent = `${curState} Edition &#8226; ${activeRanks.length} Desks`;
+
+      activeRanks.forEach((deskId, index) => {
+        const meta = ALL_DESKS_METADATA[deskId] || { sub: "Specialized analytical coverage", sampleLead: `${deskId} intelligence brief.` };
+        const weight = WEIGHT_DISTRIBUTION[index] || "2% Weight";
+        const rankNum = String(index + 1).padStart(2, '0');
+
+        let tierLabel = "";
+        if (index === 0) tierLabel = `<span class="text-[10px] font-mono px-2 py-0.5 bg-primary/20 text-primary font-bold border border-primary/40 uppercase">PRIMARY FOCUS</span>`;
+        else if (index === 1) tierLabel = `<span class="text-[10px] font-mono px-2 py-0.5 bg-surface-container-high text-secondary font-semibold uppercase">SECONDARY FOCUS</span>`;
+
+        const row = document.createElement('div');
+        row.className = "priority-item bg-surface-container-low p-3.5 md:p-4 border border-outline-variant/25 flex items-center justify-between gap-3";
+        row.innerHTML = `
+          <div class="flex items-center gap-3 md:gap-4 flex-1">
+            <span class="material-symbols-outlined text-outline text-[18px] cursor-grab select-none">drag_indicator</span>
+            <div class="font-mono text-base md:text-lg font-bold text-primary">${rankNum}</div>
+            <div>
+              <div class="flex items-center gap-2 mb-0.5">
+                <h4 class="font-serif text-lg font-semibold text-on-surface">${deskId}</h4>
+                ${tierLabel}
+              </div>
+              <p class="text-xs text-on-surface-variant line-clamp-1">${meta.sub}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="font-mono text-[11px] text-outline hidden sm:inline-block">${weight}</span>
+            <div class="flex items-center gap-1">
+              <button class="btn-bump w-7 h-7 bg-surface-container border border-outline-variant/30 flex items-center justify-center text-on-surface font-mono text-xs cursor-pointer ${index === 0 ? 'opacity-30 cursor-not-allowed' : ''}" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                ▲
+              </button>
+              <button class="btn-bump w-7 h-7 bg-surface-container border border-outline-variant/30 flex items-center justify-center text-on-surface font-mono text-xs cursor-pointer ${index === activeRanks.length - 1 ? 'opacity-30 cursor-not-allowed' : ''}" ${index === activeRanks.length - 1 ? 'disabled' : ''} title="Move Down">
+                ▼
+              </button>
+              <button class="w-7 h-7 bg-surface-container hover:bg-surface-bright border border-outline-variant/30 flex items-center justify-center text-outline hover:text-primary transition-colors text-xs cursor-pointer" title="Remove from active rank">
+                &times;
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Event listeners
+        const btns = row.querySelectorAll('button');
+        // Up
+        btns[0].addEventListener('click', () => {
+          if (index > 0) {
+            const temp = activeRanks[index - 1];
+            activeRanks[index - 1] = activeRanks[index];
+            activeRanks[index] = temp;
+            persistAndRender();
+          }
+        });
+        // Down
+        btns[1].addEventListener('click', () => {
+          if (index < activeRanks.length - 1) {
+            const temp = activeRanks[index + 1];
+            activeRanks[index + 1] = activeRanks[index];
+            activeRanks[index] = temp;
+            persistAndRender();
+          }
+        });
+        // Remove
+        btns[2].addEventListener('click', () => {
+          if (activeRanks.length > 1) {
+            activeRanks.splice(index, 1);
+            persistAndRender();
+          }
+        });
+
+        container.appendChild(row);
+      });
+
+      renderSecondaryPool();
+      renderLivePreview();
+    }
+
+    function renderSecondaryPool() {
+      const pool = document.getElementById('secondary-desks-pool');
+      pool.innerHTML = '';
+
+      const allKeys = Object.keys(ALL_DESKS_METADATA);
+      const unranked = allKeys.filter(k => !activeRanks.includes(k));
+
+      if (unranked.length === 0) {
+        pool.innerHTML = '<span class="text-xs font-mono text-outline italic">All available desks are currently assigned to your priority stack.</span>';
+        return;
+      }
+
+      unranked.forEach(deskId => {
+        const chip = document.createElement('button');
+        chip.className = "px-3 py-1.5 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-xs font-mono text-on-surface-variant hover:text-primary transition-colors cursor-pointer flex items-center gap-1.5";
+        chip.innerHTML = `<span>+ ${deskId}</span>`;
+        chip.addEventListener('click', () => {
+          activeRanks.push(deskId);
+          persistAndRender();
+        });
+        pool.appendChild(chip);
+      });
+    }
+
+    function renderLivePreview() {
+      if (activeRanks.length === 0) return;
+      const topDesk = activeRanks[0];
+      const meta = ALL_DESKS_METADATA[topDesk] || { sampleLead: "Lead dispatch tailored to your priority." };
+
+      document.getElementById('preview-lead-category').textContent = topDesk.toUpperCase();
+      document.getElementById('preview-lead-headline').textContent = meta.sampleLead;
+    }
+
+    function persistAndRender() {
+      localStorage.setItem('newsreels_priority_order', JSON.stringify(activeRanks));
+      localStorage.setItem('newsreels_interests', JSON.stringify(activeRanks));
+      renderPriorityList();
+    }
+
+    document.getElementById('btn-reset-default').addEventListener('click', () => {
+      activeRanks = ["Technology", "National", "Politics", "Business", "Science"];
+      persistAndRender();
+    });
+
+    document.getElementById('btn-build-feed').addEventListener('click', () => {
+      persistAndRender();
+      localStorage.setItem('newsreels_onboarding_complete', 'true');
+      window.location.href = 'index.html';
+    });
+
+    // Init
+    renderPriorityList();
+  </script>
+</body>
+</html>

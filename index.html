@@ -1,282 +1,1554 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html class="dark" lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>News Reels — Structured Importance & Intelligence Feed</title>
-  <meta name="description" content="Next-generation multi-dimensional news feed engine ranking real-world importance, urgency, freshness, and personal relevance.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
-  <link rel="stylesheet" href="./style.css?v=2.2">
+
+  <meta charset="utf-8"/>
+
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+  <title>NEWZZ | Editorial Intelligence &amp; Verified Dispatches</title>
+
+  <meta name="description" content="Contemporary Editorial Intelligence platform with algorithmic explainability, multi-dimensional verification, and personalized priority ranking."/>
+
+  
+
+  <!-- Google Fonts: Newsreader & Inter -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet"/>
+
+  <!-- Material Symbols Outlined -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+
+
+  <!-- Tailwind CSS CDN + Stitch Editorial Theme Configuration -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script id="tailwind-config">
+
+    tailwind.config = {
+
+      darkMode: "class",
+
+      theme: {
+
+        extend: {
+
+          colors: {
+
+            "surface": "#141311",
+
+            "on-surface": "#e6e2de",
+
+            "on-primary-container": "#512700",
+
+            "on-secondary-container": "#91bfa9",
+
+            "on-tertiary": "#363017",
+
+            "primary-container": "#eb7d00",
+
+            "surface-tint": "#ffb780",
+
+            "error": "#ffb4ab",
+
+            "surface-container": "#211f1d",
+
+            "inverse-surface": "#e6e2de",
+
+            "outline-variant": "#564335",
+
+            "on-surface-variant": "#ddc1af",
+
+            "secondary-fixed": "#beedd5",
+
+            "on-error": "#690005",
+
+            "error-container": "#93000a",
+
+            "tertiary": "#d0c7a2",
+
+            "secondary-fixed-dim": "#a2d1ba",
+
+            "surface-container-lowest": "#0f0e0c",
+
+            "surface-container-highest": "#363432",
+
+            "inverse-on-surface": "#32302e",
+
+            "on-error-container": "#ffdad6",
+
+            "surface-variant": "#363432",
+
+            "primary-fixed": "#ffdcc4",
+
+            "on-tertiary-fixed": "#201c05",
+
+            "on-tertiary-fixed-variant": "#4d472b",
+
+            "on-tertiary-container": "#373218",
+
+            "tertiary-fixed": "#ede3bd",
+
+            "on-primary-fixed-variant": "#6f3800",
+
+            "on-secondary": "#083827",
+
+            "on-primary-fixed": "#2f1400",
+
+            "secondary-container": "#234f3d",
+
+            "secondary": "#a2d1ba",
+
+            "surface-container-high": "#2b2a27",
+
+            "surface-dim": "#141311",
+
+            "tertiary-container": "#a39a78",
+
+            "background": "#141311",
+
+            "primary": "#ffb780",
+
+            "surface-bright": "#3b3936",
+
+            "surface-container-low": "#1d1b19",
+
+            "outline": "#a48c7b",
+
+            "inverse-primary": "#924c00",
+
+            "on-secondary-fixed-variant": "#234f3d",
+
+            "on-primary": "#4e2600",
+
+            "on-background": "#e6e2de",
+
+            "primary-fixed-dim": "#ffb780",
+
+            "on-secondary-fixed": "#002115",
+
+            "tertiary-fixed-dim": "#d0c7a2"
+
+          },
+
+          spacing: {
+
+            "space-xs": "0.25rem",
+
+            "space-sm": "0.5rem",
+
+            "space-md": "1rem",
+
+            "space-lg": "1.5rem",
+
+            "space-xl": "2.5rem",
+
+            "gutter": "1.5rem",
+
+            "margin": "3rem",
+
+            "gutter-mobile": "1rem",
+
+            "margin-mobile": "1.25rem"
+
+          },
+
+          fontFamily: {
+
+            "body-sans": ["Inter", "sans-serif"],
+
+            "headline-lg": ["Newsreader", "serif"],
+
+            "headline-md": ["Newsreader", "serif"],
+
+            "headline-sm": ["Newsreader", "serif"],
+
+            "headline-display": ["Newsreader", "serif"],
+
+            "body-lg": ["Newsreader", "serif"],
+
+            "body-md": ["Newsreader", "serif"],
+
+            "label-caps": ["Inter", "sans-serif"],
+
+            "label-md": ["Inter", "sans-serif"],
+
+            "label-sm": ["Inter", "sans-serif"]
+
+          },
+
+          fontSize: {
+
+            "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+
+            "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+
+            "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+
+            "headline-display": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em" }],
+
+            "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.015em" }],
+
+            "headline-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em" }],
+
+            "headline-sm": ["22px", { "lineHeight": "28px" }],
+
+            "body-lg": ["20px", { "lineHeight": "32px" }],
+
+            "body-md": ["17px", { "lineHeight": "28px" }],
+
+            "body-sans": ["15px", { "lineHeight": "24px" }]
+
+          }
+
+        }
+
+      }
+
+    };
+
+  </script>
+
+
+
+  <style>
+
+    /* Architectural Hairline Rules & Micro-animations */
+
+    .border-editorial { border-color: rgba(235, 227, 167, 0.10); }
+
+    .border-editorial-subtle { border-color: rgba(235, 227, 167, 0.06); }
+
+    
+
+    @keyframes spinFeed {
+
+      from { transform: rotate(0deg); }
+
+      to { transform: rotate(360deg); }
+
+    }
+
+    .refreshing svg,
+
+    .refreshing .material-symbols-outlined {
+
+      animation: spinFeed 0.75s linear infinite;
+
+    }
+
+
+
+    /* Modal Backdrop & Transitions */
+
+    .modal-backdrop {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 999;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      background: rgba(10, 9, 8, 0.85);
+
+      backdrop-filter: blur(8px);
+
+      padding: 1rem;
+
+    }
+
+    .modal-backdrop.hidden { display: none !important; }
+
+
+
+    /* Custom Scrollbars */
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+
+    ::-webkit-scrollbar-track { background: #0f0e0c; }
+
+    ::-webkit-scrollbar-thumb { background: #363432; }
+
+    ::-webkit-scrollbar-thumb:hover { background: #564335; }
+
+
+
+    /* Floating Feed Toast */
+
+    .feed-toast {
+
+      position: fixed;
+
+      top: 5rem;
+
+      left: 50%;
+
+      transform: translateX(-50%) translateY(0);
+
+      background: rgba(16, 185, 129, 0.95);
+
+      color: #ffffff;
+
+      font-family: 'Inter', sans-serif;
+
+      font-size: 0.85rem;
+
+      font-weight: 600;
+
+      padding: 0.5rem 1.25rem;
+
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+      z-index: 1000;
+
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+      pointer-events: none;
+
+    }
+
+    .feed-toast.hidden {
+
+      opacity: 0;
+
+      transform: translateX(-50%) translateY(-10px);
+
+    }
+
+    
+
+    /* Interest Chip Styles */
+
+    .interest-chip {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 0.5rem;
+
+      padding: 0.5rem 0.85rem;
+
+      background: #211f1d;
+
+      border: 1px solid #564335;
+
+      color: #ddc1af;
+
+      font-family: 'Inter', sans-serif;
+
+      font-size: 0.8rem;
+
+      font-weight: 500;
+
+      cursor: pointer;
+
+      transition: all 0.2s ease;
+
+    }
+
+    .interest-chip.selected {
+
+      background: #eb7d00;
+
+      color: #ffffff;
+
+      border-color: #ffb780;
+
+    }
+
+    
+
+    /* Priority Item Styles */
+
+    .priority-item {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      padding: 0.65rem 0.85rem;
+
+      background: #1d1b19;
+
+      border: 1px solid #363432;
+
+      margin-bottom: 0.4rem;
+
+    }
+
+    .priority-item-left {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 0.75rem;
+
+    }
+
+    .priority-rank-badge {
+
+      font-family: 'Inter', sans-serif;
+
+      font-size: 0.75rem;
+
+      font-weight: 700;
+
+      color: #eb7d00;
+
+    }
+
+    .priority-name {
+
+      font-family: 'Inter', sans-serif;
+
+      font-size: 0.85rem;
+
+      color: #e6e2de;
+
+    }
+
+    .btn-priority-move {
+
+      background: #2b2a27;
+
+      color: #e6e2de;
+
+      border: 1px solid #564335;
+
+      padding: 0.25rem 0.5rem;
+
+      font-size: 0.75rem;
+
+      cursor: pointer;
+
+      margin-left: 0.25rem;
+
+    }
+
+    .btn-priority-move:disabled {
+
+      opacity: 0.3;
+
+      cursor: not-allowed;
+
+    }
+
+  </style>
+
+  <link rel="stylesheet" href="style.css"/>
+
 </head>
-<body>
-  <!-- Global Application Wrapper -->
-  <div id="app-root">
-    <!-- Top Navigation Header -->
-    <header class="app-header" id="app-header">
-      <div class="header-container">
-        <div class="brand-section" id="brand-section">
-          <div class="brand-logo-glow"></div>
-          <div class="brand-title-wrap">
-            <h1 class="brand-title" id="brand-title">News Reels</h1>
-            <div class="engine-badge" id="engine-badge">
-              <span class="pulse-dot"></span>
-              <span>Multi-Dimensional Engine v2.0</span>
-            </div>
-          </div>
-        </div>
 
-        <div class="header-actions" id="header-actions">
-          <button class="action-btn location-btn" id="btn-open-location-modal" title="Configure location">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-              <circle cx="12" cy="9" r="2.5"/>
-            </svg>
-            <span id="label-user-location">Set Location</span>
-          </button>
 
-          <button class="action-btn interest-btn" id="btn-open-interests-modal" title="Manage preferences">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/>
-              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
-            </svg>
-            <span id="label-user-interests">Interests</span>
-          </button>
 
-          <button class="action-btn icon-only-btn" id="btn-refresh-feed" title="Refresh Live Feed">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 4v6h-6M1 20v-6h6"/>
-              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-            </svg>
-          </button>
-        </div>
+<body class="bg-surface font-body-sans text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary selection:text-on-primary">
+
+
+
+  <!-- =========================================================================
+
+       TOP STICKY MASTHEAD NAVIGATION
+
+       ========================================================================= -->
+
+  <header class="sticky top-0 z-50 w-full bg-[#141311] border-b border-outline-variant/20 will-change-transform">
+
+    <div class="h-16 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-gutter">
+
+      <!-- Brand & Tagline -->
+
+      <div class="flex items-center gap-space-md shrink-0">
+
+        <a class="flex items-center gap-space-sm group" href="#">
+
+          <span class="font-headline-md text-headline-md tracking-tight uppercase text-on-surface group-hover:text-primary transition-colors">NEWZZ</span>
+
+        </a>
+
+        <div class="h-4 w-px bg-outline-variant/30 hidden sm:block"></div>
+
+        <span class="hidden md:inline-block font-body-md text-[12px] italic text-outline leading-none">Know What Matters.</span>
+
       </div>
 
-      <!-- Category Filter Tabs Bar -->
-      <nav class="category-nav" id="category-nav-bar" aria-label="News categories">
-        <div class="category-scroll" id="category-scroll-container">
-          <button class="category-tab active" id="tab-category-all" data-category="all">All News</button>
-          <button class="category-tab" id="tab-category-national" data-category="national">National</button>
-          <button class="category-tab" id="tab-category-state" data-category="state">State</button>
-          <button class="category-tab" id="tab-category-politics" data-category="politics">Politics</button>
-          <button class="category-tab" id="tab-category-business" data-category="business">Business</button>
-          <button class="category-tab" id="tab-category-technology" data-category="technology">Tech</button>
-          <button class="category-tab" id="tab-category-world" data-category="world">World</button>
-          <button class="category-tab" id="tab-category-science" data-category="science">Science</button>
-          <button class="category-tab" id="tab-category-health" data-category="health">Health</button>
-          <button class="category-tab" id="tab-category-sports" data-category="sports">Sports</button>
-          <button class="category-tab" id="tab-category-entertainment" data-category="entertainment">Entertainment</button>
-          <button class="category-tab" id="tab-category-environment" data-category="environment">Environment</button>
-        </div>
+
+
+      <!-- Center Desktop Nav Links -->
+
+      <nav class="hidden xl:flex items-center gap-space-lg h-full">
+
+        <a class="tracking-wide transition-colors py-space-sm text-on-surface border-b-2 border-primary font-medium" id="nav-for-you" href="#">For You</a>
+
+        <a class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm" id="nav-latest" href="#">Latest</a>
+
+        <a class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm" id="nav-categories" href="#">Categories</a>
+
+        <a class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm flex items-center gap-1" id="nav-state-edition" href="#">
+
+          <span id="nav-state-label">Telangana Desk</span>
+
+        </a>
+
+        <a class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm" id="nav-method" href="#">Editorial Method</a>
+
       </nav>
-    </header>
 
-    <!-- Main Content Container -->
-    <main class="main-content" id="main-content">
-      <!-- Scroll-Snap Feed Container -->
-      <section class="feed-scroll" id="feed-container" aria-live="polite">
-        <!-- Dynamically populated full-screen cards appear here -->
-      </section>
 
-      <!-- Empty State View -->
-      <section class="empty-state-view hidden" id="empty-state-view">
-        <div class="empty-state-card">
-          <div class="empty-state-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-          </div>
-          <h2 class="empty-title" id="empty-title">No Stories In This Category</h2>
-          <p class="empty-desc" id="empty-desc">No events have been scraped or ranked for this specific filter yet. Try selecting 'All News' or changing your location preferences.</p>
-          <button class="primary-btn" id="btn-empty-reset">View All Stories</button>
+
+      <!-- Right Action Affordances -->
+
+      <div class="flex items-center gap-space-md shrink-0">
+
+        <!-- Search Intelligence Bar -->
+
+        <div class="hidden lg:flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-1.5 border border-outline-variant/30 text-outline">
+
+          <span class="material-symbols-outlined text-[16px]">search</span>
+
+          <input type="text" id="input-search-intelligence" placeholder="Search intelligence..." class="bg-transparent text-[13px] text-on-surface outline-none w-36 font-body-sans"/>
+
+          <kbd class="font-label-caps text-[10px] px-1 bg-surface-container border border-outline-variant/40 text-on-surface-variant">/</kbd>
+
         </div>
-      </section>
 
-      <!-- Loading State View -->
-      <section class="loading-state-view hidden" id="loading-state-view">
-        <div class="spinner"></div>
-        <p class="loading-text">Computing multi-dimensional feed rankings...</p>
-      </section>
-    </main>
-  </div>
 
-  <!-- MODAL: Welcome & Onboarding -->
-  <div class="modal-backdrop hidden" id="modal-welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-badge">Welcome to News Reels</div>
-        <h2 class="modal-title" id="welcome-title">What matters right now.</h2>
-      </div>
-      <div class="modal-body">
-        <p class="modal-text">
-          Unlike traditional news feeds driven purely by recency or clickbait, News Reels evaluates 
-          <strong>objective real-world impact</strong> across 8 societal dimensions, combined with 
-          <strong>trust verification</strong> and <strong>situational urgency</strong>.
-        </p>
-        <div class="features-grid">
-          <div class="feature-item">
-            <div class="feature-icon">🛡️</div>
-            <div class="feature-text">
-              <h4>Strict Separation</h4>
-              <p>Importance, trust, and relevance are calculated independently.</p>
-            </div>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">🔍</div>
-            <div class="feature-text">
-              <h4>Full Explainability</h4>
-              <p>Every story explains why it ranked in your top feed.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="primary-btn full-width" id="btn-welcome-start">Start Reading</button>
+
+        <!-- Location Badge Selector Button -->
+
+        <a href="state-selection.html" id="btn-open-location-modal" class="flex items-center gap-1 bg-surface-container-low hover:bg-surface-container px-space-sm py-1.5 border border-outline-variant/25 cursor-pointer text-left transition-colors" title="Change State">
+
+          <span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+
+          <span id="label-user-location" class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold">Telangana</span>
+
+          <span class="material-symbols-outlined text-[14px] text-outline">arrow_drop_down</span>
+
+        </a>
+
+
+
+        <!-- Refresh Live Feed Button -->
+
+        <button id="btn-refresh-feed" class="p-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant/25 text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Refresh Live Feed">
+
+          <span class="material-symbols-outlined text-[18px]">refresh</span>
+
+        </button>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- MODAL: Location Settings -->
+
+
+  <!-- Live Feed Toast Notification -->
+
+  <div id="feed-toast" class="feed-toast hidden" role="status" aria-live="polite">Feed updated</div>
+
+
+
+  <!-- =========================================================================
+
+       MAIN CONTENT CONTAINER
+
+       ========================================================================= -->
+
+  <main class="w-full flex-1 max-w-[1440px] mx-auto px-margin pt-8 bg-surface">
+
+    <div class="flex flex-col w-full">
+
+
+
+      <!-- TOP PERSONALIZATION & MASTHEAD BANNER -->
+
+      <section class="w-full pb-space-lg mb-space-lg bg-surface-container-lowest/60 p-space-lg md:p-space-xl border border-outline-variant/15">
+
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-md">
+
+          <div>
+
+            <div class="flex items-center gap-space-xs font-label-caps text-label-caps text-outline uppercase tracking-widest mb-space-xs">
+
+              <span id="masthead-date">Today's Dispatch</span>
+
+              <span>&#8226;</span>
+
+              <span class="text-primary font-medium" id="masthead-edition">Telangana Edition</span>
+
+              <span>&#8226;</span>
+
+              <span id="verified-stories-count">948 Verified Stories Active</span>
+
+            </div>
+
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+
+              Good morning, <span class="italic font-normal text-surface-tint" id="greeting-name">Reader</span>.
+
+            </h1>
+
+            <p class="font-body-md text-body-md text-on-surface-variant/90 max-w-2xl mt-1">
+
+              Here is what matters most to you right now, calibrated for <span id="banner-state-name" class="text-on-surface font-medium">Telangana</span> and national strategic developments.
+
+            </p>
+
+          </div>
+
+
+
+          <!-- State & Calibration Affordances -->
+
+          <div class="flex flex-wrap items-center gap-space-xs self-start lg:self-end">
+
+            <div class="flex items-center gap-1.5 bg-surface-container px-3 py-1.5 text-on-surface border border-outline-variant/30">
+
+              <span class="w-2 h-2 bg-primary-container inline-block"></span>
+
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">State:</span>
+
+              <span id="banner-state-label" class="font-label-md text-label-md text-on-surface font-semibold">Telangana</span>
+
+            </div>
+
+            <button id="btn-change-state-banner" class="font-label-caps text-label-caps tracking-wider px-3 py-1.5 bg-surface-container-high hover:bg-surface-bright text-on-surface transition-colors cursor-pointer uppercase border border-outline-variant/30" type="button">
+
+              Change State
+
+            </button>
+
+            <a href="priority-ranking.html" id="btn-open-priority-modal" class="font-label-caps text-label-caps tracking-wider px-3 py-1.5 bg-surface-container-high hover:bg-surface-bright text-primary transition-colors cursor-pointer uppercase flex items-center gap-1 border border-outline-variant/30 inline-flex">
+
+              <span class="material-symbols-outlined text-[14px]">tune</span>
+
+              Edit Priority
+
+            </a>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- Hierarchy Tags Readout (Calibrated Priority Rank) -->
+
+        <div class="flex items-center flex-wrap gap-space-xs pt-space-xs border-t border-outline-variant/15">
+
+          <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider mr-1">Calibrated Rank:</span>
+
+          <div id="calibrated-rank-container" class="flex items-center flex-wrap gap-space-xs">
+
+            <!-- Dynamically populated by app.js -->
+
+            <span class="font-label-caps text-[11px] bg-surface-container px-2 py-0.5 text-on-surface-variant flex items-center gap-1"><strong class="text-primary">01</strong> Politics</span>
+
+            <span class="font-label-caps text-[11px] bg-surface-container px-2 py-0.5 text-on-surface-variant flex items-center gap-1"><strong class="text-primary">02</strong> Technology</span>
+
+            <span class="font-label-caps text-[11px] bg-surface-container px-2 py-0.5 text-on-surface-variant flex items-center gap-1"><strong class="text-primary">03</strong> National</span>
+
+            <span class="font-label-caps text-[11px] bg-surface-container px-2 py-0.5 text-on-surface-variant flex items-center gap-1"><strong class="text-primary">04</strong> Business</span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- HORIZONTAL FILTER / CATEGORY SWITCHER RIBBON -->
+
+      <nav aria-label="Editorial Categories" class="w-full flex items-center justify-between gap-space-md mb-space-xl overflow-x-auto pb-space-xs border-b border-outline-variant/20">
+
+        <div class="flex items-center gap-1.5 min-w-max" id="category-tabs-bar">
+
+          <button class="category-tab active bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 flex items-center gap-1.5 font-semibold cursor-pointer" data-category="all" id="tab-for-you">
+
+            <span class="w-1.5 h-1.5 bg-on-primary inline-block"></span>
+
+            For You
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="all" id="tab-all">
+
+            All News
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="politics" id="tab-politics">
+
+            Politics
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="technology" id="tab-technology">
+
+            Technology
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="national" id="tab-national">
+
+            National
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="state" id="tab-state">
+
+            State
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="business" id="tab-business">
+
+            Business
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="world" id="tab-world">
+
+            World
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="science" id="tab-science">
+
+            Science
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="health" id="tab-health">
+
+            Health
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="sports" id="tab-sports">
+
+            Sports
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="education" id="tab-education">
+
+            Education
+
+          </button>
+
+          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="environment" id="tab-environment">
+
+            Environment
+
+          </button>
+
+        </div>
+
+        <div class="hidden lg:flex items-center gap-space-xs shrink-0 font-label-caps text-label-caps text-outline">
+
+          <span class="w-1.5 h-1.5 bg-outline inline-block"></span>
+
+          <span>Showing <strong class="text-on-surface" id="stat-showing-count">30</strong> of <strong class="text-on-surface" id="stat-total-count">948</strong> verified dispatches</span>
+
+        </div>
+
+      </nav>
+
+
+
+      <!-- =====================================================================
+
+           MAIN EDITORIAL GRID (68% Main Feed / 32% Intelligence Sidebar)
+
+           ===================================================================== -->
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+
+
+
+        <!-- PRIMARY EDITORIAL FLOW (8 cols of 12) -->
+
+        <div class="lg:col-span-8 flex flex-col gap-space-xl" id="editorial-main-flow">
+
+
+
+          <!-- 1. HERO LEAD STORY (DYNAMIC TOP PRIORITY DISPATCH) -->
+
+          <section id="hero-lead-container">
+
+            <!-- Populated dynamically by app.js (or instant 0ms fallback) -->
+
+            <article class="bg-surface-container-low p-space-lg md:p-space-xl relative overflow-hidden shadow-sm border-l-4 border-primary-container">
+
+              <div class="flex flex-wrap items-center justify-between gap-space-xs mb-space-sm">
+
+                <div class="flex items-center gap-space-xs">
+
+                  <span class="w-2 h-2 bg-primary-container inline-block"></span>
+
+                  <span class="font-label-caps text-label-caps text-primary uppercase tracking-widest font-semibold" id="hero-category">
+
+                    POLITICS &amp; GOVERNANCE
+
+                  </span>
+
+                  <span class="text-outline text-label-caps">&#8226;</span>
+
+                  <span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Top Calibrated Lead</span>
+
+                </div>
+
+                <div class="flex items-center gap-space-sm text-outline font-label-sm text-label-sm">
+
+                  <span id="hero-time">Just now</span>
+
+                  <span>&#8226;</span>
+
+                  <span>Verified Wire</span>
+
+                </div>
+
+              </div>
+
+
+
+              <h2 id="hero-headline" class="font-headline-md md:font-headline-lg text-headline-md md:text-headline-lg text-on-surface hover:text-primary transition-colors cursor-pointer mb-space-sm">
+
+                Modi Cabinet Reshuffle Likely, Women and Youth to Join
+
+              </h2>
+
+
+
+              <p id="hero-summary" class="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-surface-variant mb-space-md">
+
+                Political analysts report that Prime Minister Narendra Modi is expected to announce a strategic cabinet reshuffle in the coming weeks. The initiative brings experienced leadership together with emerging regional voices to accelerate national infrastructure, public administration, and technology programs.
+
+              </p>
+
+
+
+              <!-- Verification & Sourcing Attribution Bar -->
+
+              <div class="flex flex-wrap items-center justify-between gap-space-sm bg-surface-container p-space-sm mb-space-md text-on-surface border border-outline-variant/20">
+
+                <div class="flex items-center gap-space-xs font-label-md text-label-md">
+
+                  <span class="material-symbols-outlined text-[18px] text-secondary">verified</span>
+
+                  <span class="font-semibold text-on-surface" id="hero-source">Verified Primary Wire Service</span>
+
+                  <span class="text-outline">&#8226;</span>
+
+                  <span class="text-on-surface-variant text-[13px]" id="hero-verification-note">Verified by independent news wire logs</span>
+
+                </div>
+
+                <div class="flex items-center gap-2">
+
+                  <span class="font-label-caps text-[10px] px-1.5 py-0.5 bg-surface-container-high text-on-surface uppercase">Full Audit Available</span>
+
+                </div>
+
+              </div>
+
+
+
+              <!-- Story Footer Actions -->
+
+              <div class="flex items-center justify-between pt-space-xs">
+
+                <button id="btn-hero-read-dossier" class="font-body-md text-body-md italic text-primary hover:text-surface-tint underline underline-offset-4 flex items-center gap-1 font-medium cursor-pointer" type="button">
+
+                  Read Story &amp; Verification Dossier &rarr;
+
+                </button>
+
+                <div class="flex items-center gap-space-xs text-on-surface-variant">
+
+                  <button id="btn-hero-share" class="p-2 hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" title="Share Verified Intelligence">
+
+                    <span class="material-symbols-outlined text-[19px]">share</span>
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          </section>
+
+
+
+          <!-- 2. SECONDARY EDITORIAL PAIR (CARDS #2 & #3) -->
+
+          <section class="grid grid-cols-1 md:grid-cols-2 gap-gutter" id="secondary-grid-container">
+
+            <!-- Dynamically populated by app.js -->
+
+          </section>
+
+
+
+          <!-- 3. CURATED 'STATE IN FOCUS' DESK -->
+
+          <section class="bg-surface-container-lowest p-space-lg md:p-space-xl border border-outline-variant/15" id="state-focus-section">
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs pb-space-sm mb-space-md bg-surface-container-low p-space-sm border border-outline-variant/20">
+
+              <div class="flex items-center gap-space-xs">
+
+                <span class="w-2.5 h-2.5 bg-primary-container inline-block"></span>
+
+                <h3 class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest font-bold" id="state-focus-title">
+
+                  STATE IN FOCUS: TELANGANA DEVELOPMENTS
+
+                </h3>
+
+              </div>
+
+              <span class="font-label-sm text-[12px] text-outline">Regional Corridors Desk</span>
+
+            </div>
+
+            
+
+            <div class="flex flex-col gap-space-sm" id="state-focus-container">
+
+              <!-- Dynamically populated by app.js -->
+
+            </div>
+
+          </section>
+
+
+
+          <!-- 4. STREAM FEED (ADDITIONAL RANKED STORIES) -->
+
+          <section class="flex flex-col gap-space-md" id="stream-feed-container">
+
+            <!-- Dynamically populated by app.js -->
+
+          </section>
+
+
+
+          <!-- FEED PAGINATION & STATUS BAR -->
+
+          <div class="p-space-lg bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-md text-center sm:text-left border border-outline-variant/20" id="feed-pagination-status">
+
+            <div class="flex items-center gap-space-xs text-outline">
+
+              <span class="material-symbols-outlined text-[18px] text-secondary">check_circle</span>
+
+              <span class="font-label-md text-label-md text-on-surface" id="status-caught-up-msg">You are completely caught up with high-priority briefs.</span>
+
+            </div>
+
+            <div class="flex items-center gap-space-sm">
+
+              <button id="btn-load-more" class="bg-surface-container hover:bg-surface-container-high px-4 py-2 text-on-surface font-label-md text-label-md tracking-wider uppercase transition-colors border border-outline-variant/30 cursor-pointer">
+
+                Load More Stories
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+
+        </div>
+
+
+
+        <!-- =====================================================================
+
+             INTELLIGENCE SIDEBAR (4 cols of 12)
+
+             ===================================================================== -->
+
+        <aside class="lg:col-span-4 flex flex-col gap-space-lg sticky top-20">
+
+
+
+          <!-- Today's Intelligence Brief Card -->
+
+          <section class="bg-surface-container p-space-lg shadow-sm border border-outline-variant/20">
+
+            <div class="flex items-center justify-between mb-space-md">
+
+              <div class="flex items-center gap-space-xs">
+
+                <span class="relative flex h-2.5 w-2.5">
+
+                  <span class="animate-ping absolute inline-flex h-full w-full bg-primary opacity-75"></span>
+
+                  <span class="relative inline-flex h-2.5 w-2.5 bg-primary-container"></span>
+
+                </span>
+
+                <h3 class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest font-bold">
+
+                  THE MORNING BRIEF
+
+                </h3>
+
+              </div>
+
+              <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider">Fast Scan</span>
+
+            </div>
+
+            
+
+            <div class="flex flex-col gap-space-md" id="morning-brief-container">
+
+              <!-- Dynamically populated by app.js -->
+
+            </div>
+
+          </section>
+
+
+
+          <!-- Editorial Intelligence Overview -->
+
+          <section class="bg-surface-container-high p-space-lg shadow-sm border border-outline-variant/25">
+
+            <div class="flex items-center gap-space-xs mb-space-xs">
+
+              <span class="material-symbols-outlined text-[18px] text-primary">verified_user</span>
+
+              <h3 class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest font-bold">
+
+                EDITORIAL PROTOCOL
+
+              </h3>
+
+            </div>
+
+            <p class="font-body-md text-[14px] leading-normal text-on-surface-variant/90 mb-space-md">
+
+              Stories are cross-referenced across primary wire services, filtered by state gazettes, and arranged by your <span id="radar-persona-text" class="text-on-surface font-medium">configured priority rank</span>.
+
+            </p>
+
+            <div class="flex flex-col gap-2.5 mb-space-md text-[13px] font-body-sans text-on-surface-variant">
+
+              <div class="flex items-center gap-2">
+
+                <span class="w-1.5 h-1.5 bg-secondary inline-block"></span>
+
+                <span>Multi-source wire verification &amp; fact checks</span>
+
+              </div>
+
+              <div class="flex items-center gap-2">
+
+                <span class="w-1.5 h-1.5 bg-primary inline-block"></span>
+
+                <span>Dynamic priority ordering based on your interests</span>
+
+              </div>
+
+              <div class="flex items-center gap-2">
+
+                <span class="w-1.5 h-1.5 bg-outline inline-block"></span>
+
+                <span>Regional state desk continuous monitoring</span>
+
+              </div>
+
+            </div>
+
+            <div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15">
+
+              <span class="font-label-caps text-[11px] text-primary uppercase tracking-wider">High Fidelity Dispatch</span>
+
+              <span class="font-label-caps text-[11px] text-secondary font-semibold">100% Verified</span>
+
+            </div>
+
+          </section>
+
+
+
+          <!-- Local Regional Bureau Mini-Dossier -->
+
+          <section class="bg-surface-container-low p-space-md border border-outline-variant/20">
+
+            <div class="flex items-center gap-space-xs mb-space-xs">
+
+              <span class="w-2 h-2 bg-secondary inline-block"></span>
+
+              <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest font-semibold" id="bureau-copilot-heading">
+
+                REGIONAL DESK CO-PILOT
+
+              </span>
+
+            </div>
+
+            <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed" id="bureau-copilot-desc">
+
+              Active bureau monitoring 48 state gazettes, 14 local civic bodies, and regional university repositories for fact-checked announcements.
+
+            </p>
+
+          </section>
+
+
+
+        </aside>
+
+
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+
+  <!-- =========================================================================
+
+       FOOTER
+
+       ========================================================================= -->
+
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/20 mt-space-xl">
+
+    <div class="max-w-[1440px] mx-auto px-margin py-space-xl">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-gutter pb-space-lg border-b border-outline-variant/15">
+
+        <div class="lg:col-span-2 flex flex-col gap-space-sm pr-space-md">
+
+          <div class="flex items-center gap-space-sm">
+
+            <span class="font-headline-sm text-headline-sm tracking-tight uppercase text-on-surface">NEWZZ</span>
+
+            <div class="h-3 w-px bg-outline-variant/30"></div>
+
+            <span class="font-body-md text-[13px] italic text-outline">Know What Matters.</span>
+
+          </div>
+
+          <p class="font-body-md text-body-md text-on-surface-variant/80 max-w-sm">
+
+            Editorial discernment and contextual intelligence calibrated for discerning global analysts, decision-makers, and active citizens.
+
+          </p>
+
+          <div class="flex items-center gap-space-xs pt-space-xs">
+
+            <span class="inline-block w-1.5 h-1.5 bg-primary-container"></span>
+
+            <span class="font-label-caps text-label-caps text-outline uppercase tracking-widest">Broadsheet High-Fidelity Dispatch</span>
+
+          </div>
+
+        </div>
+
+        
+
+        <div class="flex flex-col gap-space-xs">
+
+          <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs">Architecture</span>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Editorial Method</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Verified Sources</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Relevance Algorithm</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Masthead &amp; Council</a>
+
+        </div>
+
+        
+
+        <div class="flex flex-col gap-space-xs">
+
+          <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs">Regional Desks</span>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Telangana State Edition</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">28 Indian States Coverage</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Union Territories</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">New Delhi Central Bureau</a>
+
+        </div>
+
+        
+
+        <div class="flex flex-col gap-space-xs">
+
+          <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs">Taxonomy</span>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">All Categories</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Governance &amp; Policy</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Geopolitics &amp; Trade</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Financial Ecosystems</a>
+
+        </div>
+
+        
+
+        <div class="flex flex-col gap-space-xs">
+
+          <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs">Governance</span>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacy Framework</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Terms of Dispatch</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Syndication Feeds</a>
+
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Editorial Inquiries</a>
+
+        </div>
+
+      </div>
+
+      
+
+      <div class="pt-space-md flex flex-col md:flex-row items-center justify-between gap-space-sm">
+
+        <div class="font-label-caps text-label-caps text-outline tracking-wider">&copy; 2026 NEWZZ PUBLISHING GROUP. ALL RIGHTS RESERVED.</div>
+
+        <div class="flex items-center gap-space-md font-label-caps text-label-caps text-outline tracking-wider">
+
+          <span class="hover:text-on-surface cursor-pointer">HYDERABAD</span>
+
+          <span>&#8226;</span>
+
+          <span class="hover:text-on-surface cursor-pointer">NEW DELHI</span>
+
+          <span>&#8226;</span>
+
+          <span class="hover:text-on-surface cursor-pointer">LONDON</span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =========================================================================
+
+       MODALS: LOCATION, INTERESTS, PRIORITY, STORY DETAIL
+
+       ========================================================================= -->
+
+
+
+  <!-- MODAL: Location Settings (All 28 States) -->
+
   <div class="modal-backdrop hidden" id="modal-location" role="dialog" aria-modal="true" aria-labelledby="location-modal-title">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2 class="modal-title" id="location-modal-title">Select Your State</h2>
-        <button class="modal-close-btn" id="btn-close-location-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-text">Configure your state so regional news can be accurately weighted for your personal relevance score.</p>
 
-        <div class="form-group">
-          <label for="input-state" class="form-label">State / Province</label>
-          <input type="text" id="input-state" class="form-input" placeholder="e.g. Telangana, Karnataka, Maharashtra" />
+    <div class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl">
+
+      <div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20">
+
+        <h2 class="font-headline-sm text-headline-sm text-on-surface" id="location-modal-title">Select Your State</h2>
+
+        <button class="text-outline hover:text-on-surface text-[24px] cursor-pointer" id="btn-close-location-modal">&times;</button>
+
+      </div>
+
+      <div class="mb-space-md">
+
+        <p class="font-body-md text-[14px] text-on-surface-variant mb-space-md">
+
+          Configure your regional state so local developments and gazettes are accurately prioritized in your dispatch.
+
+        </p>
+
+        <div class="flex flex-col gap-1.5">
+
+          <label for="input-state" class="font-label-caps text-label-caps text-outline uppercase tracking-wider">State / Union Territory</label>
+
+          <select id="input-state" class="bg-surface-container-lowest border border-outline-variant/40 text-on-surface p-2.5 font-label-md outline-none focus:border-primary w-full cursor-pointer">
+
+            <option value="">-- Select Your State (All 28 States Available) --</option>
+
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+
+            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+
+            <option value="Assam">Assam</option>
+
+            <option value="Bihar">Bihar</option>
+
+            <option value="Chhattisgarh">Chhattisgarh</option>
+
+            <option value="Goa">Goa</option>
+
+            <option value="Gujarat">Gujarat</option>
+
+            <option value="Haryana">Haryana</option>
+
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+
+            <option value="Jharkhand">Jharkhand</option>
+
+            <option value="Karnataka">Karnataka</option>
+
+            <option value="Kerala">Kerala</option>
+
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+
+            <option value="Maharashtra">Maharashtra</option>
+
+            <option value="Manipur">Manipur</option>
+
+            <option value="Meghalaya">Meghalaya</option>
+
+            <option value="Mizoram">Mizoram</option>
+
+            <option value="Nagaland">Nagaland</option>
+
+            <option value="Odisha">Odisha</option>
+
+            <option value="Punjab">Punjab</option>
+
+            <option value="Rajasthan">Rajasthan</option>
+
+            <option value="Sikkim">Sikkim</option>
+
+            <option value="Tamil Nadu">Tamil Nadu</option>
+
+            <option value="Telangana">Telangana</option>
+
+            <option value="Tripura">Tripura</option>
+
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+
+            <option value="Uttarakhand">Uttarakhand</option>
+
+            <option value="West Bengal">West Bengal</option>
+
+            <option value="Delhi">Delhi (NCT)</option>
+
+          </select>
+
         </div>
+
       </div>
-      <div class="modal-footer">
-        <button class="secondary-btn" id="btn-skip-location">Skip</button>
-        <button class="primary-btn" id="btn-save-location">Continue</button>
+
+      <div class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20">
+
+        <button class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-skip-location" type="button">Skip</button>
+
+        <button class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-save-location" type="button">Save State</button>
+
       </div>
+
     </div>
+
   </div>
+
+
 
   <!-- MODAL: Interest Preferences -->
-  <div class="modal-backdrop hidden" id="modal-interests" role="dialog" aria-modal="true" aria-labelledby="interests-modal-title">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2 class="modal-title" id="interests-modal-title">Category Selection</h2>
-        <button class="modal-close-btn" id="btn-close-interests-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-text">Select the news categories you follow. In the next step, you can order them by personal priority.</p>
 
-        <div class="interest-chips-container" id="interest-chips-container">
+  <div class="modal-backdrop hidden" id="modal-interests" role="dialog" aria-modal="true" aria-labelledby="interests-modal-title">
+
+    <div class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl">
+
+      <div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20">
+
+        <h2 class="font-headline-sm text-headline-sm text-on-surface" id="interests-modal-title">Editorial Preferences</h2>
+
+        <button class="text-outline hover:text-on-surface text-[24px] cursor-pointer" id="btn-close-interests-modal">&times;</button>
+
+      </div>
+
+      <div class="mb-space-md">
+
+        <p class="font-body-md text-[14px] text-on-surface-variant mb-space-md">
+
+          Select the news categories you follow. In the next step, you can order them by personal priority.
+
+        </p>
+
+        <div class="flex flex-wrap gap-2" id="interest-chips-container">
+
           <!-- Populated by JS -->
+
         </div>
+
       </div>
-      <div class="modal-footer">
-        <button class="secondary-btn" id="btn-reset-interests">Reset Defaults</button>
-        <button class="primary-btn" id="btn-save-interests">Continue</button>
+
+      <div class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20">
+
+        <button class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-reset-interests" type="button">Reset</button>
+
+        <button class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-save-interests" type="button">Continue &rarr;</button>
+
       </div>
+
     </div>
+
   </div>
+
+
 
   <!-- MODAL: Priority Ranking -->
+
   <div class="modal-backdrop hidden" id="modal-priority" role="dialog" aria-modal="true" aria-labelledby="priority-modal-title">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2 class="modal-title" id="priority-modal-title">Set Your Priorities</h2>
-        <button class="modal-close-btn" id="btn-close-priority-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-text">Which topics matter most to you? Order your selected categories from highest to lowest priority.</p>
 
-        <div id="priority-error-banner" class="priority-error-banner hidden" role="alert">
-          <span id="priority-error-msg">Failed to save priorities to server. Please try again.</span>
+    <div class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl">
+
+      <div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20">
+
+        <h2 class="font-headline-sm text-headline-sm text-on-surface" id="priority-modal-title">Set Topic Priorities</h2>
+
+        <button class="text-outline hover:text-on-surface text-[24px] cursor-pointer" id="btn-close-priority-modal">&times;</button>
+
+      </div>
+
+      <div class="mb-space-md">
+
+        <p class="font-body-md text-[14px] text-on-surface-variant mb-space-md">
+
+          Which topics matter most? Order categories from highest (#1) to lowest. Stories matching #1 will lead your feed.
+
+        </p>
+
+        <div id="priority-error-banner" class="hidden p-2 bg-error-container text-error text-[12px] font-label-md mb-2">
+
+          <span id="priority-error-msg">Error saving priorities</span>
+
         </div>
 
-        <div class="priority-list-container" id="priority-list-container">
+        <div id="priority-list-container" class="max-h-64 overflow-y-auto pr-1">
+
           <!-- Populated by JS -->
+
         </div>
+
       </div>
-      <div class="modal-footer">
-        <button class="secondary-btn" id="btn-back-priority">Back</button>
-        <button class="primary-btn" id="btn-save-priority">Save & Start Reading</button>
+
+      <div class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20">
+
+        <button class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-back-priority" type="button">Back</button>
+
+        <button class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-save-priority" type="button">Save Priorities</button>
+
       </div>
+
     </div>
+
   </div>
+
+
 
   <!-- MODAL: Story Detail & Deep Breakdown -->
+
   <div class="modal-backdrop hidden" id="modal-story-detail" role="dialog" aria-modal="true" aria-labelledby="detail-headline">
-    <div class="modal-card modal-card-large">
-      <div class="modal-header">
-        <div class="modal-badge-row">
-          <span class="badge" id="detail-category-badge">Category</span>
-          <span class="badge badge-verification" id="detail-verification-badge">Verified</span>
+
+    <div class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-2xl w-full p-space-lg shadow-2xl overflow-y-auto max-h-[92vh]">
+
+      <div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20">
+
+        <div class="flex items-center gap-space-xs">
+
+          <span class="font-label-caps text-[11px] bg-surface-container-high text-primary px-2 py-0.5 uppercase tracking-wider" id="detail-category-badge">Category</span>
+
+          <span class="font-label-caps text-[11px] bg-surface-container-high text-secondary px-2 py-0.5 uppercase tracking-wider" id="detail-verification-badge">Verified</span>
+
         </div>
-        <button class="modal-close-btn" id="btn-close-detail-modal">&times;</button>
+
+        <button class="text-outline hover:text-on-surface text-[24px] cursor-pointer" id="btn-close-detail-modal">&times;</button>
+
       </div>
-      <div class="modal-body" id="detail-modal-body">
-        <h2 class="detail-headline" id="detail-headline">Story Headline</h2>
-        <div class="detail-meta-row" id="detail-meta-row">
-          <span id="detail-source-author">Source Name</span> &bull; 
-          <span id="detail-time">Time</span>
+
+      
+
+      <div class="mb-space-md">
+
+        <div class="flex items-center gap-space-xs font-label-sm text-[12px] text-outline mb-1">
+
+          <span id="detail-source-author">Source Name</span>
+
+          <span>&#8226;</span>
+
+          <span id="detail-time">Recent</span>
+
         </div>
 
-        <div class="detail-explainability-box" id="detail-explainability-box">
-          <div class="explain-header">
-            <span class="explain-icon">⚡</span>
-            <strong>Priority Decision</strong>
-            <span class="detail-score-pill" id="detail-final-score">Score: 92.4</span>
-          </div>
-          <p class="explain-reason" id="detail-priority-reason">Reason</p>
-          
-          <div class="score-breakdown-grid" id="detail-score-breakdown-grid">
-            <div class="score-metric-cell">
-              <span class="metric-label">Objective Importance</span>
-              <span class="metric-val" id="detail-score-importance">0/100</span>
-              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-importance" style="width: 0%"></div></div>
-            </div>
-            <div class="score-metric-cell">
-              <span class="metric-label">Situational Urgency</span>
-              <span class="metric-val" id="detail-score-urgency">0/100</span>
-              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-urgency" style="width: 0%"></div></div>
-            </div>
-            <div class="score-metric-cell">
-              <span class="metric-label">Freshness</span>
-              <span class="metric-val" id="detail-score-freshness">0/100</span>
-              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-freshness" style="width: 0%"></div></div>
-            </div>
-            <div class="score-metric-cell">
-              <span class="metric-label">Verification / Trust</span>
-              <span class="metric-val" id="detail-score-verification">0/100</span>
-              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-verification" style="width: 0%"></div></div>
-            </div>
-            <div class="score-metric-cell">
-              <span class="metric-label">Personal Relevance</span>
-              <span class="metric-val" id="detail-score-relevance">0/100</span>
-              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-relevance" style="width: 0%"></div></div>
-            </div>
-          </div>
-        </div>
+        <h2 class="font-headline-md text-headline-md text-on-surface mb-space-sm leading-tight" id="detail-headline">
 
-        <div class="detail-summary-content" id="detail-summary-content">
+          Story Headline
+
+        </h2>
+
+        <div class="font-body-md text-body-md text-on-surface-variant/95 leading-relaxed space-y-3 mb-space-md" id="detail-summary-content">
+
           <!-- Summary paragraphs -->
-        </div>
 
-        <div class="detail-sources-section" id="detail-sources-section">
-          <h4>Corroborating Sources & Links</h4>
-          <ul class="sources-list" id="detail-sources-list"></ul>
         </div>
       </div>
-      <div class="modal-footer">
-        <a href="#" target="_blank" rel="noopener noreferrer" class="primary-btn" id="btn-open-original-article">Read Source Article &rarr;</a>
+
+      <div class="flex items-center justify-between pt-space-sm border-t border-outline-variant/20">
+
+        <span class="font-label-caps text-[11px] text-outline uppercase">Editorial Intelligence Certified</span>
+
+        <a id="btn-open-original-article" href="#" target="_blank" rel="noopener noreferrer" class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors inline-flex items-center gap-1">
+
+          Open Original Wire &rarr;
+
+        </a>
+
       </div>
+
     </div>
+
   </div>
 
-  <script src="./app.js?v=2.2"></script>
+
+
+  <!-- Primary Application Script -->
+
+  <script src="app.js"></script>
+
 </body>
+
 </html>
+

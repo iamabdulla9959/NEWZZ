@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEWZZ — Topic & Category Selection | Editorial Focus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: "#141311",
+            "surface-container-lowest": "#0d0c0a",
+            "surface-container-low": "#181613",
+            "surface-container": "#201d19",
+            "surface-container-high": "#282520",
+            "surface-bright": "#332f29",
+            "on-surface": "#F2EEDC",
+            "on-surface-variant": "#C2BDAA",
+            primary: "#EB7D00",
+            "primary-container": "#EB7D00",
+            "on-primary": "#141311",
+            secondary: "#4E8268",
+            outline: "#7A7565",
+            "outline-variant": "#4A4639",
+          },
+          fontFamily: {
+            serif: ["Newsreader", "serif"],
+            sans: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .desk-card {
+      transition: all 0.18s ease-out;
+      cursor: pointer;
+    }
+    .desk-card:hover {
+      border-color: #7A7565;
+      transform: translateY(-1px);
+    }
+    .desk-card.selected {
+      border-color: #EB7D00 !important;
+      background-color: #201b13 !important;
+      box-shadow: 0 0 0 1px #EB7D00, 0 6px 20px rgba(235, 125, 0, 0.14);
+    }
+  </style>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary selection:text-on-primary">
+
+  <!-- TOP HEADER MASTHEAD -->
+  <header class="sticky top-0 z-50 w-full bg-[#141311] border-b border-outline-variant/30">
+    <div class="h-16 max-w-[1440px] mx-auto px-4 md:px-8 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a class="flex items-center gap-2 group" href="index.html">
+          <span class="font-serif text-2xl font-bold tracking-tight uppercase text-on-surface group-hover:text-primary transition-colors">NEWZZ</span>
+        </a>
+        <div class="h-4 w-px bg-outline-variant/40 hidden sm:block"></div>
+        <span class="hidden md:inline-block text-[11px] uppercase tracking-widest text-outline">KNOW WHAT MATTERS.</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-[13px] font-medium tracking-wide">
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Home</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">For You</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Latest</a>
+        <a class="text-on-surface border-b-2 border-primary py-2 font-semibold" href="topic-selection.html">Categories</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="state-selection.html">State News</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Editorial Method</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="state-selection.html" class="flex items-center gap-1.5 px-3 py-1 bg-surface-container-low border border-outline-variant/30 text-xs hover:border-primary transition-colors">
+          <span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+          <span id="masthead-current-state" class="font-semibold uppercase tracking-wider text-on-surface">Telangana</span>
+        </a>
+        <div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 flex items-center justify-center font-serif font-bold text-primary text-xs">
+          N
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN EDITORIAL FOCUS CANVAS -->
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-8 py-8">
+    
+    <!-- STEPPER & HERO HEADLINE -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-outline-variant/20 mb-8">
+      <div>
+        <div class="flex items-center gap-2 font-mono text-[11px] text-primary uppercase tracking-widest font-semibold mb-2">
+          <span>STEP 2 OF 3</span>
+          <span class="text-outline">&#8226;</span>
+          <span>EDITORIAL FOCUS</span>
+          <span class="text-outline">&#8226;</span>
+          <span class="text-outline">COGNITION PERSONALIZATION</span>
+        </div>
+        <h1 class="font-serif text-3xl md:text-5xl font-medium tracking-tight text-on-surface mb-3">
+          What matters most to you?
+        </h1>
+        <p class="text-on-surface-variant text-sm md:text-base max-w-3xl leading-relaxed">
+          Select the primary editorial desks you want prioritized in your intelligence briefing. You can select multiple.
+        </p>
+      </div>
+
+      <!-- Right Focus Metric Card -->
+      <div class="bg-surface-container-low p-4 border border-outline-variant/30 flex items-center gap-6 shrink-0 font-mono">
+        <div>
+          <div class="flex items-center gap-1.5 text-[11px] text-primary font-bold uppercase mb-0.5">
+            <span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+            <span id="selected-count-label">4 TOPICS SELECTED</span>
+          </div>
+          <div class="text-[11px] text-outline">Recommended depth: 3-7 topics</div>
+        </div>
+        <div class="h-8 w-px bg-outline-variant/30"></div>
+        <div class="text-right">
+          <div class="text-[10px] text-outline uppercase">CALIBRATION</div>
+          <div class="text-sm font-bold text-on-surface" id="calibration-depth-badge">High Focus</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER & QUICK ACTION RIBBON -->
+    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-6 border-b border-outline-variant/15 text-xs font-mono">
+      <div class="flex items-center gap-2 text-outline">
+        <span class="text-primary font-semibold">DESK FREQUENCY:</span>
+        <span>DAILY BRIEFING &#8226; DAILY EXECUTIVE DIGEST</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="btn-select-recommended" class="text-primary hover:text-primary/80 uppercase font-semibold cursor-pointer underline underline-offset-4">
+          Select Recommended
+        </button>
+        <span class="text-outline">&#8226;</span>
+        <button id="btn-clear-all" class="text-outline hover:text-on-surface uppercase cursor-pointer">
+          Clear All
+        </button>
+      </div>
+    </div>
+
+    <!-- 10 EDITORIAL DESKS GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="desks-grid">
+      <!-- Generated Dynamically by JS -->
+    </div>
+
+    <!-- ALGORITHMIC NOISE IMMUNITY CALLOUT -->
+    <div class="bg-surface-container-low border border-outline-variant/30 p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
+      <div class="flex items-start gap-3 max-w-3xl">
+        <span class="material-symbols-outlined text-[22px] text-primary shrink-0 mt-0.5">verified_user</span>
+        <div>
+          <h4 class="font-mono text-xs text-on-surface font-bold uppercase tracking-wider mb-1">
+            Algorithmic Noise Immunity
+          </h4>
+          <p class="text-xs text-on-surface-variant leading-relaxed">
+            Desks selected here receive primary source ingestion without dopamine loops or sensational click-through filters. Each story passes multi-source corroboration before dispatch to your briefing.
+          </p>
+        </div>
+      </div>
+      <div class="font-mono text-xs text-right shrink-0">
+        <span class="text-outline uppercase">CURRENT RANK:</span>
+        <div class="text-primary font-bold">Tier 1 Priority</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- STICKY BOTTOM ACTION DOCK -->
+  <div class="sticky bottom-0 z-40 bg-[#141311] border-t border-outline-variant/30 py-4 px-4 md:px-8 shadow-2xl">
+    <div class="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <a href="state-selection.html" class="text-xs font-mono text-outline hover:text-on-surface uppercase flex items-center gap-1.5 transition-colors">
+        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+        <span>Back to State Selection</span>
+      </a>
+
+      <div class="flex items-center gap-4 w-full sm:w-auto justify-end">
+        <span class="font-mono text-xs text-outline hidden md:inline-block" id="dock-counter-text">
+          4 of 10 desks selected
+        </span>
+        <button id="btn-save-and-continue" class="w-full sm:w-auto px-6 py-3 bg-primary hover:bg-primary/90 text-on-primary text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-primary/10">
+          <span>CONTINUE TO PRIORITY RANKING</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const EDITORIAL_DESKS = [
+      { id: "Technology", num: "DESK 01", sub: "Frontier Tech", desc: "AI, semiconductor fabs, software engineering, cyber defense, and digital sovereignty.", stories: 182 },
+      { id: "Politics", num: "DESK 02", sub: "Constitutional & State", desc: "Parliamentary proceedings, state elections, constitutional law, and public governance.", stories: 212 },
+      { id: "Business", num: "DESK 03", sub: "Macro & Trade", desc: "Monetary policy, financial markets, industrial manufacturing, and corporate economics.", stories: 145 },
+      { id: "National", num: "DESK 04", sub: "Republic", desc: "Federal governance, civic infrastructure, Supreme Court rulings, and interstate commerce.", stories: 192 },
+      { id: "World", num: "DESK 05", sub: "Geopolitics", desc: "Global geopolitics, multilateral summits, foreign direct investment, and diplomacy.", stories: 154 },
+      { id: "Science", num: "DESK 06", sub: "Space & Deep Tech", desc: "ISRO space missions, quantum research, clean energy physics, and applied biotechnology.", stories: 121 },
+      { id: "Health", num: "DESK 07", sub: "Public Systems", desc: "Public healthcare infrastructure, pharmaceutical research, epidemiology, and clinical medicine.", stories: 98 },
+      { id: "Sports", num: "DESK 08", sub: "Athletics & Salience", desc: "National athletics, cricket governance, Olympic preparation, and sporting diplomacy.", stories: 85 },
+      { id: "Entertainment", num: "DESK 09", sub: "Creative Economy", desc: "Cinema, cultural arts, creative economy policy, and media intellectual property.", stories: 76 },
+      { id: "Environment", num: "DESK 10", sub: "Ecology & Systems", desc: "Himalayan ecology, climate resilience, water security, and green renewable transition.", stories: 112 }
+    ];
+
+    const RECOMMENDED_DEFAULTS = ["Technology", "Politics", "Business", "National"];
+
+    function getStoredInterests() {
+      try {
+        const raw = localStorage.getItem('newsreels_interests');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+      return [...RECOMMENDED_DEFAULTS];
+    }
+
+    let selectedDesks = new Set(getStoredInterests());
+
+    // Update Masthead state
+    const curState = localStorage.getItem('newsreels_state') || 'Telangana';
+    document.getElementById('masthead-current-state').textContent = curState;
+
+    function updateMetrics() {
+      const count = selectedDesks.size;
+      document.getElementById('selected-count-label').textContent = `${count} TOPIC${count === 1 ? '' : 'S'} SELECTED`;
+      document.getElementById('dock-counter-text').textContent = `${count} of ${EDITORIAL_DESKS.length} desks selected`;
+      
+      const badge = document.getElementById('calibration-depth-badge');
+      if (count <= 2) {
+        badge.textContent = "High Precision";
+      } else if (count <= 5) {
+        badge.textContent = "High Focus";
+      } else if (count <= 8) {
+        badge.textContent = "Broad Analytical";
+      } else {
+        badge.textContent = "Comprehensive";
+      }
+    }
+
+    function renderDesks() {
+      const grid = document.getElementById('desks-grid');
+      grid.innerHTML = '';
+
+      EDITORIAL_DESKS.forEach(desk => {
+        const isSel = selectedDesks.has(desk.id);
+        const card = document.createElement('div');
+        card.className = `desk-card bg-surface-container-low p-5 border flex flex-col justify-between ${isSel ? 'selected' : 'border-outline-variant/25'}`;
+        
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-mono mb-2">
+              <span class="text-outline uppercase">${desk.num} &#8226; ${desk.sub}</span>
+              <span class="${isSel ? 'text-primary font-bold' : 'text-outline'} flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">${isSel ? 'check_circle' : 'add_circle'}</span>
+                ${isSel ? 'SELECTED' : 'ADD DESK'}
+              </span>
+            </div>
+            <h3 class="font-serif text-2xl font-semibold text-on-surface mb-2">${desk.id}</h3>
+            <p class="text-xs text-on-surface-variant leading-relaxed mb-4">${desk.desc}</p>
+          </div>
+          <div class="pt-3 border-t border-outline-variant/15 flex items-center justify-between text-[11px] font-mono text-outline">
+            <span>${desk.stories} verified stories</span>
+            <span class="${isSel ? 'text-primary' : 'text-outline-variant'}">&#8226;&#8226;&#8226;</span>
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          if (selectedDesks.has(desk.id)) {
+            if (selectedDesks.size > 1) {
+              selectedDesks.delete(desk.id);
+            }
+          } else {
+            selectedDesks.add(desk.id);
+          }
+          saveState();
+          renderDesks();
+        });
+
+        grid.appendChild(card);
+      });
+
+      updateMetrics();
+    }
+
+    function saveState() {
+      const arr = Array.from(selectedDesks);
+      localStorage.setItem('newsreels_interests', JSON.stringify(arr));
+
+      // Also ensure priority order contains these
+      let prior = [];
+      try {
+        prior = JSON.parse(localStorage.getItem('newsreels_priority_order') || '[]');
+      } catch (e) {}
+      
+      // Filter prior to only include selected, and add any missing selected
+      prior = prior.filter(p => selectedDesks.has(p));
+      arr.forEach(a => {
+        if (!prior.includes(a)) prior.push(a);
+      });
+      localStorage.setItem('newsreels_priority_order', JSON.stringify(prior));
+    }
+
+    // Controls
+    document.getElementById('btn-select-recommended').addEventListener('click', () => {
+      selectedDesks = new Set(RECOMMENDED_DEFAULTS);
+      saveState();
+      renderDesks();
+    });
+
+    document.getElementById('btn-clear-all').addEventListener('click', () => {
+      selectedDesks = new Set(["Technology"]); // Keep minimum 1
+      saveState();
+      renderDesks();
+    });
+
+    document.getElementById('btn-save-and-continue').addEventListener('click', () => {
+      saveState();
+      window.location.href = 'priority-ranking.html';
+    });
+
+    // Init
+    renderDesks();
+  </script>
+</body>
+</html>

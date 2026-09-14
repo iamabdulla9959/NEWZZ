@@ -19,6 +19,7 @@ export type FeedCard = {
   image_url?: string | null;
   image_author?: string | null;
   image_author_url?: string | null;
+  priority_score: number;
   sources: CardSource[];
 };
 
@@ -32,6 +33,26 @@ export function getApiBaseUrl(): string {
   return "http://127.0.0.1:8000";
 }
 
+export async function reverseGeocode(latitude: number, longitude: number): Promise<{
+  district: string | null;
+  state: string | null;
+  display_name: string | null;
+}> {
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/location/reverse?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Location lookup failed: HTTP ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Reverse geocoding error:", err);
+    throw err;
+  }
+}
+
 export async function fetchFeed(params: {
   categories: string[];
   district?: string;
@@ -39,7 +60,12 @@ export async function fetchFeed(params: {
   deviceId?: string;
   limit?: number;
   offset?: number;
-}): Promise<FeedCard[]> {
+}): Promise<{
+  items: FeedCard[];
+  fallbackUsed: boolean;
+  fallbackLevel: string | null;
+  emptyReason: string | null;
+}> {
   const query = new URLSearchParams();
   const validCats = params.categories.filter((c) => c && c.toLowerCase() !== "all" && c.toLowerCase() !== "global");
   if (validCats.length) {
@@ -76,8 +102,18 @@ export async function fetchFeed(params: {
     throw new Error(`Feed API error HTTP ${response.status} (${response.statusText}): ${errorBody || "Unknown error"}`);
   }
 
-  const body = (await response.json()) as { items: FeedCard[] };
-  return body.items ?? [];
+  const body = (await response.json()) as {
+    items: FeedCard[];
+    fallback_used: boolean;
+    fallback_level: string | null;
+    empty_reason: string | null;
+  };
+  return {
+    items: body.items ?? [],
+    fallbackUsed: body.fallback_used ?? false,
+    fallbackLevel: body.fallback_level ?? null,
+    emptyReason: body.empty_reason ?? null,
+  };
 }
 
 export async function updateUserPreferences(

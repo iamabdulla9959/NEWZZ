@@ -7,24 +7,34 @@ type Props = {
   onResetOnboarding?: () => void;
   onClearSeen?: () => void;
   prefs?: UserPrefs;
+  fallbackLevel?: string | null;
+  emptyReason?: string | null;
 };
 
-export function CaughtUpScreen({ onRefresh, onResetOnboarding, onClearSeen, prefs }: Props) {
+export function CaughtUpScreen({ onRefresh, onResetOnboarding, onClearSeen, prefs, fallbackLevel, emptyReason }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.badge}>
         <Text style={styles.badgeText}>FEED COMPLETE</Text>
       </View>
       <Text style={styles.title}>You're caught up</Text>
-      <Text style={styles.sub}>
-        No infinite scroll or filler. All currently available verified stories for your active filters have been viewed.
-      </Text>
+      {fallbackLevel ? (
+        <Text style={styles.sub}>
+          No more {fallbackLevel} news available. We checked for your local district first, but there was no verified local news today.
+        </Text>
+      ) : (
+        <Text style={styles.sub}>
+          {emptyReason === "no_eligible_stories"
+            ? "There are no verified stories matching these interests and location right now. Try another category or check again later."
+            : "No infinite scroll or filler. All currently available verified stories for your active filters have been viewed."}
+        </Text>
+      )}
 
       {prefs && (
         <View style={styles.filterBox}>
           <Text style={styles.filterTitle}>Active Filters:</Text>
           <Text style={styles.filterText}>
-            Location: {prefs.district ? `${prefs.district}, ${prefs.state}` : "All Regions"}
+            Location: {prefs.state || "All Regions"}
           </Text>
           <Text style={styles.filterText}>
             Categories: {prefs.categories?.length ? prefs.categories.join(", ") : "All"}
@@ -56,38 +66,38 @@ export function CaughtUpScreen({ onRefresh, onResetOnboarding, onClearSeen, pref
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#0B0F14",
+    backgroundColor: "#2E2910",
     alignItems: "center",
     justifyContent: "center",
     padding: 28,
   },
   badge: {
-    backgroundColor: "rgba(124, 219, 213, 0.15)",
+    backgroundColor: "rgba(44, 87, 69, 0.3)",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
     marginBottom: 16,
   },
   badgeText: {
-    color: "#7CDBD5",
+    color: "#EBE3A7",
     fontSize: 12,
     fontWeight: "800",
     letterSpacing: 1.5,
   },
-  title: { color: "#F4F7FB", fontSize: 28, fontWeight: "800", textAlign: "center" },
-  sub: { color: "#9AA8B8", fontSize: 15, textAlign: "center", marginTop: 12, lineHeight: 22, maxWidth: 360 },
+  title: { color: "#EBE3A7", fontSize: 28, fontWeight: "800", textAlign: "center" },
+  sub: { color: "#EBE3A7", fontSize: 15, textAlign: "center", marginTop: 12, lineHeight: 22, maxWidth: 360, opacity: 0.8 },
   filterBox: {
     marginTop: 20,
     padding: 14,
-    backgroundColor: "#16222F",
+    backgroundColor: "rgba(44, 87, 69, 0.2)",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#2A3542",
+    borderColor: "#2C5745",
     width: "100%",
     maxWidth: 360,
   },
-  filterTitle: { color: "#7CDBD5", fontSize: 12, fontWeight: "700", marginBottom: 4 },
-  filterText: { color: "#C5D0DC", fontSize: 13, lineHeight: 18 },
+  filterTitle: { color: "#EB7D00", fontSize: 12, fontWeight: "700", marginBottom: 4 },
+  filterText: { color: "#EBE3A7", fontSize: 13, lineHeight: 18 },
   btnGroup: {
     marginTop: 24,
     gap: 12,
@@ -95,28 +105,29 @@ const styles = StyleSheet.create({
     maxWidth: 360,
   },
   btnPrimary: {
-    backgroundColor: "#7CDBD5",
+    backgroundColor: "#EB7D00",
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
   },
-  btnPrimaryText: { color: "#0B0F14", fontWeight: "700", fontSize: 15 },
+  btnPrimaryText: { color: "#2E2910", fontWeight: "700", fontSize: 15 },
   btnSecondary: {
-    backgroundColor: "#1E2B3A",
+    backgroundColor: "rgba(44, 87, 69, 0.3)",
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#3A4D62",
+    borderColor: "#2C5745",
   },
-  btnSecondaryText: { color: "#F4F7FB", fontWeight: "600", fontSize: 14 },
+  btnSecondaryText: { color: "#EBE3A7", fontWeight: "600", fontSize: 14 },
   btnDanger: {
-    backgroundColor: "rgba(247, 37, 133, 0.12)",
+    backgroundColor: "rgba(235,125,0,0.12)",
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "rgba(247, 37, 133, 0.4)",
+    borderColor: "rgba(235,125,0,0.4)",
   },
-  btnDangerText: { color: "#FF70A6", fontWeight: "600", fontSize: 13 },
+  btnDangerText: { color: "#EBE3A7", fontWeight: "600", fontSize: 13 },
 });
+

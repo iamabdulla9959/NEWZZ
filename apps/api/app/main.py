@@ -1,4 +1,7 @@
+import subprocess
 import sys
+import threading
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 # Ensure repository root is on sys.path for packages.* imports
@@ -12,7 +15,6 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
 from app.config import settings
-from contextlib import asynccontextmanager
 from app.db import engine
 from app.models import Base
 from app.routers.admin import router as admin_router
@@ -43,6 +45,39 @@ app.include_router(feed_router)
 app.include_router(admin_router)
 app.include_router(location_router)
 
+
+
+_crawler_running = False
+
+def _run_crawler_task():
+    global _crawler_running
+    try:
+        crawler_script = _repo_root / "website_scraping" / "auto_news_crawler.py"
+        if crawler_script.exists():
+            cmd = [
+                sys.executable,
+                "-c",
+                "import sys; from pathlib import Path; "
+                "sys.path.insert(0, str(Path('website_scraping').resolve())); "
+                "from auto_news_crawler import run_crawl_cycle, load_existing_links, OUTPUT_FILE; "
+                "links = load_existing_links(OUTPUT_FILE); "
+                "run_crawl_cycle(links)",
+            ]
+            subprocess.run(cmd, cwd=str(_repo_root), timeout=120, capture_output=True)
+    except Exception as err:
+        pass
+    finally:
+        _crawler_running = False
+
+@app.api_route("/crawl/trigger", methods=["GET", "POST"])
+def trigger_crawl() -> dict[str, str]:
+    global _crawler_running
+    if not _crawler_running:
+        _crawler_running = True
+        t = threading.Thread(target=_run_crawler_task, daemon=True)
+        t.start()
+        return {"status": "started", "message": "Crawler running in background"}
+    return {"status": "busy", "message": "Crawler already active in background"}
 
 @app.get("/health")
 def health() -> dict[str, str]:

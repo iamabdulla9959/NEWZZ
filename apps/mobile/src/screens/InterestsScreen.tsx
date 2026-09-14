@@ -51,21 +51,22 @@ export function InterestsScreen({ prefs, onDone }: Props) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#0B0F14", padding: 20 },
+  safe: { flex: 1, backgroundColor: "#2E2910", padding: 20 },
   kicker: { color: "#EB7D00", fontSize: 13, fontWeight: "600" },
-  title: { color: "#F4F7FB", fontSize: 28, fontWeight: "700", marginTop: 8 },
-  sub: { color: "#9AA8B8", fontSize: 16, marginTop: 8, marginBottom: 24 },
+  title: { color: "#EBE3A7", fontSize: 28, fontWeight: "700", marginTop: 8 },
+  sub: { color: "#EBE3A7", fontSize: 16, marginTop: 8, marginBottom: 24, opacity: 0.8 },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 10, flex: 1 },
   chip: {
-    borderColor: "#2A3542",
+    borderColor: "#2C5745",
+    backgroundColor: "rgba(44, 87, 69, 0.3)",
     borderWidth: 1,
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
-  chipOn: { backgroundColor: "rgba(235,125,0,0.15)", borderColor: "#EB7D00" },
-  chipText: { color: "#C5D0DC", fontSize: 16 },
-  chipTextOn: { color: "#EB7D00", fontWeight: "700" },
+  chipOn: { backgroundColor: "#EB7D00", borderColor: "#EB7D00" },
+  chipText: { color: "#EBE3A7", fontSize: 16 },
+  chipTextOn: { color: "#2E2910", fontWeight: "700" },
   next: {
     backgroundColor: "#EB7D00",
     borderRadius: 14,
@@ -73,5 +74,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   nextDisabled: { opacity: 0.4 },
-  nextText: { color: "#0B0F14", fontWeight: "700", fontSize: 16 },
+  nextText: { color: "#2E2910", fontWeight: "700", fontSize: 16 },
 });

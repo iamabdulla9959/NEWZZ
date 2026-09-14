@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEWZZ — State Selection | Regional Calibration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: "#141311",
+            "surface-container-lowest": "#0d0c0a",
+            "surface-container-low": "#181613",
+            "surface-container": "#201d19",
+            "surface-container-high": "#282520",
+            "surface-bright": "#332f29",
+            "on-surface": "#F2EEDC",
+            "on-surface-variant": "#C2BDAA",
+            primary: "#EB7D00",
+            "primary-container": "#EB7D00",
+            "on-primary": "#141311",
+            secondary: "#4E8268",
+            outline: "#7A7565",
+            "outline-variant": "#4A4639",
+          },
+          fontFamily: {
+            serif: ["Newsreader", "serif"],
+            sans: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .state-card {
+      transition: all 0.15s ease-out;
+      cursor: pointer;
+    }
+    .state-card:hover {
+      background-color: #24211c;
+      border-color: #7A7565;
+      transform: translateY(-1px);
+    }
+    .state-card.selected {
+      border-color: #EB7D00 !important;
+      background-color: #221e17 !important;
+      box-shadow: 0 0 0 1px #EB7D00, 0 4px 16px rgba(235, 125, 0, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary selection:text-on-primary">
+
+  <!-- TOP HEADER MASTHEAD -->
+  <header class="sticky top-0 z-50 w-full bg-[#141311] border-b border-outline-variant/30">
+    <div class="h-16 max-w-[1440px] mx-auto px-4 md:px-8 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a class="flex items-center gap-2 group" href="index.html">
+          <span class="font-serif text-2xl font-bold tracking-tight uppercase text-on-surface group-hover:text-primary transition-colors">NEWZZ</span>
+        </a>
+        <div class="h-4 w-px bg-outline-variant/40 hidden sm:block"></div>
+        <span class="hidden md:inline-block text-[11px] uppercase tracking-widest text-outline">KNOW WHAT MATTERS.</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-[13px] font-medium tracking-wide">
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Home</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">For You</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Latest</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="topic-selection.html">Categories</a>
+        <a class="text-on-surface border-b-2 border-primary py-2 font-semibold" href="state-selection.html">State News</a>
+        <a class="text-on-surface-variant hover:text-on-surface transition-colors py-2" href="index.html">Editorial Method</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1.5 px-3 py-1 bg-surface-container-low border border-outline-variant/30 text-xs">
+          <span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+          <span id="masthead-current-state" class="font-semibold uppercase tracking-wider text-on-surface">Telangana</span>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 flex items-center justify-center font-serif font-bold text-primary text-xs">
+          N
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN ONBOARDING CANVAS -->
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-8 py-8">
+    
+    <!-- STEPPER & HERO HEADLINE -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-outline-variant/20 mb-8">
+      <div>
+        <div class="flex items-center gap-2 font-mono text-[11px] text-primary uppercase tracking-widest font-semibold mb-2">
+          <span>STEP 1 OF 3</span>
+          <span class="text-outline">&#8226;</span>
+          <span>REGIONAL CALIBRATION</span>
+          <span class="text-outline">&#8226;</span>
+          <span class="text-outline">CONSTITUTIONAL JURISDICTION</span>
+        </div>
+        <h1 class="font-serif text-3xl md:text-5xl font-medium tracking-tight text-on-surface mb-3">
+          Where are you following news from?
+        </h1>
+        <p class="text-on-surface-variant text-sm md:text-base max-w-3xl leading-relaxed">
+          Choose your state to anchor regional policy, state infrastructure, high-court rulings, and bureaucratic governance dispatches directly into your daily analytical briefing.
+        </p>
+      </div>
+
+      <!-- Right Step Indicator Pills -->
+      <div class="flex items-center gap-2 shrink-0 text-[11px] font-mono">
+        <span class="px-2.5 py-1 bg-primary text-on-primary font-bold">1: STATE</span>
+        <span class="px-2.5 py-1 bg-surface-container text-outline">2: DOMAINS</span>
+        <span class="px-2.5 py-1 bg-surface-container text-outline">3: CADENCE</span>
+      </div>
+    </div>
+
+    <!-- SEARCH & BUREAU LIVE SYNC BAR -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+      <!-- Search Input -->
+      <div class="lg:col-span-8 flex flex-col justify-center">
+        <label for="input-state-search" class="font-mono text-[11px] text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[14px] text-primary">search</span>
+          Search among 28 Indian states
+        </label>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="input-state-search" 
+            placeholder="Filter by state name or zone (e.g., Telangana, Deccan, North-East, West)..."
+            class="w-full bg-surface-container-lowest border border-outline-variant/40 focus:border-primary text-on-surface px-4 py-3.5 text-sm md:text-base outline-none transition-colors"
+          />
+          <button id="btn-clear-search" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface text-xs uppercase font-mono px-2 py-1">
+            CLEAR
+          </button>
+        </div>
+      </div>
+
+      <!-- Bureau Status Card -->
+      <div class="lg:col-span-4 bg-surface-container-low p-4 border border-outline-variant/30 flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-1.5 font-mono text-[10px] text-secondary uppercase tracking-widest font-semibold mb-1">
+            <span class="w-2 h-2 bg-secondary inline-block"></span>
+            REAL-TIME BUREAU SYNC
+          </div>
+          <div class="font-serif text-2xl font-bold text-on-surface">1,142</div>
+          <div class="text-[11px] text-outline">Total active verified dispatches today</div>
+        </div>
+        <div class="text-right font-mono text-[11px]">
+          <div class="text-primary font-semibold">28/28 Covered</div>
+          <div class="text-outline" id="bureau-sync-label">Telangana Bureau</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVE STATE SHOWCASE HERO CARD -->
+    <div class="bg-surface-container-low border border-outline-variant/30 p-5 md:p-6 mb-8 relative overflow-hidden" id="showcase-banner">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <span class="font-mono text-[11px] text-primary uppercase tracking-widest font-bold flex items-center gap-1.5" id="showcase-focus-badge">
+          <span class="w-2 h-2 bg-primary inline-block"></span>
+          PRIMARY FOCUS AREA: TELANGANA &#8212; ACTIVE DESK CALIBRATION
+        </span>
+        <span class="font-mono text-[11px] text-secondary font-semibold">DESK ACTIVE</span>
+      </div>
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="max-w-3xl">
+          <h2 class="font-serif text-3xl md:text-4xl text-on-surface font-semibold mb-2" id="showcase-state-name">
+            Telangana
+          </h2>
+          <p class="text-sm text-on-surface-variant leading-relaxed" id="showcase-state-desc">
+            Regional desk: Hyderabad &amp; South Deccan &#8212; Continuous coverage on IT corridor policy, Kaleshwaram hydrology updates, and regional energy sector dispatches.
+          </p>
+        </div>
+        <div class="flex items-center gap-6 shrink-0 pt-2 md:pt-0 font-mono text-xs">
+          <div>
+            <div class="text-lg font-bold text-on-surface" id="showcase-dispatches-count">62</div>
+            <div class="text-[10px] text-outline uppercase">DISPATCHES</div>
+          </div>
+          <div class="h-8 w-px bg-outline-variant/30"></div>
+          <div>
+            <div class="text-lg font-bold text-secondary">100%</div>
+            <div class="text-[10px] text-outline uppercase">FACT-CHECKED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 28 INDIAN STATES GRID -->
+    <div class="mb-12">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-outline-variant/15">
+        <span class="font-mono text-xs uppercase tracking-wider text-outline">
+          ALL 28 CONSTITUTIONAL JURISDICTIONS (SELECT ONE)
+        </span>
+        <span class="font-mono text-xs text-primary" id="states-count-display">Showing 28 of 28 States</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="states-grid">
+        <!-- Generated Dynamically by JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- STICKY BOTTOM ACTION DOCK -->
+  <div class="sticky bottom-0 z-40 bg-[#141311] border-t border-outline-variant/30 py-4 px-4 md:px-8 shadow-2xl">
+    <div class="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3 text-xs text-outline">
+        <span class="font-mono uppercase text-primary font-semibold">INTEGRITY PROTOCOL:</span>
+        <span>Your regional calibration affects local state dispatches without suppressing national security or public safety alerts.</span>
+      </div>
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <a href="index.html" class="w-1/2 sm:w-auto px-5 py-3 text-center bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-mono uppercase tracking-wider border border-outline-variant/30 transition-colors">
+          Cancel
+        </a>
+        <button id="btn-save-and-continue" class="w-1/2 sm:w-auto px-6 py-3 bg-primary hover:bg-primary/90 text-on-primary text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-primary/10">
+          <span>CONTINUE TO TOPIC SELECTION</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const INDIAN_STATES_DATA = [
+      { name: "Andhra Pradesh", region: "SOUTH", desk: "AMARAVATI DESK", dispatches: 57, desc: "Coastal corridor logistics, Polavaram irrigation updates, and Amaravati capital development governance." },
+      { name: "Arunachal Pradesh", region: "NORTH-EAST", desk: "ITANAGAR BUREAU", dispatches: 24, desc: "Border infrastructure corridors, strategic hydropower deployments, and tribal customary governance." },
+      { name: "Assam", region: "NORTH-EAST", desk: "GUWAHATI DESK", dispatches: 48, desc: "Brahmaputra flood resilience programs, tea industrial commerce, and North-East connectivity hubs." },
+      { name: "Bihar", region: "EAST", desk: "PATNA BUREAU", dispatches: 67, desc: "Ganga plains infrastructure, state legislative policy, industrial labor migration, and rural development." },
+      { name: "Chhattisgarh", region: "CENTRAL", desk: "RAIPUR DESK", dispatches: 38, desc: "Mineral extraction policy, Bastar tribal community development, and green energy grid expansion." },
+      { name: "Goa", region: "WEST", desk: "PANAJI DESK", dispatches: 29, desc: "Maritime trade governance, eco-tourism regulations, and Western Ghats conservation monitoring." },
+      { name: "Gujarat", region: "WEST", desk: "AHMEDABAD BUREAU", dispatches: 74, desc: "GIFT City financial regulations, semiconductor manufacturing clusters, and coastal port operations." },
+      { name: "Haryana", region: "NORTH", desk: "CHANDIGARH DESK", dispatches: 52, desc: "NCR industrial expansion, agricultural procurement policy, and sports infrastructure pipelines." },
+      { name: "Himachal Pradesh", region: "NORTH", desk: "SHIMLA DESK", dispatches: 33, desc: "Himalayan ecology policy, disaster prevention infrastructure, and hydroelectric grid monitoring." },
+      { name: "Jharkhand", region: "EAST", desk: "RANCHI DESK", dispatches: 41, desc: "Mining royalty reforms, industrial steel manufacturing corridors, and forestry administration." },
+      { name: "Karnataka", region: "SOUTH", desk: "BENGALURU DESK", dispatches: 88, desc: "Deep-tech innovation corridors, Cauvery water policy, and aerospace manufacturing clusters." },
+      { name: "Kerala", region: "SOUTH", desk: "KOCHI DESK", dispatches: 65, desc: "Maritime trade, healthcare public infrastructure, remittances economy, and coastal climate action." },
+      { name: "Madhya Pradesh", region: "CENTRAL", desk: "BHOPAL DESK", dispatches: 59, desc: "Central agricultural procurement, national park tiger conservation, and renewable solar energy farms." },
+      { name: "Maharashtra", region: "WEST", desk: "MUMBAI BUREAU", dispatches: 96, desc: "Financial capital regulatory policy, Vidarbha agricultural welfare, and infrastructure transit lines." },
+      { name: "Manipur", region: "NORTH-EAST", desk: "IMPHAL DESK", dispatches: 31, desc: "Border trade security, civil administration dialogues, and hill council development policies." },
+      { name: "Meghalaya", region: "NORTH-EAST", desk: "SHILLONG DESK", dispatches: 26, desc: "Khasi and Garo administrative councils, mineral transport laws, and eco-tourism stewardship." },
+      { name: "Mizoram", region: "NORTH-EAST", desk: "AIZAWL DESK", dispatches: 22, desc: "Indo-Myanmar trade corridor, bamboo industrial promotion, and cross-border peace monitoring." },
+      { name: "Nagaland", region: "NORTH-EAST", desk: "KOHIMA DESK", dispatches: 23, desc: "Naga peace accord dialogues, tribal governance conventions, and cultural heritage initiatives." },
+      { name: "Odisha", region: "EAST", desk: "BHUBANESWAR DESK", dispatches: 60, desc: "Cyclone disaster mitigation, coastal blue economy, and international sports hub expansion." },
+      { name: "Punjab", region: "NORTH", desk: "CHANDIGARH BUREAU", dispatches: 55, desc: "Agrarian policy debates, groundwater preservation technology, and agro-processing trade." },
+      { name: "Rajasthan", region: "NORTH", desk: "JAIPUR BUREAU", dispatches: 68, desc: "Thar Desert renewable energy projects, critical mineral discoveries, and heritage tourism policy." },
+      { name: "Sikkim", region: "NORTH-EAST", desk: "GANGTOK DESK", dispatches: 20, desc: "100% organic farming agriculture, Teesta basin river management, and border defense corridors." },
+      { name: "Tamil Nadu", region: "SOUTH", desk: "CHENNAI BUREAU", dispatches: 85, desc: "Automotive and EV industrial corridors, electronics export policy, and maritime port trade." },
+      { name: "Telangana", region: "SOUTH", desk: "HYDERABAD BUREAU", dispatches: 82, desc: "Regional desk: Hyderabad & South Deccan - Continuous coverage on IT corridor policy, Kaleshwaram hydrology updates, and regional energy sector dispatches." },
+      { name: "Tripura", region: "NORTH-EAST", desk: "AGARTALA DESK", dispatches: 25, desc: "Indo-Bangladesh transit corridors, rubber production development, and tribal governance." },
+      { name: "Uttar Pradesh", region: "NORTH", desk: "LUCKNOW BUREAU", dispatches: 94, desc: "Expressway infrastructure corridors, defense manufacturing hub, and administrative governance." },
+      { name: "Uttarakhand", region: "NORTH", desk: "DEHRADUN DESK", dispatches: 37, desc: "Char Dham infrastructure resilience, Himalayan glacial monitoring, and eco-tourism rules." },
+      { name: "West Bengal", region: "EAST", desk: "KOLKATA BUREAU", dispatches: 78, desc: "Sundarbans climate resilience, Kolkata port river trade, and cultural industry administration." }
+    ];
+
+    let selectedState = localStorage.getItem('newsreels_state') || 'Telangana';
+
+    function renderShowcase(stName) {
+      const item = INDIAN_STATES_DATA.find(s => s.name.toLowerCase() === stName.toLowerCase()) || INDIAN_STATES_DATA[23];
+      document.getElementById('showcase-focus-badge').innerHTML = `
+        <span class="w-2 h-2 bg-primary inline-block"></span>
+        PRIMARY FOCUS AREA: ${item.name.toUpperCase()} &#8212; ACTIVE DESK CALIBRATION
+      `;
+      document.getElementById('showcase-state-name').textContent = item.name;
+      document.getElementById('showcase-state-desc').textContent = item.desc;
+      document.getElementById('showcase-dispatches-count').textContent = item.dispatches;
+      document.getElementById('bureau-sync-label').textContent = item.desk;
+      document.getElementById('masthead-current-state').textContent = item.name;
+    }
+
+    function renderGrid(query = '') {
+      const container = document.getElementById('states-grid');
+      container.innerHTML = '';
+      const q = query.trim().toLowerCase();
+
+      const filtered = INDIAN_STATES_DATA.filter(s => {
+        return s.name.toLowerCase().includes(q) || 
+               s.region.toLowerCase().includes(q) || 
+               s.desk.toLowerCase().includes(q);
+      });
+
+      document.getElementById('states-count-display').textContent = `Showing ${filtered.length} of 28 States`;
+
+      filtered.forEach(s => {
+        const isSel = s.name.toLowerCase() === selectedState.toLowerCase();
+        const card = document.createElement('div');
+        card.className = `state-card bg-surface-container-low p-4 border ${isSel ? 'selected' : 'border-outline-variant/25'}`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between text-[10px] font-mono mb-1.5">
+            <span class="text-outline uppercase">${s.region}</span>
+            <span class="${isSel ? 'text-primary font-bold' : 'text-outline'}">${s.dispatches} active dispatches</span>
+          </div>
+          <h3 class="font-serif text-lg font-semibold text-on-surface mb-2">${s.name}</h3>
+          <div class="flex items-center justify-between text-[11px] font-mono pt-2 border-t border-outline-variant/15">
+            <span class="text-outline text-[10px]">${s.desk}</span>
+            ${isSel ? '<span class="text-primary font-bold text-[10px] flex items-center gap-1"><span class="w-1.5 h-1.5 bg-primary rounded-full"></span>ACTIVE</span>' : ''}
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          selectedState = s.name;
+          localStorage.setItem('newsreels_state', selectedState);
+          renderShowcase(selectedState);
+          renderGrid(document.getElementById('input-state-search').value);
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    // Initialize
+    renderShowcase(selectedState);
+    renderGrid();
+
+    // Search filter listener
+    const searchInput = document.getElementById('input-state-search');
+    const clearBtn = document.getElementById('btn-clear-search');
+    searchInput.addEventListener('input', (e) => {
+      const val = e.target.value;
+      if (val.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderGrid(val);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      clearBtn.classList.add('hidden');
+      renderGrid();
+    });
+
+    // Save and continue to step 2
+    document.getElementById('btn-save-and-continue').addEventListener('click', () => {
+      localStorage.setItem('newsreels_state', selectedState);
+      window.location.href = 'topic-selection.html';
+    });
+  </script>
+</body>
+</html>
