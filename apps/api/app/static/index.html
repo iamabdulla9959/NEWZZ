@@ -482,7 +482,83 @@
     .safe-bottom {
       padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
     }
-</style>
+
+    /* === UNIFIED BUTTON SYSTEM (Standardized to 4 cohesive styles) === */
+    .btn-primary {
+      min-height: 40px;
+      padding: 0.5rem 1rem;
+      background-color: #ffb782;
+      color: #4f2500;
+      font-size: 0.75rem; /* text-xs */
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 0.125rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background-color 0.15s ease, opacity 0.15s ease;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background-color: rgba(255, 183, 130, 0.9); }
+
+    .btn-secondary {
+      min-height: 40px;
+      padding: 0.5rem 0.875rem;
+      background-color: #211f1d;
+      color: #e6e2de;
+      border: 1px solid rgba(147, 143, 137, 0.3);
+      font-size: 0.75rem; /* text-xs */
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 0.125rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { background-color: #2b2a27; border-color: rgba(147, 143, 137, 0.5); }
+
+    .btn-action-link {
+      min-height: 40px;
+      padding: 0.5rem 0.875rem;
+      color: #ffb782;
+      font-size: 0.8125rem; /* 13px */
+      font-weight: 600;
+      letter-spacing: 0.025em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      background-color: rgba(255, 183, 130, 0.06);
+      border: 1px solid rgba(255, 183, 130, 0.2);
+      border-radius: 0.125rem;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      cursor: pointer;
+    }
+    .btn-action-link:hover {
+      background-color: rgba(255, 183, 130, 0.15);
+      color: #ffdcc3;
+    }
+
+    .btn-filter-pill {
+      min-height: 36px;
+      padding: 0.375rem 0.875rem;
+      border-radius: 9999px;
+      font-size: 0.75rem; /* text-xs */
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(147, 143, 137, 0.2);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+  </style>
 
   <link rel="stylesheet" href="style.css"/>
 
@@ -609,98 +685,53 @@
 
       <!-- TOP PERSONALIZATION & MASTHEAD BANNER -->
 
-      <section class="w-full mb-4 sm:mb-6 bg-surface-container-lowest/60 p-3 sm:p-5 md:p-6 border border-outline-variant/15 rounded-sm">
-
-        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-md">
-
+      <section class="w-full bg-surface-container-lowest/80 p-4 sm:p-5 mb-5 border border-outline-variant/20 rounded-sm">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-3">
           <div>
-
-            <div class="flex items-center gap-space-xs font-label-caps text-label-caps text-outline uppercase tracking-widest mb-space-xs">
-
+            <!-- Issues 3 & 4: Sentence case, 12px min body/label size -->
+            <div class="flex items-center gap-2 text-xs text-outline mb-1 font-medium">
               <span id="masthead-date">Today's Dispatch</span>
-
-              <span>&#8226;</span>
-
-              <span class="text-primary font-medium" id="masthead-edition">Telangana Edition</span>
-
-              <span>&#8226;</span>
-
+              <span>•</span>
+              <span class="text-primary font-semibold" id="masthead-edition">Telangana Edition</span>
+              <span>•</span>
               <span id="verified-stories-count">948 Verified Stories Active</span>
-
             </div>
-
-            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
-
-              Good morning, <span class="italic font-normal text-surface-tint" id="greeting-name">Reader</span>.
-
-            </h1>
-
-            <p class="font-body-md text-body-md text-on-surface-variant/90 max-w-2xl mt-1">
-
-              Here is what matters most to you right now, calibrated for <span id="banner-state-name" class="text-on-surface font-medium">Telangana</span> and national strategic developments.
-
-            </p>
-
+            <!-- Issue 11: Compact heading saving ~120px viewport space -->
+            <div class="flex flex-wrap items-baseline gap-2">
+              <h1 class="font-serif text-xl sm:text-2xl text-on-surface font-bold tracking-tight">
+                Good morning, <span class="italic font-normal text-surface-tint" id="greeting-name">Reader</span>.
+              </h1>
+              <span class="text-xs text-outline hidden sm:inline">Calibrated verified intelligence feed.</span>
+            </div>
           </div>
 
-
-
-          <!-- State & Calibration Affordances -->
-
-          <div class="flex flex-wrap items-center gap-space-xs self-start lg:self-end">
-
-            <div class="flex items-center gap-1.5 bg-surface-container px-3 py-1.5 text-on-surface border border-outline-variant/30">
-
-              <span class="w-2 h-2 bg-primary-container inline-block"></span>
-
-              <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">State:</span>
-
-              <span id="banner-state-label" class="font-label-md text-label-md text-on-surface font-semibold">Telangana</span>
-
+          <!-- State & Priority Controls -->
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-surface-container border border-outline-variant/20 text-xs text-on-surface rounded-sm">
+              <span class="w-2 h-2 rounded-full bg-primary"></span>
+              <span class="text-outline uppercase text-[11px] font-mono">STATE:</span>
+              <span class="font-semibold" id="banner-state-name">Telangana</span>
             </div>
-
-            <button id="btn-change-state-banner" class="font-label-caps text-label-caps tracking-wider px-3 py-1.5 bg-surface-container-high hover:bg-surface-bright text-on-surface transition-colors cursor-pointer uppercase border border-outline-variant/30" type="button">
-
+            <button class="btn-secondary" id="btn-change-state-banner" type="button">
               Change State
-
             </button>
-
-            <a href="priority-ranking.html" id="btn-open-priority-modal" class="font-label-caps text-label-caps tracking-wider px-3 py-1.5 bg-surface-container-high hover:bg-surface-bright text-primary transition-colors cursor-pointer uppercase flex items-center gap-1 border border-outline-variant/30 inline-flex">
-
-              <span class="material-symbols-outlined text-[14px]">tune</span>
-
-              Edit Priority
-
+            <a href="priority-ranking.html" class="btn-primary" id="btn-edit-priority-banner">
+              <span class="material-symbols-outlined text-[15px]">tune</span>
+              <span>Edit Priority</span>
             </a>
-
           </div>
-
         </div>
 
-
-
-        <!-- Hierarchy Tags Readout (Calibrated Priority Rank) -->
-
-        <div class="flex items-center flex-wrap gap-space-xs pt-space-xs border-t border-outline-variant/15">
-
-          <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider mr-1">Calibrated Rank:</span>
-
-          <div id="calibrated-rank-container" class="flex items-center flex-wrap gap-space-xs">
-
-            <!-- Dynamically populated by app.js -->
-
-            <span class="font-label-caps text-[11px] bg-surface-container px-2 py-0.5 text-on-surface-variant flex items-center gap-1"><strong class="text-primary">01</strong> Politics</span>
-
-            <span class="font-label-caps text-[11px] bg-surface-container px-2 py-0.5 text-on-surface-variant flex items-center gap-1"><strong class="text-primary">02</strong> Technology</span>
-
-            <span class="font-label-caps text-[11px] bg-surface-container px-2 py-0.5 text-on-surface-variant flex items-center gap-1"><strong class="text-primary">03</strong> National</span>
-
-            <span class="font-label-caps text-[11px] bg-surface-container px-2 py-0.5 text-on-surface-variant flex items-center gap-1"><strong class="text-primary">04</strong> Business</span>
-
+        <!-- Calibrated Rank Chips (Standardized font size text-xs) -->
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/15 text-xs text-outline">
+          <span class="font-mono text-[11px] uppercase tracking-wider text-outline">CALIBRATED RANK:</span>
+          <div class="flex flex-wrap items-center gap-1.5" id="calibrated-rank-container">
+            <span class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"><b class="text-primary">01</b> Politics</span>
+            <span class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"><b class="text-primary">02</b> Technology</span>
+            <span class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"><b class="text-primary">03</b> National</span>
+            <span class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"><b class="text-primary">04</b> Business</span>
           </div>
-
         </div>
-
       </section>
 
 
@@ -951,7 +982,7 @@
 
                 <span class="w-2.5 h-2.5 bg-primary-container inline-block"></span>
 
-                <h3 class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest font-bold" id="state-focus-title">
+                <h3 class="text-xs sm:text-sm font-semibold tracking-wider text-on-surface uppercase" id="state-focus-title">
 
                   STATE IN FOCUS: TELANGANA DEVELOPMENTS
 
@@ -1041,11 +1072,7 @@
 
                 </span>
 
-                <h3 class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest font-bold">
-
-                  THE MORNING BRIEF
-
-                </h3>
+                <h3 class="font-serif font-bold text-sm text-on-surface">The Morning Brief</h3>
 
               </div>
 

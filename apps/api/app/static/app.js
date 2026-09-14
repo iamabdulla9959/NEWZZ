@@ -754,7 +754,7 @@
 
           <div class="flex items-center gap-2">
 
-            <span class="font-label-caps text-[10px] px-1.5 py-0.5 bg-surface-container-high text-on-surface uppercase">Full Audit Available</span>
+            <span class="text-xs px-2.5 py-1 bg-surface-container-high text-on-surface uppercase font-mono font-medium rounded-sm tracking-wider">Full Audit Available</span>
 
           </div>
 
@@ -986,7 +986,7 @@
 
           
 
-          <button class="font-body-md text-body-md italic text-primary hover:text-surface-tint cursor-pointer strip-link" type="button">Read &rarr;</button>
+          <button class="btn-action-link strip-link" type="button"><span>Read &rarr;</span></button>
 
         </div>
 
@@ -1045,67 +1045,68 @@
 
 
     streamItems.forEach(c => {
-
       const art = document.createElement('article');
-
-      art.className = 'bg-surface-container-low p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-md border border-outline-variant/15 hover:bg-surface-container transition-colors';
-
-      const timeAgo = formatTimeAgo(c.published_at || c.event_time);
-
+      art.className = 'bg-surface-container-low p-4 sm:p-5 border border-outline-variant/15 hover:border-primary/40 hover:bg-surface-container transition-all rounded-sm group';
       const source = c.source_name || (c.sources && c.sources[0]?.name) || 'Verified Wire';
+      const cat = (c.category || 'general').toLowerCase();
 
+      // Visual Anchor Icon Map (Issue 10: Break wall of text)
+      const ICON_MAP = {
+        national: 'flag',
+        politics: 'policy',
+        technology: 'memory',
+        business: 'trending_up',
+        science: 'biotech',
+        health: 'health_and_safety',
+        sports: 'sports_cricket',
+        world: 'public',
+        entertainment: 'theaters',
+        environment: 'eco'
+      };
+      const icon = ICON_MAP[cat] || 'newspaper';
 
-
+      // Issues 8 & 12: Action button inline with 40px touch target, visual anchor badge
       art.innerHTML = `
-
-        <div class="flex-1">
-
-          <div class="flex items-center gap-space-xs font-label-caps text-[10px] text-outline mb-1">
-
-            <span class="text-primary font-semibold uppercase">${c.category || 'General'}</span>
-
-            <span>&#8226;</span>
-
-            <span>${source}</span>
-
-            
-
+        <div class="flex items-start gap-3 sm:gap-4">
+          <!-- Visual Anchor Icon Pill -->
+          <div class="shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-sm bg-surface-container border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+            <span class="material-symbols-outlined text-[18px] sm:text-[20px]">${icon}</span>
           </div>
 
-          <h4 class="font-headline-sm text-[18px] leading-snug text-on-surface hover:text-primary transition-colors cursor-pointer stream-title">
+          <div class="flex-1 min-w-0">
+            <!-- Card Header Metadata -->
+            <div class="flex flex-wrap items-center gap-2 text-xs text-outline mb-1.5 font-medium">
+              <span class="text-primary font-semibold uppercase">${c.category || 'General'}</span>
+              <span>•</span>
+              <span class="text-on-surface-variant">${source}</span>
+              <span>•</span>
+              <span class="text-surface-tint">Verified Wire</span>
+            </div>
 
-            ${c.headline}
+            <!-- Headline -->
+            <h4 class="font-serif text-base sm:text-lg leading-snug text-on-surface group-hover:text-primary transition-colors cursor-pointer stream-title mb-1.5">
+              ${c.headline}
+            </h4>
 
-          </h4>
+            <!-- Summary -->
+            <p class="text-sm text-on-surface-variant/90 line-clamp-2 leading-relaxed mb-3">
+              ${c.summary || ''}
+            </p>
 
-          <p class="font-body-md text-[14px] text-on-surface-variant/80 mt-1 line-clamp-2 leading-normal">
-
-            ${c.summary || c.headline}
-
-          </p>
-
+            <!-- Inline Action Button: Standardized >=40px Touch Target (Issues 8 & 12) -->
+            <div class="flex items-center gap-3 pt-1">
+              <button type="button" class="btn-action-link stream-btn" aria-label="Read full dispatch for ${c.headline.replace(/"/g, '&quot;')}">
+                <span>Read Dispatch</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </button>
+            </div>
+          </div>
         </div>
-
-        <div class="flex items-center gap-space-md shrink-0">
-
-          <button class="font-body-md text-[15px] italic text-primary hover:text-surface-tint cursor-pointer stream-btn" type="button">
-
-            Read &rarr;
-
-          </button>
-
-        </div>
-
       `;
 
-
-
       art.querySelector('.stream-title')?.addEventListener('click', () => openDetailModal(c));
-
       art.querySelector('.stream-btn')?.addEventListener('click', () => openDetailModal(c));
-
       elements.streamFeedContainer.appendChild(art);
-
     });
 
 
@@ -1124,7 +1125,8 @@
 
     elements.morningBriefContainer.innerHTML = '';
 
-    const topBullets = cards.slice(0, 4);
+    // Issue 9: Avoid repeating Hero and Trending headlines; take unique fast-scan stories
+    const topBullets = cards.length > 5 ? cards.slice(4, 8) : cards.slice(0, 4);
 
 
 
