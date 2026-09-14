@@ -39,6 +39,17 @@
   </script>
   <link rel="stylesheet" href="style.css"/>
   <style>
+    /* Universal Mobile Auto-Scaling and Fluid Responsiveness */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      min-height: 100dvh;
+      -webkit-text-size-adjust: 100%;
+    }
     .state-card {
       transition: all 0.15s ease-out;
       cursor: pointer;
@@ -52,15 +63,6 @@
       border-color: #EB7D00 !important;
       background-color: #221e17 !important;
       box-shadow: 0 0 0 1px #EB7D00, 0 4px 16px rgba(235, 125, 0, 0.15);
-    }
-  
-    /* Screen Auto-Scaling and Dynamic Mobile Adjustments */
-    html, body {
-      min-height: 100dvh;
-      -webkit-text-size-adjust: 100%;
-    }
-    .mobile-dock-clearance {
-      padding-bottom: max(3.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)));
     }
 </style>
 </head>
@@ -97,12 +99,12 @@
   </header>
 
   <!-- MAIN ONBOARDING CANVAS -->
-  <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-8 py-8">
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 md:px-8 pt-4 sm:pt-6 pb-56">
     
     <!-- STEPPER & HERO HEADLINE -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-outline-variant/20 mb-8">
       <div>
-        <div class="flex items-center gap-2 font-mono text-[11px] text-primary uppercase tracking-widest font-semibold mb-2">
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 font-mono text-[10px] sm:text-[11px] text-primary uppercase tracking-wider font-semibold mb-2">
           <span>STEP 1 OF 3</span>
           <span class="text-outline">&#8226;</span>
           <span>REGIONAL CALIBRATION</span>
@@ -131,7 +133,7 @@
       <div class="lg:col-span-8 flex flex-col justify-center">
         <label for="input-state-search" class="font-mono text-[11px] text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
           <span class="material-symbols-outlined text-[14px] text-primary">search</span>
-          Search among 28 Indian states
+          Search among 28 States & 8 Union Territories (36 Total)
         </label>
         <div class="relative">
           <input 
@@ -157,7 +159,7 @@
           <div class="text-[11px] text-outline">Total active verified dispatches today</div>
         </div>
         <div class="text-right font-mono text-[11px]">
-          <div class="text-primary font-semibold">28/28 Covered</div>
+          <div class="text-primary font-semibold">36/36 Covered</div>
           <div class="text-outline" id="bureau-sync-label">Telangana Bureau</div>
         </div>
       </div>
@@ -199,9 +201,42 @@
     <div class="mb-12">
       <div class="flex items-center justify-between mb-4 pb-2 border-b border-outline-variant/15">
         <span class="font-mono text-xs uppercase tracking-wider text-outline">
-          ALL 28 CONSTITUTIONAL JURISDICTIONS (SELECT ONE)
+          ALL 36 CONSTITUTIONAL JURISDICTIONS (28 STATES & 8 UNION TERRITORIES)
         </span>
-        <span class="font-mono text-xs text-primary" id="states-count-display">Showing 28 of 28 States</span>
+        <span class="font-mono text-xs text-primary" id="states-count-display">Showing 36 of 36 Jurisdictions</span>
+      </div>
+
+      
+      <!-- REGION FILTER TABS (Quick jump to all 28 states) -->
+            <!-- JURISDICTION FILTER TABS (28 States + 8 Union Territories) -->
+      <div class="flex flex-wrap items-center gap-1.5 mb-5 font-mono text-xs" id="region-filter-tabs">
+        <button type="button" class="region-tab active px-3.5 py-2 bg-primary text-on-primary font-bold rounded-sm text-xs cursor-pointer transition-colors" data-filter="all">
+          All 36
+        </button>
+        <button type="button" class="region-tab px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-outline hover:text-on-surface rounded-sm text-xs cursor-pointer transition-colors" data-filter="state">
+          States (28)
+        </button>
+        <button type="button" class="region-tab px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-outline hover:text-on-surface rounded-sm text-xs cursor-pointer transition-colors" data-filter="ut">
+          Union Territories (8)
+        </button>
+        <button type="button" class="region-tab px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-outline hover:text-on-surface rounded-sm text-xs cursor-pointer transition-colors" data-filter="south">
+          South (6)
+        </button>
+        <button type="button" class="region-tab px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-outline hover:text-on-surface rounded-sm text-xs cursor-pointer transition-colors" data-filter="north">
+          North (10)
+        </button>
+        <button type="button" class="region-tab px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-outline hover:text-on-surface rounded-sm text-xs cursor-pointer transition-colors" data-filter="west">
+          West (4)
+        </button>
+        <button type="button" class="region-tab px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-outline hover:text-on-surface rounded-sm text-xs cursor-pointer transition-colors" data-filter="east">
+          East (4)
+        </button>
+        <button type="button" class="region-tab px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-outline hover:text-on-surface rounded-sm text-xs cursor-pointer transition-colors" data-filter="central">
+          Central (2)
+        </button>
+        <button type="button" class="region-tab px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-outline hover:text-on-surface rounded-sm text-xs cursor-pointer transition-colors" data-filter="north-east">
+          North-East (8)
+        </button>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="states-grid">
@@ -231,36 +266,48 @@
   </div>
 
   <script>
-    const INDIAN_STATES_DATA = [
-      { name: "Andhra Pradesh", region: "SOUTH", desk: "AMARAVATI DESK", dispatches: 57, desc: "Coastal corridor logistics, Polavaram irrigation updates, and Amaravati capital development governance." },
-      { name: "Arunachal Pradesh", region: "NORTH-EAST", desk: "ITANAGAR BUREAU", dispatches: 24, desc: "Border infrastructure corridors, strategic hydropower deployments, and tribal customary governance." },
-      { name: "Assam", region: "NORTH-EAST", desk: "GUWAHATI DESK", dispatches: 48, desc: "Brahmaputra flood resilience programs, tea industrial commerce, and North-East connectivity hubs." },
-      { name: "Bihar", region: "EAST", desk: "PATNA BUREAU", dispatches: 67, desc: "Ganga plains infrastructure, state legislative policy, industrial labor migration, and rural development." },
-      { name: "Chhattisgarh", region: "CENTRAL", desk: "RAIPUR DESK", dispatches: 38, desc: "Mineral extraction policy, Bastar tribal community development, and green energy grid expansion." },
-      { name: "Goa", region: "WEST", desk: "PANAJI DESK", dispatches: 29, desc: "Maritime trade governance, eco-tourism regulations, and Western Ghats conservation monitoring." },
-      { name: "Gujarat", region: "WEST", desk: "AHMEDABAD BUREAU", dispatches: 74, desc: "GIFT City financial regulations, semiconductor manufacturing clusters, and coastal port operations." },
-      { name: "Haryana", region: "NORTH", desk: "CHANDIGARH DESK", dispatches: 52, desc: "NCR industrial expansion, agricultural procurement policy, and sports infrastructure pipelines." },
-      { name: "Himachal Pradesh", region: "NORTH", desk: "SHIMLA DESK", dispatches: 33, desc: "Himalayan ecology policy, disaster prevention infrastructure, and hydroelectric grid monitoring." },
-      { name: "Jharkhand", region: "EAST", desk: "RANCHI DESK", dispatches: 41, desc: "Mining royalty reforms, industrial steel manufacturing corridors, and forestry administration." },
-      { name: "Karnataka", region: "SOUTH", desk: "BENGALURU DESK", dispatches: 88, desc: "Deep-tech innovation corridors, Cauvery water policy, and aerospace manufacturing clusters." },
-      { name: "Kerala", region: "SOUTH", desk: "KOCHI DESK", dispatches: 65, desc: "Maritime trade, healthcare public infrastructure, remittances economy, and coastal climate action." },
-      { name: "Madhya Pradesh", region: "CENTRAL", desk: "BHOPAL DESK", dispatches: 59, desc: "Central agricultural procurement, national park tiger conservation, and renewable solar energy farms." },
-      { name: "Maharashtra", region: "WEST", desk: "MUMBAI BUREAU", dispatches: 96, desc: "Financial capital regulatory policy, Vidarbha agricultural welfare, and infrastructure transit lines." },
-      { name: "Manipur", region: "NORTH-EAST", desk: "IMPHAL DESK", dispatches: 31, desc: "Border trade security, civil administration dialogues, and hill council development policies." },
-      { name: "Meghalaya", region: "NORTH-EAST", desk: "SHILLONG DESK", dispatches: 26, desc: "Khasi and Garo administrative councils, mineral transport laws, and eco-tourism stewardship." },
-      { name: "Mizoram", region: "NORTH-EAST", desk: "AIZAWL DESK", dispatches: 22, desc: "Indo-Myanmar trade corridor, bamboo industrial promotion, and cross-border peace monitoring." },
-      { name: "Nagaland", region: "NORTH-EAST", desk: "KOHIMA DESK", dispatches: 23, desc: "Naga peace accord dialogues, tribal governance conventions, and cultural heritage initiatives." },
-      { name: "Odisha", region: "EAST", desk: "BHUBANESWAR DESK", dispatches: 60, desc: "Cyclone disaster mitigation, coastal blue economy, and international sports hub expansion." },
-      { name: "Punjab", region: "NORTH", desk: "CHANDIGARH BUREAU", dispatches: 55, desc: "Agrarian policy debates, groundwater preservation technology, and agro-processing trade." },
-      { name: "Rajasthan", region: "NORTH", desk: "JAIPUR BUREAU", dispatches: 68, desc: "Thar Desert renewable energy projects, critical mineral discoveries, and heritage tourism policy." },
-      { name: "Sikkim", region: "NORTH-EAST", desk: "GANGTOK DESK", dispatches: 20, desc: "100% organic farming agriculture, Teesta basin river management, and border defense corridors." },
-      { name: "Tamil Nadu", region: "SOUTH", desk: "CHENNAI BUREAU", dispatches: 85, desc: "Automotive and EV industrial corridors, electronics export policy, and maritime port trade." },
-      { name: "Telangana", region: "SOUTH", desk: "HYDERABAD BUREAU", dispatches: 82, desc: "Regional desk: Hyderabad & South Deccan - Continuous coverage on IT corridor policy, Kaleshwaram hydrology updates, and regional energy sector dispatches." },
-      { name: "Tripura", region: "NORTH-EAST", desk: "AGARTALA DESK", dispatches: 25, desc: "Indo-Bangladesh transit corridors, rubber production development, and tribal governance." },
-      { name: "Uttar Pradesh", region: "NORTH", desk: "LUCKNOW BUREAU", dispatches: 94, desc: "Expressway infrastructure corridors, defense manufacturing hub, and administrative governance." },
-      { name: "Uttarakhand", region: "NORTH", desk: "DEHRADUN DESK", dispatches: 37, desc: "Char Dham infrastructure resilience, Himalayan glacial monitoring, and eco-tourism rules." },
-      { name: "West Bengal", region: "EAST", desk: "KOLKATA BUREAU", dispatches: 78, desc: "Sundarbans climate resilience, Kolkata port river trade, and cultural industry administration." }
+        const ALL_JURISDICTIONS_DATA = [
+      // 28 STATES
+      { id: 1, name: "Andhra Pradesh", capital: "Amaravati", type: "State", region: "SOUTH", desk: "AMARAVATI DESK", dispatches: 68, desc: "Amaravati capital development, Polavaram irrigation monitoring, and coastal corridor infrastructure." },
+      { id: 2, name: "Arunachal Pradesh", capital: "Itanagar", type: "State", region: "NORTH-EAST", desk: "ITANAGAR BUREAU", dispatches: 32, desc: "Border infrastructure corridors, strategic hydropower deployments, and tribal customary governance." },
+      { id: 3, name: "Assam", capital: "Dispur", type: "State", region: "NORTH-EAST", desk: "GUWAHATI DESK", dispatches: 54, desc: "Brahmaputra flood resilience programs, tea industrial commerce, and North-East connectivity hubs." },
+      { id: 4, name: "Bihar", capital: "Patna", type: "State", region: "EAST", desk: "PATNA BUREAU", dispatches: 76, desc: "Ganga plains infrastructure, state legislative policy, industrial labor migration, and rural development." },
+      { id: 5, name: "Chhattisgarh", capital: "Raipur", type: "State", region: "CENTRAL", desk: "RAIPUR DESK", dispatches: 44, desc: "Mineral extraction policy, Bastar tribal community development, and green energy grid expansion." },
+      { id: 6, name: "Goa", capital: "Panaji", type: "State", region: "WEST", desk: "PANAJI DESK", dispatches: 36, desc: "Maritime trade governance, eco-tourism regulations, and Western Ghats conservation monitoring." },
+      { id: 7, name: "Gujarat", capital: "Gandhinagar", type: "State", region: "WEST", desk: "GANDHINAGAR BUREAU", dispatches: 88, desc: "GIFT City financial regulations, semiconductor manufacturing clusters, and coastal port operations." },
+      { id: 8, name: "Haryana", capital: "Chandigarh", type: "State", region: "NORTH", desk: "CHANDIGARH DESK", dispatches: 62, desc: "NCR industrial expansion, agricultural procurement policy, and sports infrastructure pipelines." },
+      { id: 9, name: "Himachal Pradesh", capital: "Shimla", type: "State", region: "NORTH", desk: "SHIMLA DESK", dispatches: 41, desc: "Himalayan ecology policy, disaster prevention infrastructure, and hydroelectric grid monitoring." },
+      { id: 10, name: "Jharkhand", capital: "Ranchi", type: "State", region: "EAST", desk: "RANCHI DESK", dispatches: 49, desc: "Mining royalty reforms, industrial steel manufacturing corridors, and forestry administration." },
+      { id: 11, name: "Karnataka", capital: "Bengaluru", type: "State", region: "SOUTH", desk: "BENGALURU DESK", dispatches: 95, desc: "Deep-tech innovation corridors, Cauvery water policy, and aerospace manufacturing clusters." },
+      { id: 12, name: "Kerala", capital: "Thiruvananthapuram", type: "State", region: "SOUTH", desk: "THIRUVANANTHAPURAM DESK", dispatches: 74, desc: "Maritime trade, healthcare public infrastructure, remittances economy, and coastal climate action." },
+      { id: 13, name: "Madhya Pradesh", capital: "Bhopal", type: "State", region: "CENTRAL", desk: "BHOPAL DESK", dispatches: 66, desc: "Central agricultural procurement, national park tiger conservation, and renewable solar energy farms." },
+      { id: 14, name: "Maharashtra", capital: "Mumbai", type: "State", region: "WEST", desk: "MUMBAI BUREAU", dispatches: 110, desc: "Financial capital regulatory policy, Vidarbha agricultural welfare, and infrastructure transit lines." },
+      { id: 15, name: "Manipur", capital: "Imphal", type: "State", region: "NORTH-EAST", desk: "IMPHAL DESK", dispatches: 38, desc: "Border trade security, civil administration dialogues, and hill council development policies." },
+      { id: 16, name: "Meghalaya", capital: "Shillong", type: "State", region: "NORTH-EAST", desk: "SHILLONG DESK", dispatches: 31, desc: "Khasi and Garo administrative councils, mineral transport laws, and eco-tourism stewardship." },
+      { id: 17, name: "Mizoram", capital: "Aizawl", type: "State", region: "NORTH-EAST", desk: "AIZAWL DESK", dispatches: 27, desc: "Indo-Myanmar trade corridor, bamboo industrial promotion, and cross-border peace monitoring." },
+      { id: 18, name: "Nagaland", capital: "Kohima", type: "State", region: "NORTH-EAST", desk: "KOHIMA DESK", dispatches: 29, desc: "Naga peace accord dialogues, tribal governance conventions, and cultural heritage initiatives." },
+      { id: 19, name: "Odisha", capital: "Bhubaneswar", type: "State", region: "EAST", desk: "BHUBANESWAR DESK", dispatches: 69, desc: "Cyclone disaster mitigation, coastal blue economy, and international sports hub expansion." },
+      { id: 20, name: "Punjab", capital: "Chandigarh", type: "State", region: "NORTH", desk: "CHANDIGARH BUREAU", dispatches: 63, desc: "Agrarian policy debates, groundwater preservation technology, and agro-processing trade." },
+      { id: 21, name: "Rajasthan", capital: "Jaipur", type: "State", region: "NORTH", desk: "JAIPUR BUREAU", dispatches: 78, desc: "Thar Desert renewable energy projects, critical mineral discoveries, and heritage tourism policy." },
+      { id: 22, name: "Sikkim", capital: "Gangtok", type: "State", region: "NORTH-EAST", desk: "GANGTOK DESK", dispatches: 26, desc: "100% organic farming agriculture, Teesta basin river management, and border defense corridors." },
+      { id: 23, name: "Tamil Nadu", capital: "Chennai", type: "State", region: "SOUTH", desk: "CHENNAI BUREAU", dispatches: 92, desc: "Automotive and EV industrial corridors, electronics export policy, and maritime port trade." },
+      { id: 24, name: "Telangana", capital: "Hyderabad", type: "State", region: "SOUTH", desk: "HYDERABAD BUREAU", dispatches: 90, desc: "IT and life sciences corridors, Kaleshwaram hydrology updates, and regional energy sector dispatches." },
+      { id: 25, name: "Tripura", capital: "Agartala", type: "State", region: "NORTH-EAST", desk: "AGARTALA DESK", dispatches: 29, desc: "Indo-Bangladesh transit corridors, rubber production development, and tribal governance." },
+      { id: 26, name: "Uttar Pradesh", capital: "Lucknow", type: "State", region: "NORTH", desk: "LUCKNOW BUREAU", dispatches: 104, desc: "Expressway infrastructure corridors, defense manufacturing hub, and administrative governance." },
+      { id: 27, name: "Uttarakhand", capital: "Dehradun", type: "State", region: "NORTH", desk: "DEHRADUN DESK", dispatches: 43, desc: "Char Dham infrastructure resilience, Himalayan glacial monitoring, and eco-tourism rules." },
+      { id: 28, name: "West Bengal", capital: "Kolkata", type: "State", region: "EAST", desk: "KOLKATA BUREAU", dispatches: 85, desc: "Sundarbans climate resilience, Kolkata port river trade, and cultural industry administration." },
+
+      // 8 UNION TERRITORIES
+      { id: 29, name: "Andaman and Nicobar Islands", capital: "Port Blair", type: "Union Territory", region: "ISLANDS", desk: "PORT BLAIR DESK", dispatches: 22, desc: "Great Nicobar maritime transshipment port, maritime security, and coral reef conservation." },
+      { id: 30, name: "Chandigarh", capital: "Chandigarh", type: "Union Territory", region: "NORTH", desk: "CHANDIGARH UT DESK", dispatches: 35, desc: "Joint administrative governance, urban green planning, and educational health institutions." },
+      { id: 31, name: "Dadra and Nagar Haveli and Daman and Diu", capital: "Daman", type: "Union Territory", region: "WEST", desk: "DAMAN BUREAU", dispatches: 20, desc: "Coastal industrial zones, textile manufacturing, and maritime heritage preservation." },
+      { id: 32, name: "Delhi", capital: "New Delhi", type: "Union Territory", region: "NORTH", desk: "DELHI NCT DESK", dispatches: 115, desc: "National capital governance, Supreme Court orders, central ministry policies, and NCR air quality." },
+      { id: 33, name: "Jammu and Kashmir", capital: "Srinagar / Jammu", type: "Union Territory", region: "NORTH", desk: "SRINAGAR BUREAU", dispatches: 68, desc: "Himalayan tourism, Chenab railway bridge connectivity, lithium mining, and security governance." },
+      { id: 34, name: "Ladakh", capital: "Leh", type: "Union Territory", region: "NORTH", desk: "LEH BUREAU", dispatches: 24, desc: "High-altitude border infrastructure, solar energy mega-parks, and climate ecology stewardship." },
+      { id: 35, name: "Lakshadweep", capital: "Kavaratti", type: "Union Territory", region: "ISLANDS", desk: "KAVARATTI DESK", dispatches: 18, desc: "Island eco-tourism projects, maritime fisheries, and lagoon marine ecosystem management." },
+      { id: 36, name: "Puducherry", capital: "Puducherry", type: "Union Territory", region: "SOUTH", desk: "PUDUCHERRY DESK", dispatches: 28, desc: "French heritage tourism, port development agreements, and coastal biotechnology initiatives." }
     ];
+    const INDIAN_STATES_DATA = ALL_JURISDICTIONS_DATA;
 
     let selectedState = localStorage.getItem('newsreels_state') || 'Telangana';
 
@@ -277,45 +324,95 @@
       document.getElementById('masthead-current-state').textContent = item.name;
     }
 
+    let activeFilter = 'all';
+
+    function renderShowcase(stName) {
+      const item = ALL_JURISDICTIONS_DATA.find(s => s.name.toLowerCase() === stName.toLowerCase()) || ALL_JURISDICTIONS_DATA[0];
+      document.getElementById('showcase-focus-badge').innerHTML = `
+        <span class="w-2 h-2 bg-primary inline-block"></span>
+        PRIMARY FOCUS AREA: ${item.name.toUpperCase()} &#8212; ACTIVE DESK CALIBRATION
+      `;
+      document.getElementById('showcase-state-name').textContent = item.name;
+      document.getElementById('showcase-desk-desc').textContent = `${item.desk} (${item.capital}) — ${item.desc}`;
+      document.getElementById('showcase-dispatches').textContent = item.dispatches;
+      document.getElementById('bureau-sync-label').textContent = item.desk;
+      document.getElementById('masthead-current-state').textContent = item.name;
+    }
+
     function renderGrid(query = '') {
       const container = document.getElementById('states-grid');
       container.innerHTML = '';
       const q = query.trim().toLowerCase();
 
-      const filtered = INDIAN_STATES_DATA.filter(s => {
-        return s.name.toLowerCase().includes(q) || 
-               s.region.toLowerCase().includes(q) || 
-               s.desk.toLowerCase().includes(q);
+      const filtered = ALL_JURISDICTIONS_DATA.filter((s) => {
+        const matchesQuery = s.name.toLowerCase().includes(q) || 
+                             s.capital.toLowerCase().includes(q) ||
+                             s.region.toLowerCase().includes(q) || 
+                             s.desk.toLowerCase().includes(q);
+        
+        let matchesFilter = true;
+        if (activeFilter === 'state') matchesFilter = s.type === 'State';
+        else if (activeFilter === 'ut') matchesFilter = s.type === 'Union Territory';
+        else if (activeFilter !== 'all') matchesFilter = s.region.toLowerCase() === activeFilter.toLowerCase();
+
+        return matchesQuery && matchesFilter;
       });
 
-      document.getElementById('states-count-display').textContent = `Showing ${filtered.length} of 28 States`;
+      document.getElementById('states-count-display').textContent = `Showing ${filtered.length} of ${ALL_JURISDICTIONS_DATA.length} Jurisdictions`;
 
-      filtered.forEach(s => {
+      filtered.forEach((s) => {
+        const numStr = String(s.id).padStart(2, '0');
         const isSel = s.name.toLowerCase() === selectedState.toLowerCase();
         const card = document.createElement('div');
-        card.className = `state-card bg-surface-container-low p-4 border ${isSel ? 'selected' : 'border-outline-variant/25'}`;
+        card.className = `state-card bg-surface-container-low p-4 border rounded-sm ${isSel ? 'selected' : 'border-outline-variant/25'}`;
         card.innerHTML = `
-          <div class="flex items-center justify-between text-[10px] font-mono mb-1.5">
-            <span class="text-outline uppercase">${s.region}</span>
-            <span class="${isSel ? 'text-primary font-bold' : 'text-outline'}">${s.dispatches} active dispatches</span>
+          <div class="flex items-center justify-between text-xs font-mono mb-1.5">
+            <span class="text-outline uppercase text-[10px] tracking-wider">${s.type === 'Union Territory' ? 'UT' : 'STATE'} • ${s.region}</span>
+            <span class="${isSel ? 'text-primary font-bold' : 'text-outline'} text-[11px]">${s.dispatches} dispatches</span>
           </div>
-          <h3 class="font-serif text-lg font-semibold text-on-surface mb-2">${s.name}</h3>
-          <div class="flex items-center justify-between text-[11px] font-mono pt-2 border-t border-outline-variant/15">
-            <span class="text-outline text-[10px]">${s.desk}</span>
-            ${isSel ? '<span class="text-primary font-bold text-[10px] flex items-center gap-1"><span class="w-1.5 h-1.5 bg-primary rounded-full"></span>ACTIVE</span>' : ''}
+          <div class="flex items-start justify-between gap-2 mb-1.5">
+            <div>
+              <span class="text-xs font-mono text-outline/80 font-bold mr-1">#${numStr}</span>
+              <h3 class="font-serif text-lg font-semibold text-on-surface leading-tight inline">${s.name}</h3>
+            </div>
+          </div>
+          <div class="text-xs font-sans text-primary/90 font-medium mb-2.5">
+            Capital: <span class="text-on-surface">${s.capital}</span>
+          </div>
+          <div class="flex items-center justify-between text-xs font-mono pt-2 border-t border-outline-variant/15">
+            <span class="text-outline text-[11px] truncate max-w-[140px]">${s.desk}</span>
+            ${isSel ? '<span class="text-primary font-bold text-xs flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span> ACTIVE</span>' : '<span class="text-outline/60 text-xs">Select</span>'}
           </div>
         `;
-
         card.addEventListener('click', () => {
           selectedState = s.name;
           localStorage.setItem('newsreels_state', selectedState);
           renderShowcase(selectedState);
           renderGrid(document.getElementById('input-state-search').value);
         });
-
         container.appendChild(card);
       });
     }
+
+    // Region tab click listeners
+    document.querySelectorAll('.region-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.region-tab').forEach(t => {
+          t.classList.remove('active', 'bg-primary', 'text-on-primary', 'font-bold');
+          t.classList.add('bg-surface-container', 'text-outline');
+        });
+        tab.classList.add('active', 'bg-primary', 'text-on-primary', 'font-bold');
+        tab.classList.remove('bg-surface-container', 'text-outline');
+        activeFilter = tab.getAttribute('data-filter') || 'all';
+        renderGrid(document.getElementById('input-state-search').value);
+      });
+    });
+        tab.classList.add('active', 'bg-primary', 'text-on-primary', 'font-bold');
+        tab.classList.remove('bg-surface-container', 'text-outline');
+        activeRegion = tab.getAttribute('data-region') || 'all';
+        renderGrid(document.getElementById('input-state-search').value);
+      });
+    });
 
     // Initialize
     renderShowcase(selectedState);

@@ -239,6 +239,25 @@
 
 
   <style>
+    /* Universal Mobile Auto-Scaling and Fluid Responsiveness */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      min-height: 100dvh;
+      -webkit-text-size-adjust: 100%;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
 
     /* Architectural Hairline Rules & Micro-animations */
 
@@ -578,7 +597,7 @@
 
   <header class="sticky top-0 z-50 w-full bg-[#141311] border-b border-outline-variant/20 will-change-transform">
 
-    <div class="h-16 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-gutter">
+    <div class="h-16 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-gutter">
 
       <!-- Brand & Tagline -->
 
@@ -677,7 +696,7 @@
 
        ========================================================================= -->
 
-  <main class="w-full flex-1 max-w-[1440px] mx-auto px-margin pt-8 bg-surface">
+  <main class="w-full flex-1 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 bg-surface">
 
     <div class="flex flex-col w-full">
 
@@ -738,7 +757,7 @@
 
       <!-- HORIZONTAL FILTER / CATEGORY SWITCHER RIBBON -->
 
-      <nav aria-label="Editorial Categories" class="w-full flex items-center justify-between gap-space-md mb-space-xl overflow-x-auto pb-space-xs border-b border-outline-variant/20">
+      <nav aria-label="Editorial Categories" class="w-full overflow-x-auto no-scrollbar mb-4 sm:mb-6">
 
         <div class="flex items-center gap-1.5 min-w-max" id="category-tabs-bar">
 
@@ -1200,7 +1219,7 @@
 
   <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/20 mt-space-xl">
 
-    <div class="max-w-[1440px] mx-auto px-margin py-space-xl">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-space-xl">
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-gutter pb-space-lg border-b border-outline-variant/15">
 
@@ -1360,68 +1379,48 @@
 
           <label for="input-state" class="font-label-caps text-label-caps text-outline uppercase tracking-wider">State / Union Territory</label>
 
-          <select id="input-state" class="bg-surface-container-lowest border border-outline-variant/40 text-on-surface p-2.5 font-label-md outline-none focus:border-primary w-full cursor-pointer">
-
-            <option value="">-- Select Your State (All 28 States Available) --</option>
-
-            <option value="Andhra Pradesh">Andhra Pradesh</option>
-
-            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-
-            <option value="Assam">Assam</option>
-
-            <option value="Bihar">Bihar</option>
-
-            <option value="Chhattisgarh">Chhattisgarh</option>
-
-            <option value="Goa">Goa</option>
-
-            <option value="Gujarat">Gujarat</option>
-
-            <option value="Haryana">Haryana</option>
-
-            <option value="Himachal Pradesh">Himachal Pradesh</option>
-
-            <option value="Jharkhand">Jharkhand</option>
-
-            <option value="Karnataka">Karnataka</option>
-
-            <option value="Kerala">Kerala</option>
-
-            <option value="Madhya Pradesh">Madhya Pradesh</option>
-
-            <option value="Maharashtra">Maharashtra</option>
-
-            <option value="Manipur">Manipur</option>
-
-            <option value="Meghalaya">Meghalaya</option>
-
-            <option value="Mizoram">Mizoram</option>
-
-            <option value="Nagaland">Nagaland</option>
-
-            <option value="Odisha">Odisha</option>
-
-            <option value="Punjab">Punjab</option>
-
-            <option value="Rajasthan">Rajasthan</option>
-
-            <option value="Sikkim">Sikkim</option>
-
-            <option value="Tamil Nadu">Tamil Nadu</option>
-
-            <option value="Telangana">Telangana</option>
-
-            <option value="Tripura">Tripura</option>
-
-            <option value="Uttar Pradesh">Uttar Pradesh</option>
-
-            <option value="Uttarakhand">Uttarakhand</option>
-
-            <option value="West Bengal">West Bengal</option>
-
-            <option value="Delhi">Delhi (NCT)</option>
-
+          <select id="input-state" class="w-full bg-surface-container border border-outline-variant/30 text-on-surface px-3 py-2 text-sm outline-none focus:border-primary rounded-sm">
+            <option value="">-- Select Your State or UT (36 Available) --</option>
+            <optgroup label="28 Indian States">
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+              <option value="Assam">Assam</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Chhattisgarh">Chhattisgarh</option>
+              <option value="Goa">Goa</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Himachal Pradesh">Himachal Pradesh</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Manipur">Manipur</option>
+              <option value="Meghalaya">Meghalaya</option>
+              <option value="Mizoram">Mizoram</option>
+              <option value="Nagaland">Nagaland</option>
+              <option value="Odisha">Odisha</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Sikkim">Sikkim</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Tripura">Tripura</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Uttarakhand">Uttarakhand</option>
+              <option value="West Bengal">West Bengal</option>
+            </optgroup>
+            <optgroup label="8 Union Territories">
+              <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+              <option value="Chandigarh">Chandigarh</option>
+              <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+              <option value="Ladakh">Ladakh</option>
+              <option value="Lakshadweep">Lakshadweep</option>
+              <option value="Puducherry">Puducherry</option>
+            </optgroup>
           </select>
 
         </div>

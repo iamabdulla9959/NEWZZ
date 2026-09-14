@@ -563,10 +563,19 @@
 
     // Tab isolation
     if (activeCategory && activeCategory.toLowerCase() !== 'all') {
-      filtered = cards.filter(c => matchesCategory(c.category, activeCategory));
-      if (filtered.length === 0) {
-        const kw = activeCategory.toLowerCase();
-        filtered = cards.filter(c => ((c.headline || '') + ' ' + (c.summary || '')).toLowerCase().includes(kw));
+      if (activeCategory.toLowerCase() === 'state') {
+        filtered = cards.filter(c => {
+          const cs = (c.state || '').trim().toLowerCase();
+          const head = (c.headline || '').toLowerCase();
+          const isRegional = (c.category || '').toLowerCase() === 'state' || (c.category || '').toLowerCase() === 'regional';
+          return (targetState && (cs === targetState || head.includes(targetState))) || isRegional;
+        });
+      } else {
+        filtered = cards.filter(c => matchesCategory(c.category, activeCategory));
+        if (filtered.length === 0) {
+          const kw = activeCategory.toLowerCase();
+          filtered = cards.filter(c => ((c.headline || '') + ' ' + (c.summary || '')).toLowerCase().includes(kw));
+        }
       }
     } else {
       // In 'All News / For You', filter to user's selected interests if any
@@ -644,13 +653,14 @@
     function calculateCompositeScore(card) {
       const recency = getRecencyScore(card);
       const tier = getCardPriorityTier(card);
-      const priorityPoints = tier === 0 ? 60 : (tier === 1 ? 45 : (tier === 2 ? 30 : (tier === 3 ? 15 : 0)));
+      const priorityPoints = tier === 0 ? 50 : (tier === 1 ? 40 : (tier === 2 ? 25 : (tier === 3 ? 15 : 0)));
       const stateMatch = getStateMatchScore(card);
-      const statePoints = stateMatch > 0 ? (stateMatch === 100 ? 50 : 25) : 0;
+      // High state boost: 120 points for user's configured state news so local breaking news leads the feed
+      const statePoints = stateMatch === 100 ? 120 : (stateMatch === 50 ? 60 : 0);
       const qualityScore = Number(card.final_feed_score) || 50;
 
-      // Composite Score: Recency (2x) + User Category Priority + Regional State Match + Quality
-      return (recency * 2.0) + priorityPoints + statePoints + (qualityScore * 0.1);
+      // Composite Score: Recency (2x) + State Priority Boost + Category Tier + Quality
+      return (recency * 2.0) + statePoints + priorityPoints + (qualityScore * 0.1);
     }
 
     return [...filtered].sort((a, b) => {
