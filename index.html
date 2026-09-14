@@ -3,23 +3,7 @@
 <html class="dark" lang="en">
 
 <head>
-  <!-- First-Time Visitor Onboarding Gate -->
-  <script>
-    (function() {
-      try {
-        var params = new URLSearchParams(window.location.search);
-        if (params.get('onboarding') === 'reset') {
-          localStorage.removeItem('newsreels_onboarding_complete');
-        }
-        var completed = localStorage.getItem('newsreels_onboarding_complete');
-        if (completed !== 'true' && params.get('skip') !== '1') {
-          window.location.replace('state-selection.html');
-        }
-      } catch (e) {
-        console.warn('Onboarding check failed:', e);
-      }
-    })();
-  </script>
+
 
 
   <meta charset="utf-8"/>
