@@ -160,7 +160,9 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
         except Exception as exc:  # fail closed
             judge = {"consistent": False, "issues": [f"judge_error:{exc}"]}
         if not judge.get("consistent"):
-            reasons.extend([str(i) for i in judge.get("issues") or ["fact_inconsistent"]])
+            raw_issues = judge.get("issues")
+        issues_list = raw_issues if isinstance(raw_issues, list) else ["fact_inconsistent"]
+        reasons.extend([str(i) for i in issues_list])
 
         if reasons:
             card.verified_status = "pending_review"
@@ -206,7 +208,7 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
                 )
                 ver_score, ver_meta = VerificationEngine.calculate_verification(
                     sources=[{"name": getattr(a.source, "name", "Wire"), "url": getattr(a, "url", "")} for a in articles],
-                    conflict_detected=bool(cluster.flagged_conflict),
+                    conflict_detected=cluster.flagged_conflict,
                 )
                 scoring_out = FeedRankingEngine.compute_final_score(
                     objective_importance=imp_score,
@@ -299,7 +301,7 @@ def _attach_sources(card: Card, articles: list[Article]) -> None:
                 article_id=article.id,
                 name=article.source.name,
                 url=article.url,
-                trust_tier=str(article.source.trust_tier),
+                trust_tier=article.source.trust_tier,
             )
         )
 

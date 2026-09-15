@@ -363,10 +363,10 @@ def seed() -> None:
             exists = db.query(Source).filter(Source.name == row["name"]).one_or_none()
             if exists:
                 exists.trust_tier = str(row["trust_tier"])
-                exists.category = row["category"]
+                exists.category = str(row["category"]
                 exists.region = row["region"]
                 exists.rss_url = row["rss_url"]
-                exists.source_type = row.get("source_type", "rss")
+                exists.source_type = str(row.get("source_type", "rss"))
                 continue
             db.add(Source(id=new_id(), is_active=True, **row))
         db.commit()

@@ -3,7 +3,8 @@ import sys
 from datetime import datetime, timezone
 import time
 
-sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 sys.path.extend(["apps/api", "apps/worker"])
 
 from dotenv import load_dotenv
@@ -107,7 +108,9 @@ def main():
             judge = {"consistent": False, "issues": [f"judge_error:{exc}"]}
 
         if not judge.get("consistent"):
-            reasons.extend([str(iss) for iss in judge.get("issues") or ["fact_inconsistent"]])
+            raw_iss = judge.get("issues")
+        iss_list = raw_iss if isinstance(raw_iss, list) else ["fact_inconsistent"]
+        reasons.extend([str(iss) for iss in iss_list])
 
         if reasons:
             card.verified_status = "pending_review"

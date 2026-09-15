@@ -6,7 +6,7 @@ import re
 import urllib.request
 import urllib.parse
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Set
+from typing import Dict, Any, List, Set, Tuple
 from urllib.parse import urlparse
 
 sys.path.insert(0, r"d:\News")
@@ -14,9 +14,9 @@ sys.path.insert(0, r"d:\News\apps\api")
 sys.path.insert(0, r"d:\News\apps\worker")
 sys.path.insert(0, r"d:\News\website_scraping")
 if sys.stdout:
-    sys.stdout.reconfigure(encoding='utf-8')
+    if hasattr(sys.stdout, "reconfigure"): sys.stdout.reconfigure(encoding='utf-8')
 if sys.stderr:
-    sys.stderr.reconfigure(encoding='utf-8')
+    if hasattr(sys.stderr, "reconfigure"): sys.stderr.reconfigure(encoding='utf-8')
 
 import feedparser
 from playwright.sync_api import sync_playwright

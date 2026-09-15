@@ -130,7 +130,7 @@ def get_feed(
     from packages.ranking_engine.verification_engine import VerificationEngine
 
     scored_cards: list[Card] = []
-    seen_cluster_keys: dict[str, Card] = {}
+    seen_cluster_keys: dict[tuple[str, str], Card] = {}
 
     for card in candidates:
         # 1. Importance (0..100) - Dynamic contextual multi-dimensional evaluation
@@ -155,13 +155,13 @@ def get_feed(
         if ver <= 0.0:
             src_dicts = []
             for s in sources_list:
-                is_t1 = str(s.trust_tier) in ("1", "Tier 1")
+                is_t1 = s.trust_tier in ("1", "Tier 1")
                 if is_t1:
                     tier1_count += 1
                 src_dicts.append({"name": s.name, "tier": s.trust_tier})
             ver, _ = VerificationEngine.calculate_verification(src_dicts)
         else:
-            tier1_count = sum(1 for s in sources_list if str(s.trust_tier) in ("1", "Tier 1"))
+            tier1_count = sum(1 for s in sources_list if s.trust_tier in ("1", "Tier 1"))
 
         # 5. Personal Relevance (0..100) - Tailored to requesting user
         rel = RelevanceEngine.calculate_relevance(
@@ -196,7 +196,7 @@ def get_feed(
         card.priority_reason = scoring_out.priority_reason
 
         # Deduplicate per cluster and headline, keeping highest scoring representation
-        cluster_key = (str(card.cluster_id), " ".join(card.headline.lower().split()))
+        cluster_key = (card.cluster_id, " ".join(card.headline.lower().split()))
         if cluster_key in seen_cluster_keys:
             if card.final_feed_score > seen_cluster_keys[cluster_key].final_feed_score:
                 seen_cluster_keys[cluster_key] = card

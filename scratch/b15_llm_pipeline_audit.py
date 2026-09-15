@@ -151,6 +151,9 @@ def audit_input_contract() -> dict[str, Any]:
     ]
 
     class CapturingLLM:
+    def complete_text(self, system: str, user: str) -> str:
+        return "{"issues": [], "consistent": true}"
+
         def __init__(self):
             self.captured_system = ""
             self.captured_user = ""
@@ -225,6 +228,9 @@ def audit_output_contract() -> dict[str, Any]:
 
     # Test missing fields in summarize_articles
     class IncompleteLLM:
+    def complete_text(self, system: str, user: str) -> str:
+        return "{"issues": [], "consistent": true}"
+
         def complete_json(self, system: str, user: str):
             return {"headline": "Incomplete"} # Missing summary, category, key_facts, etc.
 
@@ -245,6 +251,9 @@ def audit_output_contract() -> dict[str, Any]:
 def audit_summary_length_contract() -> dict[str, Any]:
     print("\n--- 5. Summary Length Contract ---")
     class LengthTestLLM:
+    def complete_text(self, system: str, user: str) -> str:
+        return "{"issues": [], "consistent": true}"
+
         def __init__(self, count: int):
             self.count = count
         def complete_json(self, system: str, user: str):
@@ -409,6 +418,9 @@ def audit_prompt_injection_safety() -> dict[str, Any]:
 
     # Test in summarize_articles prompt formatting
     class InjectionTestingLLM:
+    def complete_text(self, system: str, user: str) -> str:
+        return "{"issues": [], "consistent": true}"
+
         def __init__(self):
             self.system = ""
             self.user = ""
@@ -452,12 +464,18 @@ def audit_grounding() -> dict[str, Any]:
     print("\n--- 10. Source Grounding Check ---")
     # Verify fact consistency judge
     class MockJudgeLLM:
+    def complete_text(self, system: str, user: str) -> str:
+        return "{"issues": [], "consistent": true}"
+
         def complete_json(self, system: str, user: str):
             return {"consistent": True, "issues": []}
 
     res_valid = judge_fact_consistency(MockJudgeLLM(), "Valid summary", ["Valid source text"])
     
     class MockJudgeFailLLM:
+    def complete_text(self, system: str, user: str) -> str:
+        return "{"issues": [], "consistent": true}"
+
         def complete_json(self, system: str, user: str):
             return {"consistent": False, "issues": ["invented names not found in source"]}
 

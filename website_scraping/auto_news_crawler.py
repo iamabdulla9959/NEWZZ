@@ -644,3 +644,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+GLOBAL_CATEGORIES = ["Technology", "World", "Science", "Politics", "Business", "Health", "Sports", "Entertainment", "Environment"]
+INDIA_CATEGORIES = ["National", "Technology", "Science", "Politics", "Business", "Health", "Sports", "Entertainment", "Environment"]

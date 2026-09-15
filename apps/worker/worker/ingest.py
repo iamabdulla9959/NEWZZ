@@ -35,7 +35,7 @@ def parse_datetime(value: str | None) -> datetime | None:
         return dt
     except (TypeError, ValueError):
         try:
-            normalized = str(value).replace("Z", "+00:00")
+            normalized = value.replace("Z", "+00:00")
             parsed = datetime.fromisoformat(normalized)
             return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
         except (TypeError, ValueError):
@@ -112,8 +112,8 @@ def ingest_rss_source(
         response.raise_for_status()
         parsed = feedparser.parse(response.content)
         for entry in parsed.entries:
-            url = (entry.get("link") or "").strip()
-            title = (entry.get("title") or "").strip()
+            url = str(entry.get("link") or "").strip()
+            title = str(entry.get("title") or "").strip()
             if not url or not title:
                 continue
             if db.query(Article).filter(Article.url == url).one_or_none():
@@ -139,7 +139,8 @@ def ingest_rss_source(
                             text = re.sub(r"\s+", " ", soup.body.get_text(separator=" ", strip=True)).strip()[:10000]
                 except Exception as exc:
                     logger.debug("Could not fetch fallback article text for %s: %s", url, exc)
-            published = parse_datetime(entry.get("published") or entry.get("updated"))
+            raw_pub = entry.get("published") or entry.get("updated")
+            published = parse_datetime(str(raw_pub) if raw_pub else None)
 
 
             # Step 2 translation layer

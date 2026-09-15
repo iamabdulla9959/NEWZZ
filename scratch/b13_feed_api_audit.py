@@ -10,9 +10,9 @@ from urllib.parse import urlparse
 sys.path.insert(0, r"d:\News")
 sys.path.insert(0, r"d:\News\apps\api")
 if sys.stdout:
-    sys.stdout.reconfigure(encoding='utf-8')
+    if hasattr(sys.stdout, "reconfigure"): sys.stdout.reconfigure(encoding='utf-8')
 if sys.stderr:
-    sys.stderr.reconfigure(encoding='utf-8')
+    if hasattr(sys.stderr, "reconfigure"): sys.stderr.reconfigure(encoding=\#utf-8')
 
 from playwright.sync_api import sync_playwright
 
@@ -29,7 +29,7 @@ def fetch_json(url: str):
     with urllib.request.urlopen(req) as resp:
         return resp.getcode(), json.loads(resp.read().decode())
 
-def fetch_raw(url: str, method: str = "GET", data: bytes = None, headers: dict = None):
+def fetch_raw(url: str, method: str = "GET", data: bytes | None = None, headers: dict | None = None):
     h = {"User-Agent": "B13-Audit/1.0"}
     if headers:
         h.update(headers)

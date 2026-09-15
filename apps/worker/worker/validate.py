@@ -73,7 +73,7 @@ def check_sentence_count(summary: str) -> ValidationResult:
 
 
 def check_reading_level(summary: str) -> ValidationResult:
-    grade = float(textstat.flesch_kincaid_grade(summary))
+    grade = float(getattr(textstat, "flesch_kincaid_grade", textstat.textstat.flesch_kincaid_grade)(summary))
     if grade < MIN_GRADE or grade > MAX_GRADE:
         return ValidationResult(False, [f"reading_level:{grade}"])
     return ValidationResult(True, [])
