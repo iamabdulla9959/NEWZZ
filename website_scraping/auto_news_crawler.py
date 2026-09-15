@@ -219,10 +219,39 @@ GLOBAL_BASELINES: Dict[str, str] = {
 
 
 def load_existing_links(filepath: str) -> Set[str]:
-    """Reads existing news.json to pre-populate seen URLs and guarantee zero duplicates."""
+    """Reads existing news.json (supports both standard JSON array and JSONL) to pre-populate seen URLs and guarantee zero duplicates."""
     seen_links = set()
     if not os.path.exists(filepath):
         return seen_links
+
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+            if not content:
+                return seen_links
+            if content.startswith("["):
+                records = json.loads(content)
+                for record in records:
+                    link = record.get("link")
+                    if link:
+                        seen_links.add(link)
+            else:
+                for line in content.splitlines():
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        record = json.loads(line)
+                        link = record.get("link")
+                        if link:
+                            seen_links.add(link)
+                    except json.JSONDecodeError:
+                        continue
+        logger.info(f"Loaded {len(seen_links)} existing unique article URLs from {filepath}.")
+    except Exception as e:
+        logger.warning(f"Could not read {filepath}: {e}. Starting fresh.")
+
+    return seen_links
 
     try:
         with open(filepath, "r", encoding="utf-8") as f:
@@ -446,16 +475,36 @@ def sync_articles_to_feed_json(articles: List[Dict]) -> None:
 
 
 def append_articles_to_file(filepath: str, articles: List[Dict]) -> None:
-    """Appends newly discovered unique articles to destination JSON and feed.json."""
+    """Saves newly discovered unique articles to destination JSON as a valid standard JSON array and syncs to feed.json."""
     if not articles:
         return
 
-    with open(filepath, "a", encoding="utf-8") as f:
-        for item in articles:
-            f.write(json.dumps(item, ensure_ascii=False) + "\n")
-        f.flush()
-        os.fsync(f.fileno())
-    
+    existing = []
+    if os.path.exists(filepath):
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                if content.startswith("["):
+                    existing = json.loads(content)
+                elif content:
+                    for line in content.splitlines():
+                        if line.strip():
+                            try:
+                                existing.append(json.loads(line.strip()))
+                            except Exception:
+                                pass
+        except Exception:
+            existing = []
+
+    existing_links = {a.get("link") for a in existing if a.get("link")}
+    fresh_unique = [a for a in articles if a.get("link") not in existing_links]
+    all_articles = existing + fresh_unique
+
+    temp_file = filepath + ".tmp"
+    with open(temp_file, "w", encoding="utf-8") as f:
+        json.dump(all_articles, f, ensure_ascii=False, indent=2)
+    os.replace(temp_file, filepath)
+
     sync_articles_to_feed_json(articles)
 
 

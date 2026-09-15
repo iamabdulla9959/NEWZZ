@@ -257,29 +257,39 @@ def init_local_db(db_path: str = SQLITE_DB_PATH) -> None:
 
 
 def load_articles_from_json(filepath: str = NEWS_JSON_PATH) -> List[Dict[str, Any]]:
-    """Loads all article records from news.json, normalizing category to canonical values."""
+    """Loads all article records from news.json (supports both standard JSON array and JSONL), normalizing category to canonical values."""
     if not os.path.exists(filepath):
         logger.warning(f"File not found: {filepath}")
         return []
 
     articles = []
     seen_links = set()
-    with open(filepath, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                rec = json.loads(line)
-                link = rec.get("link")
-                if link and link not in seen_links:
-                    seen_links.add(link)
-                    # Normalize category at load time (single canonical source of truth)
-                    raw_cat = rec.get("category", "National")
-                    rec["category"] = normalize_category(str(raw_cat))
-                    articles.append(rec)
-            except json.JSONDecodeError:
-                continue
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+            if not content:
+                return []
+            if content.startswith("["):
+                raw_list = json.loads(content)
+            else:
+                raw_list = []
+                for line in content.splitlines():
+                    if line.strip():
+                        try:
+                            raw_list.append(json.loads(line.strip()))
+                        except Exception:
+                            pass
+
+        for rec in raw_list:
+            link = rec.get("link")
+            if link and link not in seen_links:
+                seen_links.add(link)
+                raw_cat = rec.get("category", "National")
+                rec["category"] = normalize_category(str(raw_cat))
+                articles.append(rec)
+    except Exception as e:
+        logger.error(f"Error loading {filepath}: {e}")
+
     return articles
 
 
