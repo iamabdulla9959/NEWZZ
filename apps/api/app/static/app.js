@@ -148,6 +148,7 @@ const INSTANT_FALLBACK_CARD = {
     cardIds: new Set(),
 
     allRankedCache: [],
+    allMasterCards: [],
 
     selectedCard: null,
 
@@ -970,28 +971,20 @@ const INSTANT_FALLBACK_CARD = {
 
     const st = (userState || '').trim().toLowerCase();
 
+    // Always query from the full master pool of cards so state news is never replaced with World news
+    const pool = (state.allMasterCards && state.allMasterCards.length > 0) ? state.allMasterCards : (state.allRankedCache && state.allRankedCache.length > 0 ? state.allRankedCache : allCards);
 
-
-    let stateMatches = allCards.filter(c => {
-
+    let stateMatches = pool.filter(c => {
       const cs = (c.state || '').trim().toLowerCase();
-
       const head = (c.headline || '').toLowerCase();
-
-      return cs === st || head.includes(st);
-
+      return (st && (cs === st || head.includes(st))) || (st.includes('delhi') && cs.includes('delhi'));
     });
 
-
-
     if (stateMatches.length === 0) {
-
-      stateMatches = allCards.slice(3, 6);
-
+      // Fall back strictly to Indian regional state cards, NEVER world news
+      stateMatches = pool.filter(c => (c.category || '').toLowerCase() === 'state').slice(0, 3);
     } else {
-
       stateMatches = stateMatches.slice(0, 3);
-
     }
 
 
@@ -1179,14 +1172,17 @@ const INSTANT_FALLBACK_CARD = {
 
 
 
-  function renderMorningBrief(cards) {
+  function renderMorningBrief(cards, leadCard) {
 
     if (!elements.morningBriefContainer) return;
 
     elements.morningBriefContainer.innerHTML = '';
 
-    // Issue 9: Avoid repeating Hero and Trending headlines; take unique fast-scan stories
-    const topBullets = cards.length > 5 ? cards.slice(4, 8) : cards.slice(0, 4);
+    // Never repeat the Hero Lead headline in the fast-scan brief
+    const leadId = leadCard ? leadCard.id : (cards[0] ? cards[0].id : null);
+    const pool = (state.allMasterCards && state.allMasterCards.length > 0) ? state.allMasterCards : cards;
+    const available = pool.filter(c => c.id !== leadId && (leadCard ? c.headline !== leadCard.headline : true));
+    const topBullets = available.slice(0, 4);
 
 
 
@@ -1322,7 +1318,7 @@ const INSTANT_FALLBACK_CARD = {
 
     renderStreamFeed(state.cards);
 
-    renderMorningBrief(state.allRankedCache.length > 0 ? state.allRankedCache : state.cards);
+    renderMorningBrief(state.allRankedCache.length > 0 ? state.allRankedCache : state.cards, lead);
 
     updateAlgorithmicRadar(lead);
 
@@ -1698,6 +1694,8 @@ const INSTANT_FALLBACK_CARD = {
       );
 
 
+
+      state.allMasterCards = rawItems;
 
       state.allRankedCache = rankedCards;
 
