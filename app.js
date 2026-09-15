@@ -1405,7 +1405,7 @@ const INSTANT_FALLBACK_CARD = {
       let html = `
         <div class="mb-4 inline-flex items-center gap-2 px-2.5 py-1 bg-primary/15 text-primary border border-primary/30 rounded-sm font-mono text-[11px] font-bold uppercase tracking-wider">
           <span class="material-symbols-outlined text-[14px]">article</span>
-          <span>${wordCount >= 200 ? wordCount + ' Words' : '220+ Words'} &#8226; Simple English &#8226; Comprehensive Briefing</span>
+          <span>${wordCount} Words &#8226; Simple English &#8226; Concise Briefing</span>
         </div>
       `;
 
