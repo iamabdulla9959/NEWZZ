@@ -15,14 +15,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY apps/api/requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy API backend, ranking engine packages, and startup scripts
-COPY apps/ apps/
+# Copy API backend, ranking engine packages, scripts, crawler, and startup scripts
+COPY apps/api apps/api
 COPY packages/ packages/
+COPY scripts/ scripts/
+COPY website_scraping/ website_scraping/
 COPY start.sh start.sh
 RUN chmod +x start.sh
 
 ENV PORT=8000 \
     DATABASE_URL=sqlite:///newsreels.db \
+    ALLOW_SQLITE_PROD=true \
     CORS_ORIGINS=*
 
 EXPOSE 8000

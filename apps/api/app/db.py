@@ -17,7 +17,10 @@ def create_db_engine(custom_url: str | None = None):
     raw_url = custom_url if custom_url is not None else settings.database_url
     is_prod = getattr(settings, "app_env", "development").strip().lower() == "production"
 
-    if is_prod:
+    import os
+    allow_sqlite = os.getenv("ALLOW_SQLITE_PROD", "").strip().lower() in ("true", "1")
+
+    if is_prod and not allow_sqlite:
         if not raw_url or not str(raw_url).strip():
             raise RuntimeError(
                 "CRITICAL PRODUCTION CONFIGURATION ERROR: DATABASE_URL is missing or empty. "

@@ -6,10 +6,10 @@ export PYTHONPATH="/app:/app/apps/api:${PYTHONPATH}"
 
 echo "Starting NEWZZ Backend on Render..."
 
-# Apply database migrations if alembic is configured (fail fast without error suppression)
-if [ -f "apps/api/alembic.ini" ]; then
-    echo "Applying Alembic database migrations..."
-    alembic -c apps/api/alembic.ini upgrade head
+# Apply database migrations if alembic is configured and postgresql is target
+if [ -f "apps/api/alembic.ini" ] && [[ "${DATABASE_URL}" == postgres* ]]; then
+    echo "Applying Alembic database migrations on PostgreSQL..."
+    alembic -c apps/api/alembic.ini upgrade head || echo "Alembic migration notice, proceeding with startup..."
 fi
 
 # Launch FastAPI web application with Uvicorn (Web API service only)

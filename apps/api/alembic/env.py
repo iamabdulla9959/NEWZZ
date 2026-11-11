@@ -14,7 +14,7 @@ except ImportError:
 
 config = context.config
 raw_url = config.get_main_option("sqlalchemy.url")
-if not raw_url or raw_url == "driver://user:pass@localhost/dbname":
+if not raw_url or raw_url == "driver://user:pass@localhost/dbname" or raw_url == "postgresql+psycopg://newsreels:newsreels@localhost:5432/newsreels":
     raw_url = settings.database_url
 config.set_main_option("sqlalchemy.url", normalize_database_url(raw_url))
 
