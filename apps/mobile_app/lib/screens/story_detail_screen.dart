@@ -77,14 +77,34 @@ class StoryDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Row(
+            Wrap(
+              spacing: 12,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Icon(Icons.access_time, size: 16, color: Colors.grey[500]),
-                const SizedBox(width: 4),
-                Text(
-                  card.publishedAt?.toLocal().toString().split('.')[0] ?? 'Unknown Date',
-                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.access_time, size: 16, color: Colors.grey[500]),
+                    const SizedBox(width: 4),
+                    Text(
+                      card.publishedAt != null
+                          ? 'Source: ${card.publishedAt!.toLocal().toString().split('.')[0]}'
+                          : 'Date unavailable',
+                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+                    ),
+                  ],
                 ),
+                if (card.impactEvidence?['latest_independent_report_at'] != null)
+                  Text(
+                    'Updated: ${card.impactEvidence!['latest_independent_report_at'].toString().split('.')[0].replaceAll('T', ' ')}',
+                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+                  ),
+                if (card.newzzPublishedAt != null)
+                  Text(
+                    'Curated: ${card.newzzPublishedAt!.toLocal().toString().split('.')[0]}',
+                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+                  ),
               ],
             ),
             const SizedBox(height: 24),

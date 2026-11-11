@@ -288,8 +288,7 @@ def fetch_and_build_live_feed(target_state: Optional[str] = None, max_per_feed: 
 
                 pub_dt = parse_entry_datetime(entry)
                 if not pub_dt:
-                    # Fallback to now if pub date cannot be parsed
-                    pub_dt = now
+                    continue
 
                 # Ensure publication date is within the last 72h and NOT far in the future
                 if pub_dt < min_date or pub_dt > now + timedelta(hours=2):

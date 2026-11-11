@@ -197,8 +197,29 @@ def ingest_rss_source(
                             text = re.sub(r"\s+", " ", soup.body.get_text(separator=" ", strip=True)).strip()[:10000]
                 except Exception as exc:
                     logger.debug("Could not fetch fallback article text for %s: %s", url, exc)
-            raw_pub = entry.get("published") or entry.get("updated")
+            # Strict publication date extraction: NEVER replace missing publication time with update time
+            raw_pub = entry.get("published")
             published = parse_datetime(str(raw_pub) if raw_pub else None)
+            if not published:
+                parsed_pub_struct = entry.get("published_parsed")
+                if parsed_pub_struct:
+                    try:
+                        import calendar
+                        published = datetime.fromtimestamp(calendar.timegm(parsed_pub_struct), tz=timezone.utc)
+                    except Exception:
+                        published = None
+
+            # Update date extraction: tracked separately and never conflated with publication time
+            raw_upd = entry.get("updated")
+            source_updated = parse_datetime(str(raw_upd) if raw_upd else None)
+            if not source_updated:
+                parsed_upd_struct = entry.get("updated_parsed")
+                if parsed_upd_struct:
+                    try:
+                        import calendar
+                        source_updated = datetime.fromtimestamp(calendar.timegm(parsed_upd_struct), tz=timezone.utc)
+                    except Exception:
+                        source_updated = None
 
             # Step 2 translation layer
             raw_for_clustering, original_text, orig_lang, conf = process_and_translate_text(

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-# Ensure apps/api and root are discoverable on PYTHONPATH
-export PYTHONPATH="/app:/app/apps/api:${PYTHONPATH}"
+# Ensure apps/api and root are discoverable on PYTHONPATH in both Docker and Native environments
+export PYTHONPATH=".:/app:apps/api:/app/apps/api:${PYTHONPATH}"
 
 echo "Starting NEWZZ Backend on Render..."
 

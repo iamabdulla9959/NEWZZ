@@ -13,15 +13,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy dependency specifications and install
 COPY apps/api/requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+COPY apps/worker/requirements.txt worker-requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r worker-requirements.txt
 
-# Copy API backend, ranking engine packages, scripts, crawler, and startup scripts
+# Copy API backend, worker, ranking engine packages, scripts, crawler, and startup scripts
 COPY apps/api apps/api
+COPY apps/worker apps/worker
 COPY packages/ packages/
 COPY scripts/ scripts/
 COPY website_scraping/ website_scraping/
 COPY start.sh start.sh
-RUN sed -i 's/\r$//' start.sh && chmod +x start.sh
+COPY worker_start.sh worker_start.sh
+RUN sed -i 's/\r$//' start.sh worker_start.sh && chmod +x start.sh worker_start.sh
 
 ENV PORT=8000 \
     DATABASE_URL=sqlite:///newsreels.db \

@@ -199,17 +199,29 @@ def process_eligible_clusters(
         else:
             card.verified_status = "published"
 
-            best_published_at = None
-            best_ingested_at = None
-            for a in articles:
-                if a.published_at:
-                    if best_published_at is None or a.published_at < best_published_at:
-                        best_published_at = a.published_at
-                if a.ingested_at:
-                    if best_ingested_at is None or a.ingested_at < best_ingested_at:
-                        best_ingested_at = a.ingested_at
+            # Establish authentic story chronology: distinguish first reported, developing independent updates, and syndicated copies
+            all_pubs = [a.published_at for a in articles if a.published_at]
+            first_reported_at = min(all_pubs) if all_pubs else None
 
-            card.published_at = best_published_at
+            # Non-wire, independent reports (syndicated wire copies must not refresh an old story)
+            independent_pubs = [
+                a.published_at for a in articles
+                if a.published_at and not getattr(a, "wire_attribution", None)
+            ]
+            latest_independent_at = max(independent_pubs) if independent_pubs else first_reported_at
+            lead_pub = articles[0].published_at if articles else None
+
+            # Primary published_at reflects authentic reporting without letting syndicated copies refresh old stories
+            card.published_at = lead_pub if (lead_pub and lead_pub in independent_pubs) else (first_reported_at or lead_pub)
+            if card.newzz_published_at is None:
+                card.newzz_published_at = datetime.now(timezone.utc)
+
+            # Store rich chronological semantics in impact_evidence JSON
+            if card.impact_evidence is None:
+                card.impact_evidence = {}
+            if isinstance(card.impact_evidence, dict):
+                card.impact_evidence["first_reported_at"] = first_reported_at.isoformat() if first_reported_at else None
+                card.impact_evidence["latest_independent_report_at"] = latest_independent_at.isoformat() if latest_independent_at else None
 
             obj_score, impact_hits = calculate_objective_score(
                 articles=articles,

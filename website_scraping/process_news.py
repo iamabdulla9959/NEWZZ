@@ -313,7 +313,7 @@ def compute_similarity(text_a: str, text_b: str) -> float:
 
 def _parse_article_datetime(art: Dict[str, Any]) -> Optional[datetime]:
     """Extracts and parses datetime from article metadata without inventing timestamps."""
-    pub_str = art.get("published_date") or art.get("published_at") or art.get("fetched_at")
+    pub_str = art.get("published_date") or art.get("published_at")
     if not pub_str:
         return None
     try:
@@ -591,10 +591,10 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
         canonical_cat = normalize_category(str(card_data.get("category", "National")))
         cat_for_engine = canonical_cat.lower()  # engines accept lowercase
 
-        # Parse publication datetime accurately
+        # Parse publication datetime accurately without fabricating current time
         now = datetime.now(timezone.utc)
         pub_str = card_data.get("published_at")
-        pub_dt = now
+        pub_dt = None
         if pub_str:
             try:
                 if isinstance(pub_str, datetime):
@@ -611,7 +611,7 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
                     if pub_dt.tzinfo is None:
                         pub_dt = pub_dt.replace(tzinfo=timezone.utc)
                 except Exception:
-                    pub_dt = now
+                    pub_dt = None
 
         # Compute multi-dimensional metrics
         dims, imp_score = ImportanceEngine.analyze_event_text(
@@ -980,6 +980,26 @@ def run_pipeline(limit: int = 0) -> Dict[str, Any]:
         raw_cat = summary_res.get("category") or cluster[0].get("category", "National")
         canonical_cat = normalize_category(str(raw_cat))
 
+        # Determine chronological publication semantics across cluster
+        independent_dts = []
+        all_pub_dts = []
+        for a in cluster:
+            dt = _parse_article_datetime(a)
+            if dt:
+                all_pub_dts.append(dt)
+                title_text = f"{a.get('title', '')} {a.get('summary', '')}".lower()
+                is_wire = any(w in title_text for w in ["(pti)", "(ani)", "(reuters)", "press trust of india", "asian news international"])
+                if not is_wire:
+                    independent_dts.append(dt)
+
+        first_reported = min(all_pub_dts) if all_pub_dts else None
+        latest_independent = max(independent_dts) if independent_dts else first_reported
+        lead_dt = _parse_article_datetime(cluster[0]) if cluster else None
+
+        # Primary published_at preserves authentic reporting without letting syndicated copies refresh old stories
+        chosen_pub = lead_dt if (lead_dt and lead_dt in independent_dts) else (first_reported or lead_dt)
+        source_pub_iso = chosen_pub.isoformat() if chosen_pub else None
+
         card_record = {
             "id": card_id,
             "headline": summary_res.get("headline", cluster[0].get("title", "")),
@@ -991,7 +1011,8 @@ def run_pipeline(limit: int = 0) -> Dict[str, Any]:
             "sources_count": len(cluster),
             "sources": [{"name": a.get("source"), "link": a.get("link")} for a in cluster],
             "key_facts": summary_res.get("key_facts", []),
-            "published_at": datetime.now(timezone.utc).isoformat(),
+            "published_at": source_pub_iso,
+            "newzz_published_at": datetime.now(timezone.utc).isoformat(),
         }
 
         # Persist to local SQLite

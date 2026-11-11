@@ -392,7 +392,7 @@ def parse_feed_articles(
                 except Exception:
                     pass
             now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-            published_final = pub_date_iso or now_iso
+            published_final = pub_date_iso
 
             article = {
                 "scope": scope,
@@ -498,7 +498,8 @@ def sync_articles_to_feed_json(articles: List[Dict]) -> None:
                     "word_count": word_count,
                     "category": cat,
                     "state": st,
-                    "published_at": art.get("published_date") or datetime.now(timezone.utc).isoformat(),
+                    "published_at": art.get("published_date"),
+                    "newzz_published_at": datetime.now(timezone.utc).isoformat(),
                     "created_at": datetime.now(timezone.utc).isoformat(),
                     "source_name": source,
                     "canonical_url": link,

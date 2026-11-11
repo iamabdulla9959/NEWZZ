@@ -65,13 +65,24 @@ def get_feed(
         return cat.strip().capitalize()
 
     def _build_query(wanted_cats: list[str]):
+        # Established authentic provenance categories for public news feed:
+        # Excludes: synthetic seed data ('seed', 'seed_demo'), development tests ('dev_testing', 'development_test'),
+        # and unresolved legacy records (NULL or 'legacy_unresolved').
+        authentic_creators = ["live_pipeline", "authentic_ingested", "website_scraping_bot", "editorially_created"]
+        excluded_creators = ["seed", "seed_demo", "dev_testing", "development_test", "legacy_unresolved"]
+
         q = (
             db.query(Card)
             .options(selectinload(Card.sources))
             .filter(
                 Card.verified_status == "published",
-                sa.or_(Card.created_by.is_(None), sa.and_(Card.created_by != "dev_testing", Card.created_by != "seed")),
+                Card.created_by.is_not(None),
+                Card.created_by.in_(authentic_creators),
+                Card.created_by.notin_(excluded_creators),
                 Card.content_type == "NEWS",
+                ~Card.summary.like("%In a significant development, primary news reports%"),
+                ~Card.summary.like("%Technical committees and administrative task forces%"),
+                ~Card.summary.like("%supervisory delegations will continue reviewing%"),
             )
         )
         if wanted_cats:

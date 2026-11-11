@@ -11,6 +11,7 @@ class CardOut {
   final bool isSingleSource;
   final DateTime? createdAt;
   final DateTime? publishedAt;
+  final DateTime? newzzPublishedAt;
   final String? district;
   final String? state;
   final double objectiveScore;
@@ -39,6 +40,7 @@ class CardOut {
     required this.isSingleSource,
     this.createdAt,
     this.publishedAt,
+    this.newzzPublishedAt,
     this.district,
     this.state,
     required this.objectiveScore,
@@ -69,6 +71,7 @@ class CardOut {
       isSingleSource: json['is_single_source'] as bool? ?? true,
       createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
       publishedAt: json['published_at'] != null ? DateTime.tryParse(json['published_at'].toString()) : null,
+      newzzPublishedAt: json['newzz_published_at'] != null ? DateTime.tryParse(json['newzz_published_at'].toString()) : null,
       district: json['district']?.toString(),
       state: json['state']?.toString(),
       objectiveScore: (json['objective_score'] as num?)?.toDouble() ?? 0.0,
