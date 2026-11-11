@@ -21,7 +21,7 @@ COPY packages/ packages/
 COPY scripts/ scripts/
 COPY website_scraping/ website_scraping/
 COPY start.sh start.sh
-RUN chmod +x start.sh
+RUN sed -i 's/\r$//' start.sh && chmod +x start.sh
 
 ENV PORT=8000 \
     DATABASE_URL=sqlite:///newsreels.db \
