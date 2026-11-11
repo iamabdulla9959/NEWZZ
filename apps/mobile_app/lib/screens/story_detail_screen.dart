@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/card.dart';
 import '../models/card_source.dart';
+import '../core/utils/text_sanitizer.dart';
 
 class StoryDetailScreen extends StatelessWidget {
   final CardOut card;
@@ -114,7 +115,7 @@ class StoryDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              card.summary,
+              TextSanitizer.cleanSummary(card.headline, card.summary),
               style: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
             ),
             if (card.priorityReason.isNotEmpty) ...[

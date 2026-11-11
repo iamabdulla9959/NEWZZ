@@ -4,6 +4,68 @@
   "count": 341,
   "items": [
     {
+      "id": "eebe61b3-8d8d-4be5-a955-ac1206a145d0",
+      "headline": "News 1",
+      "summary": "Reporting from Verified News Wire: News 1.",
+      "key_facts": [
+        "News 1",
+        "Source: Verified News Wire",
+        "Region: National"
+      ],
+      "word_count": 7,
+      "category": "tech",
+      "state": null,
+      "published_at": null,
+      "newzz_published_at": "2026-11-11T18:24:59.393245+00:00",
+      "created_at": "2026-11-11T18:24:59.393259+00:00",
+      "source_name": "Verified News Wire",
+      "canonical_url": "https://example.com/1",
+      "url": "https://example.com/1",
+      "sources": [
+        {
+          "source_id": "98f636c5-8d80-4a45-aa33-1e918cb5647e",
+          "name": "Verified News Wire",
+          "url": "https://example.com/1",
+          "trust_tier": "1"
+        }
+      ],
+      "verification_type": "cross_verified",
+      "verification_score": 92.0,
+      "final_feed_score": 55.0,
+      "priority_reason": "Freshly ingested and categorized from verified news reporting."
+    },
+    {
+      "id": "4d68b4ec-6fbc-4e90-bcf5-96296b039968",
+      "headline": "News 2",
+      "summary": "Reporting from Verified News Wire: News 2.",
+      "key_facts": [
+        "News 2",
+        "Source: Verified News Wire",
+        "Region: National"
+      ],
+      "word_count": 7,
+      "category": "tech",
+      "state": null,
+      "published_at": null,
+      "newzz_published_at": "2026-11-11T18:24:59.393280+00:00",
+      "created_at": "2026-11-11T18:24:59.393282+00:00",
+      "source_name": "Verified News Wire",
+      "canonical_url": "https://example.com/2",
+      "url": "https://example.com/2",
+      "sources": [
+        {
+          "source_id": "a635e19c-f90e-40d8-b15d-1af39c7c2eb8",
+          "name": "Verified News Wire",
+          "url": "https://example.com/2",
+          "trust_tier": "1"
+        }
+      ],
+      "verification_type": "cross_verified",
+      "verification_score": 92.0,
+      "final_feed_score": 55.0,
+      "priority_reason": "Freshly ingested and categorized from verified news reporting."
+    },
+    {
       "id": "0c149987-4a41-48b9-a99f-e5d5cf98e3a2",
       "cluster_id": "62a56445-a8f6-42ee-8b96-9ce931378079",
       "headline": "Andhra Pradesh cabinet approves ₹37,000 crore investments",

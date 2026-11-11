@@ -1,0 +1,16 @@
+# ==============================================================================
+# NEWZZ Android Release Signing Configuration Template
+#
+# INSTRUCTIONS FOR DEVELOPER:
+# 1. Copy this file to 'key.properties' in the same directory ('apps/mobile_app/android/key.properties').
+# 2. Generate your Google Play upload keystore using:
+#    keytool -genkey -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+# 3. Fill in the parameters below.
+# 4. NEVER commit 'key.properties' or your '.jks' keystore file to Git.
+# ==============================================================================
+
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=upload
+storeFile=../upload-keystore.jks
+

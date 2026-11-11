@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/news_feed_screen.dart';
+import 'screens/landing_onboarding_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final hasCompletedOnboarding = prefs.getBool('has_completed_onboarding') ?? false;
+  runApp(MyApp(hasCompletedOnboarding: hasCompletedOnboarding));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool hasCompletedOnboarding;
+  const MyApp({super.key, this.hasCompletedOnboarding = false});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ class MyApp extends StatelessWidget {
           unselectedLabelColor: Color(0xFF737373),
         ),
       ),
-      home: const NewsFeedScreen(),
+      home: hasCompletedOnboarding ? const NewsFeedScreen() : const LandingOnboardingScreen(),
     );
   }
 }

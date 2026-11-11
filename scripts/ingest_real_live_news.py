@@ -186,11 +186,87 @@ def call_groq_summarizer(headline: str, snippet: str, source: str, state: Option
         logger.debug(f"Groq summarizer fallback: {e}")
     return None
 
+def parse_google_news_rss_html(raw_html: str) -> list[tuple[str, str]]:
+    """Extracts (headline, publisher) tuples from Google News RSS <description> HTML."""
+    if not raw_html or "<ol>" not in raw_html or "<li>" not in raw_html:
+        return []
+    try:
+        from html.parser import HTMLParser
+        class _GParser(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.items = []
+                self._in_a = False
+                self._in_font = False
+                self._curr_h = []
+                self._curr_p = []
+            def handle_starttag(self, tag, attrs):
+                if tag == "a":
+                    self._in_a = True
+                    self._curr_h = []
+                elif tag == "font":
+                    self._in_font = True
+                    self._curr_p = []
+            def handle_endtag(self, tag):
+                if tag == "a":
+                    self._in_a = False
+                elif tag == "font":
+                    self._in_font = False
+                elif tag == "li":
+                    h = clean_html_text("".join(self._curr_h)).strip()
+                    p = clean_html_text("".join(self._curr_p)).strip()
+                    if h:
+                        self.items.append((h, p))
+                    self._curr_h = []
+                    self._curr_p = []
+            def handle_data(self, data):
+                if self._in_a:
+                    self._curr_h.append(data)
+                elif self._in_font:
+                    self._curr_p.append(data)
+
+        parser = _GParser()
+        parser.feed(raw_html)
+        return parser.items
+    except Exception:
+        return []
+
 def generate_editorial_summary(headline: str, raw_snippet: str, source: str, state: Optional[str]) -> tuple[str, list[str], int]:
     clean_h = re.sub(r"\s+-\s+[^-]+$", "", headline).strip()
+
+    # Check for Google News multi-source list markup
+    g_items = parse_google_news_rss_html(raw_snippet)
+    if g_items:
+        other_angles = [
+            (h, p) for h, p in g_items
+            if clean_h.lower() not in h.lower() and h.lower() not in clean_h.lower()
+        ]
+        publishers = list(dict.fromkeys([p for _, p in g_items if p] + ([source] if source else [])))
+
+        if other_angles:
+            top_angle = other_angles[0][0]
+            summary_body = f"According to verified reports across {', '.join(publishers[:3])}, {top_angle}."
+            if len(other_angles) > 1:
+                second_angle = other_angles[1][0]
+                summary_body += f" Further developments reported that {second_angle}."
+        else:
+            summary_body = f"Verified reporting dispatched by {source}. Comprehensive background and wire telemetry are documented in the source dossier."
+
+        key_facts = []
+        for h, p in other_angles[:2]:
+            key_facts.append(f"{h[:100]} ({p})" if p else h[:100])
+        key_facts.append(f"Corroborated across: {', '.join(publishers[:3]) or source}")
+
+        return summary_body, key_facts[:3], len(summary_body.split())
+
     clean_s = clean_html_text(raw_snippet)
     if " - " in clean_s:
         clean_s = re.sub(r"\s+-\s+[^-]+$", "", clean_s).strip()
+
+    # Strip headline from clean_s if clean_s starts with clean_h
+    if clean_s.lower().startswith(clean_h.lower()):
+        clean_s = clean_s[len(clean_h):].strip()
+        clean_s = re.sub(r"^[\.\:\-\–\—\,\s]+", "", clean_s).strip()
 
     # 1. Try Groq AI first for high-quality journalistic summary
     groq_res = call_groq_summarizer(clean_h, clean_s, source, state)
@@ -200,15 +276,13 @@ def generate_editorial_summary(headline: str, raw_snippet: str, source: str, sta
     # 2. Journalistic structured fallback strictly grounded in facts if LLM is offline
     paragraphs = []
     if clean_s and len(clean_s) > 25 and clean_s.lower() != clean_h.lower():
-        if clean_h.lower() not in clean_s.lower():
-            paragraphs.append(f"{clean_h}.")
+        # Do NOT prepend headline — headline is already rendered as the card title!
         paragraphs.append(clean_s)
     else:
-        paragraphs.append(f"{clean_h}.")
         if state:
             paragraphs.append(f"Reported from regional bureaus across {state} by {source}.")
         else:
-            paragraphs.append(f"Reported by {source}.")
+            paragraphs.append(f"Verified news report dispatched by {source}. Review the source dossier for complete reporting details.")
 
     full_summary = " ".join(paragraphs)
     words = len(full_summary.split())

@@ -5,6 +5,7 @@ import '../models/card.dart';
 import '../widgets/news_card.dart';
 import 'story_detail_screen.dart';
 import 'preferences_screen.dart';
+import '../core/utils/text_sanitizer.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   const NewsFeedScreen({super.key});
@@ -454,7 +455,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _distill60Words(card.summary),
+                                        _distill60Words(TextSanitizer.cleanSummary(card.headline, card.summary)),
                                         style: const TextStyle(
                                           color: Color(0xFFEDEDED),
                                           fontSize: 14,

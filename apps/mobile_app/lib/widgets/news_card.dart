@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/card.dart';
+import '../core/utils/text_sanitizer.dart';
 
 class NewsCard extends StatelessWidget {
   final CardOut card;
@@ -110,7 +111,7 @@ class NewsCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                card.summary,
+                TextSanitizer.cleanSummary(card.headline, card.summary),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium?.copyWith(
