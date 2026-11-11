@@ -11,11 +11,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency specifications and install
-COPY apps/api/requirements.txt requirements.txt
-COPY apps/worker/requirements.txt worker-requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -r worker-requirements.txt
+# Copy dependency specifications preserving directory hierarchy for relative requirements resolution (-r ../api/requirements.txt)
+COPY apps/api/requirements.txt apps/api/requirements.txt
+COPY apps/worker/requirements.txt apps/worker/requirements.txt
+RUN pip install --no-cache-dir -r apps/api/requirements.txt && \
+    pip install --no-cache-dir -r apps/worker/requirements.txt
 
 # Copy API backend, worker, ranking engine packages, scripts, crawler, and startup scripts
 COPY apps/api apps/api
