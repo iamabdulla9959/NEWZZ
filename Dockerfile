@@ -1,7 +1,8 @@
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH="/app:/app/apps/api:/app/apps/worker:/app/packages:.:apps/api:apps/worker:packages"
 
 WORKDIR /app
 
