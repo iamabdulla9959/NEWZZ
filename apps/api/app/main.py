@@ -39,13 +39,24 @@ async def _render_self_keepalive():
     ensuring inbound traffic hits Render's reverse proxy and prevents container spin-down."""
     import asyncio
     import os
+    import sys
     import urllib.request
+
+    if "pytest" in sys.modules or os.getenv("TESTING") == "1":
+        return
 
     keepalive_url = os.getenv("RENDER_EXTERNAL_URL") or os.getenv("RENDER_KEEP_ALIVE_URL") or "https://newzz-5e19.onrender.com"
     target = f"{keepalive_url.rstrip('/')}/health"
 
-    # Wait 60s after startup before first ping
-    await asyncio.sleep(60)
+    # Wait 10s after startup before first ping & initial crawl
+    await asyncio.sleep(10)
+    try:
+        from scripts.ingest_real_live_news import fetch_and_build_live_feed
+        logger.info("[SelfKeepAlive] Initiating startup live news crawl...")
+        await asyncio.to_thread(fetch_and_build_live_feed, target_state=None, max_per_feed=15)
+    except Exception as exc:
+        logger.warning("[SelfKeepAlive] Startup live ingest notice: %s", exc)
+
     while True:
         try:
             def _ping():
@@ -54,6 +65,10 @@ async def _render_self_keepalive():
                     return res.status
             status = await asyncio.to_thread(_ping)
             logger.info("[SelfKeepAlive] Keepalive ping -> %s returned %s", target, status)
+
+            # Automatically refresh live news in background right before 14min sleep threshold
+            from scripts.ingest_real_live_news import fetch_and_build_live_feed
+            await asyncio.to_thread(fetch_and_build_live_feed, target_state=None, max_per_feed=10)
         except Exception as exc:
             logger.debug("[SelfKeepAlive] Keepalive ping notice for %s: %s", target, exc)
         await asyncio.sleep(810)  # 13.5 minutes (safely before Render's 15-minute sleep threshold)

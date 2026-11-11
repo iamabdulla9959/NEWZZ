@@ -408,6 +408,96 @@ def fetch_and_build_live_feed(target_state: Optional[str] = None, max_per_feed: 
     return len(crawled_articles)
 
 def sync_to_sqlite(articles: List[Dict]):
+    """Synchronizes fresh cards into database via SQLAlchemy ORM (compatible with PostgreSQL & SQLite)."""
+    try:
+        from app.db import SessionLocal
+        from app.models import Card, StoryCluster, CardSource
+
+        db = SessionLocal()
+        now = datetime.now(timezone.utc)
+        inserted_cards = 0
+        updated_cards = 0
+
+        for art in articles:
+            card_id = art["id"]
+            cluster_id = art["cluster_id"]
+            headline = art["headline"]
+            summary = art["summary"]
+            category = art["category"].capitalize()
+            state = art["state"]
+            pub_at_str = art["published_at"]
+            pub_dt = datetime.fromisoformat(pub_at_str.replace("Z", "+00:00"))
+
+            existing = db.query(Card).filter(Card.headline == headline).first()
+            if existing:
+                existing.summary = summary
+                existing.final_feed_score = art["final_feed_score"]
+                existing.importance_score = art["importance_score"]
+                existing.urgency_score = art["urgency_score"]
+                existing.freshness_score = art["freshness_score"]
+                existing.published_at = pub_dt
+                updated_cards += 1
+                continue
+
+            cluster = db.query(StoryCluster).filter(StoryCluster.id == cluster_id).first()
+            if not cluster:
+                cluster = StoryCluster(
+                    id=cluster_id,
+                    title_hint=headline[:200],
+                    eligible=True,
+                    flagged_conflict=False,
+                    created_at=now,
+                )
+                db.add(cluster)
+
+            card = Card(
+                id=card_id,
+                cluster_id=cluster_id,
+                headline=headline,
+                summary=summary,
+                category=category,
+                verified_status="published",
+                district=None,
+                state=state,
+                created_at=now,
+                published_at=pub_dt,
+                newzz_published_at=now,
+                verification_type=art["verification_type"],
+                objective_score=art["final_feed_score"],
+                priority_score=5,
+                content_type="NEWS",
+                importance_score=art["importance_score"],
+                urgency_score=art["urgency_score"],
+                freshness_score=art["freshness_score"],
+                verification_score=art["verification_score"],
+                personal_relevance_score=art["personal_relevance_score"],
+                final_feed_score=art["final_feed_score"],
+                priority_reason=art["priority_reason"],
+                created_by="live_pipeline",
+            )
+            db.add(card)
+
+            if art.get("sources"):
+                src_data = art["sources"][0]
+                card_src = CardSource(
+                    id=src_data.get("source_id", str(uuid.uuid4())),
+                    card_id=card_id,
+                    source_id=src_data.get("source_id", str(uuid.uuid4())),
+                    name=src_data["name"],
+                    url=src_data["url"],
+                    trust_tier=str(src_data["trust_tier"]),
+                )
+                db.add(card_src)
+
+            inserted_cards += 1
+
+        db.commit()
+        db.close()
+        logger.info(f"Synchronized into database via SQLAlchemy: {inserted_cards} new cards, {updated_cards} updated cards")
+        return
+    except Exception as exc:
+        logger.warning(f"SQLAlchemy sync notice: {exc}. Attempting SQLite file fallback...")
+
     import sqlite3
     db_path = _repo_root / "newsreels.db"
     if not db_path.exists():

@@ -29,7 +29,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
 
   String? _deviceId;
   String? _selectedState;
-  bool _isReelsMode = false;
+  bool _isReelsMode = true;
   late final PageController _pageController = PageController();
 
   late TabController _tabController;
