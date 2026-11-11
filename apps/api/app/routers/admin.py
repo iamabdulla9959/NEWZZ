@@ -14,12 +14,42 @@ router = APIRouter(prefix="/admin")
 
 def require_admin(
     x_admin_key: str | None = Header(default=None),
+    authorization: str | None = Header(default=None),
     key: str | None = Query(default=None),
 ) -> str:
-    provided = x_admin_key or key
-    if not provided or provided != settings.admin_api_key:
-        raise HTTPException(status_code=401, detail="admin key required")
-    return provided
+    import secrets
+    admin_key = (settings.admin_api_key or "").strip()
+    is_prod = (settings.app_env or "").lower() == "production"
+
+    if is_prod and (not admin_key or admin_key == "change-me-local-only"):
+        raise HTTPException(
+            status_code=403,
+            detail="Admin access disabled: secure admin key not configured",
+        )
+
+    if not admin_key:
+        raise HTTPException(
+            status_code=403,
+            detail="Admin access disabled: secure admin key not configured",
+        )
+
+    token = None
+    if authorization:
+        parts = authorization.split()
+        if len(parts) == 2 and parts[0].lower() == "bearer":
+            token = parts[1].strip()
+        else:
+            token = authorization.strip()
+    elif x_admin_key:
+        token = x_admin_key.strip()
+    elif key and not is_prod:
+        token = key.strip()
+
+    if not token:
+        raise HTTPException(status_code=401, detail="Admin credentials required")
+    if not secrets.compare_digest(token, admin_key):
+        raise HTTPException(status_code=403, detail="Invalid admin credentials")
+    return token
 
 
 @router.get("/review", response_class=HTMLResponse)
@@ -81,7 +111,8 @@ def approve(
     item.status = "approved"
     item.resolved_at = datetime.now(timezone.utc)
     item.card.verified_status = "published"
-    item.card.published_at = datetime.now(timezone.utc)
+    item.card.newzz_published_at = datetime.now(timezone.utc)
+    # Preserve original source published_at date; do not overwrite with now()
     db.commit()
     return {"status": "published", "card_id": item.card_id}
 

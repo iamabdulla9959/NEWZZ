@@ -104,6 +104,7 @@ class Card(Base):
     state: Mapped[str | None] = mapped_column(String(128), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    newzz_published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     objective_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     impact_keywords_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     priority_score: Mapped[int] = mapped_column(Integer, nullable=False, default=5)
@@ -191,3 +192,33 @@ class UserPreferences(Base):
     category_order: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class IngestionRequest(Base):
+    __tablename__ = "ingestion_requests"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="pending")  # pending, running, succeeded, failed
+    trigger_origin: Mapped[str] = mapped_column(String(64), nullable=False, default="manual_api")
+    worker_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    lease_generation: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    attempt_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    last_heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    result_summary: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
+
+class IngestionLease(Base):
+    __tablename__ = "ingestion_leases"
+
+    lease_name: Mapped[str] = mapped_column(String(64), primary_key=True)  # e.g. "canonical_ingestion"
+    holder_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    lease_generation: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    acquired_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    renewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+

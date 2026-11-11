@@ -8,6 +8,8 @@ class CardSourceOut(BaseModel):
     name: str
     url: str
     trust_tier: str | int
+    url_type: str = "direct"
+    provenance_status: str = "name_only_match"
 
     model_config = {"from_attributes": True}
 
@@ -19,8 +21,11 @@ class CardOut(BaseModel):
     category: str
     verified_status: str
     verification_type: str | None = None
+    corroboration_count: int = 1
+    is_single_source: bool = True
     created_at: datetime | None = None
     published_at: datetime | None = None
+    newzz_published_at: datetime | None = None
     district: str | None = None
     state: str | None = None
     objective_score: float = 0.0

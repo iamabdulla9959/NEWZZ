@@ -4,7 +4,61 @@ from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 import logging
 import re
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
+
+TRACKING_QUERY_PARAMS = {
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "gclid",
+    "fbclid",
+    "ref",
+    "ocid",
+    "ncid",
+    "igshid",
+    "msclkid",
+}
+
+
+def normalize_article_url(url: str) -> str:
+    """Conservatively normalizes article URLs for deduplication.
+
+    Rules:
+    - Trims whitespace.
+    - Lowercases scheme and netloc (domain).
+    - Removes fragments (#...).
+    - Removes common analytics/marketing tracking parameters while preserving
+      content/pagination identifiers (id, article_id, story, p, etc.).
+    - Sorts query parameters deterministically.
+    - Strips trailing slash on non-root paths.
+    """
+    if not url:
+        return ""
+    try:
+        parts = urlparse(url.strip())
+        if not parts.scheme or not parts.netloc:
+            return url.strip()
+
+        scheme = parts.scheme.lower()
+        netloc = parts.netloc.lower()
+
+        path = parts.path
+        if len(path) > 1 and path.endswith("/"):
+            path = path.rstrip("/")
+
+        query_pairs = parse_qsl(parts.query, keep_blank_values=True)
+        filtered_pairs = [
+            (k, v) for k, v in query_pairs
+            if k.lower() not in TRACKING_QUERY_PARAMS
+        ]
+        filtered_pairs.sort(key=lambda item: item[0])
+        clean_query = urlencode(filtered_pairs)
+
+        return urlunparse((scheme, netloc, path, parts.params, clean_query, ""))
+    except Exception:
+        return url.strip()
 
 import feedparser
 import httpx
@@ -101,6 +155,9 @@ def ingest_rss_source(
     source: Source,
     client: httpx.Client | None = None,
     llm: LLMClient | None = None,
+    expected_lease_holder: str | None = None,
+    expected_lease_generation: int | None = None,
+    lease_name: str = "canonical_ingestion",
 ) -> int:
     if not source.rss_url:
         return 0
@@ -112,7 +169,8 @@ def ingest_rss_source(
         response.raise_for_status()
         parsed = feedparser.parse(response.content)
         for entry in parsed.entries:
-            url = str(entry.get("link") or "").strip()
+            raw_url = str(entry.get("link") or "").strip()
+            url = normalize_article_url(raw_url)
             title = str(entry.get("title") or "").strip()
             if not url or not title:
                 continue
@@ -142,7 +200,6 @@ def ingest_rss_source(
             raw_pub = entry.get("published") or entry.get("updated")
             published = parse_datetime(str(raw_pub) if raw_pub else None)
 
-
             # Step 2 translation layer
             raw_for_clustering, original_text, orig_lang, conf = process_and_translate_text(
                 title=title,
@@ -152,28 +209,59 @@ def ingest_rss_source(
 
             translated_text = raw_for_clustering if orig_lang != "en" else None
 
+            if expected_lease_holder is not None and expected_lease_generation is not None:
+                from worker.coordination import validate_lease_fencing, StaleLeaseError
+                if not validate_lease_fencing(
+                    db,
+                    lease_name=lease_name,
+                    holder_id=expected_lease_holder,
+                    expected_generation=expected_lease_generation,
+                ):
+                    db.rollback()
+                    raise StaleLeaseError(
+                        f"Lease superseded for worker '{expected_lease_holder}' at gen {expected_lease_generation} before article insert"
+                    )
+
             from worker.verify import extract_wire_attribution
             wire = extract_wire_attribution(f"{title} {text}")
 
-            db.add(
-                Article(
-                    id=new_id(),
-                    source_id=source.id,
-                    url=url,
-                    title=title[:1024],
-                    raw_text=raw_for_clustering,
-                    original_text=original_text,
-                    translated_text=translated_text,
-                    original_language=orig_lang,
-                    translation_confidence=conf,
-                    category=source.category,
-                    state=source.region,
-                    district=source.district,
-                    published_at=published,
-                    wire_attribution=wire,
+            try:
+                with db.begin_nested():
+                    db.add(
+                        Article(
+                            id=new_id(),
+                            source_id=source.id,
+                            url=url,
+                            title=title[:1024],
+                            raw_text=raw_for_clustering,
+                            original_text=original_text,
+                            translated_text=translated_text,
+                            original_language=orig_lang,
+                            translation_confidence=conf,
+                            category=source.category,
+                            state=source.region,
+                            district=source.district,
+                            published_at=published,
+                            wire_attribution=wire,
+                        )
+                    )
+                    db.flush()
+                created += 1
+            except Exception as insert_exc:
+                logger.debug("Duplicate or conflict during article insert for %s: %s", url, insert_exc)
+                continue
+        if expected_lease_holder is not None and expected_lease_generation is not None:
+            from worker.coordination import validate_lease_fencing, StaleLeaseError
+            if not validate_lease_fencing(
+                db,
+                lease_name=lease_name,
+                holder_id=expected_lease_holder,
+                expected_generation=expected_lease_generation,
+            ):
+                db.rollback()
+                raise StaleLeaseError(
+                    f"Lease superseded for worker '{expected_lease_holder}' at gen {expected_lease_generation} before article commit"
                 )
-            )
-            created += 1
         db.commit()
     finally:
         if close:

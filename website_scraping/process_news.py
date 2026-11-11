@@ -142,17 +142,17 @@ STOPWORDS = {
 SUMMARIZER_PROMPT = """You are an objective news editor for mobile news reels. Output ONLY valid JSON matching this schema:
 {
   "headline": "string, concise, punchy, factual, strictly under 12 words",
-  "summary": "string, 140-190 words structured into 2 or 3 distinct paragraphs separated by \\n\\n",
+  "summary": "string, concise, structured into 1 to 3 distinct paragraphs separated by \\n\\n",
   "category": "Technology|Politics|Business|National|World|Science|Health|Sports|Entertainment|Environment|State|Education",
   "priority_score": "int, 1-10 rating of civic/national/human impact",
   "key_facts": ["string, 3 concise factual bullets"]
 }
 
 Rules:
-- Structure the summary into 2-3 paragraphs separated by \\n\\n:
-  * Para 1: The breaking development (who, what, where, when).
-  * Para 2: Background context and corroborated details from reporting sources.
-  * Para 3: Official responses, implications, or upcoming developments.
+- Grounding: Base the summary STRICTLY and ONLY on facts, events, and statements explicitly provided in the source texts.
+- Do NOT invent names, numbers, dates, quotes, or unmentioned administrative reactions.
+- If the sources provide limited details, state what was reported concisely and accurately without padding with speculation or synthetic text.
+- Structure into 1-3 readable paragraphs separated by \\n\\n depending on the depth of the provided source facts.
 - Factual, neutral tone. No editorial opinions. Never repeat the headline as the first sentence.
 - Use only canonical category values from the schema enum above."""
 
@@ -454,7 +454,7 @@ def call_llm(prompt: str, user_content: str) -> Optional[Dict[str, Any]]:
     try:
         from openai import OpenAI
         if groq_key:
-            clients_to_try.append(("groq", OpenAI(api_key=groq_key, base_url="https://api.groq.com/openai/v1", max_retries=0), os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")))
+            clients_to_try.append(("groq", OpenAI(api_key=groq_key, base_url="https://api.groq.com/openai/v1", max_retries=0), os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")))
         if gemini_key:
             clients_to_try.append(("gemini", OpenAI(api_key=gemini_key, base_url="https://generativelanguage.googleapis.com/v1beta/openai/", max_retries=0), os.getenv("LLM_MODEL", "gemini-2.5-flash")))
         if openrouter_key:
@@ -510,42 +510,64 @@ def generate_factual_summary(cluster: List[Dict[str, Any]]) -> Dict[str, Any]:
         raw_summary = llm_result.get("summary", "")
         formatted_summary = format_paragraphs(raw_summary)
         words = len(formatted_summary.split())
-        if 50 <= words <= 350:
+        if 25 <= words <= 350:
             llm_result["summary"] = formatted_summary
             if "headline" in llm_result:
                 llm_result["headline"] = clean_text(llm_result["headline"])
             return llm_result
 
-    # High-quality factual fallback synthesis without boilerplate padding
+    # High-quality factual fallback synthesis strictly grounded in source content
     snippets = [clean_text(a.get("summary", "")) for a in cluster if a.get("summary")]
     unique_snippets = []
     for s in snippets:
-        if s and s not in unique_snippets and s.lower() not in lead_title.lower():
-            unique_snippets.append(s)
+        s_clean = re.sub(r"\s+-\s+[^-]+$", "", s).strip()
+        s_clean = re.sub(r"&nbsp;&nbsp;.*$", "", s_clean).strip()
+        if s_clean and s_clean not in unique_snippets:
+            if s_clean.lower() == lead_title.lower():
+                continue
+            if s_clean.lower().startswith(lead_title.lower()):
+                extra = s_clean[len(lead_title):].strip(" .-:\t\n")
+                if extra and len(extra) > 15 and extra not in unique_snippets:
+                    unique_snippets.append(extra)
+            elif lead_title.lower() not in s_clean.lower():
+                unique_snippets.append(s_clean)
+            elif len(s_clean) > len(lead_title) + 15:
+                unique_snippets.append(s_clean)
 
-    para1 = f"{lead_title}."
+    summary_paras = []
     if unique_snippets:
-        para1 += f" {unique_snippets[0]}"
-
-    if len(unique_snippets) > 1:
-        para2 = unique_snippets[1]
+        if lead_title.lower() not in unique_snippets[0].lower():
+            para1 = f"{lead_title}. {unique_snippets[0]}"
+        else:
+            para1 = unique_snippets[0]
+        summary_paras.append(para1)
+        for snip in unique_snippets[1:3]:
+            summary_paras.append(snip)
     else:
-        para2 = f"Reports corroborated across {sources_str} outline key details regarding the development, highlighting ongoing investigations and regional significance."
+        if sources_str and sources_str != "Verified News Sources":
+            summary_paras.append(f"{lead_title}. Reported by {sources_str}.")
+        else:
+            summary_paras.append(f"{lead_title}.")
 
-    para3 = f"Authorities and relevant agencies continue to monitor the situation, with official briefings and administrative follow-ups expected as more verified information emerges."
+    fallback_summary = "\n\n".join(summary_paras)
 
-    fallback_summary = f"{para1}\n\n{para2}\n\n{para3}"
+    key_facts = [lead_title[:100]]
+    if len(sources) > 1:
+        key_facts.append(f"Corroborated across {len(sources)} sources: {sources_str}.")
+    elif sources:
+        key_facts.append(f"Reported by {sources[0]}.")
+    for s in unique_snippets[:2]:
+        if len(key_facts) < 3 and s:
+            key_facts.append(s[:100])
+    while len(key_facts) < 3:
+        key_facts.append(f"Category: {category.capitalize()}")
 
     return {
         "headline": lead_title[:100],
         "summary": fallback_summary,
         "category": category,
         "priority_score": 6,
-        "key_facts": [
-            lead_title[:100],
-            f"Corroborated by {sources_str}.",
-            "Official oversight and administrative reviews ongoing.",
-        ],
+        "key_facts": key_facts,
     }
 
 
@@ -553,11 +575,13 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
     """If running inside News Reels monorepo, also syncs published cards to newsreels.db."""
     try:
         from app.db import SessionLocal
-        from app.models import Card, CardSource, StoryCluster, new_id
+        from app.models import Article, Card, CardSource, Source, StoryCluster, new_id
         from worker.visuals import assign_card_visuals
 
         from packages.ranking_engine.feed_ranking_engine import FeedRankingEngine
+        from packages.ranking_engine.freshness_engine import FreshnessEngine
         from packages.ranking_engine.importance_engine import ImportanceEngine
+        from packages.ranking_engine.relevance_engine import RelevanceEngine
         from packages.ranking_engine.urgency_engine import UrgencyEngine
         from packages.ranking_engine.verification_engine import VerificationEngine
 
@@ -566,6 +590,28 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
         # Use canonical category (Title-case) for DB storage — keeps category filter consistent
         canonical_cat = normalize_category(str(card_data.get("category", "National")))
         cat_for_engine = canonical_cat.lower()  # engines accept lowercase
+
+        # Parse publication datetime accurately
+        now = datetime.now(timezone.utc)
+        pub_str = card_data.get("published_at")
+        pub_dt = now
+        if pub_str:
+            try:
+                if isinstance(pub_str, datetime):
+                    pub_dt = pub_str if pub_str.tzinfo else pub_str.replace(tzinfo=timezone.utc)
+                else:
+                    pub_clean = str(pub_str).replace("Z", "+00:00")
+                    pub_dt = datetime.fromisoformat(pub_clean)
+                    if pub_dt.tzinfo is None:
+                        pub_dt = pub_dt.replace(tzinfo=timezone.utc)
+            except Exception:
+                try:
+                    import email.utils
+                    pub_dt = email.utils.parsedate_to_datetime(str(pub_str))
+                    if pub_dt.tzinfo is None:
+                        pub_dt = pub_dt.replace(tzinfo=timezone.utc)
+                except Exception:
+                    pub_dt = now
 
         # Compute multi-dimensional metrics
         dims, imp_score = ImportanceEngine.analyze_event_text(
@@ -580,6 +626,10 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
             is_developing=card_data.get("is_developing"),
             action_required=card_data.get("action_required"),
         )
+        frs_score = FreshnessEngine.calculate_freshness(
+            published_at=pub_dt,
+            current_time=now,
+        )
         src_dicts = [
             {
                 "name": art.get("source", "Web News"),
@@ -593,15 +643,14 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
         )
         tier1_c = sum(1 for s in src_dicts if s["tier"] == "1")
 
-        from packages.ranking_engine.relevance_engine import RelevanceEngine
         rel_score = RelevanceEngine.calculate_relevance(
             story_category=cat_for_engine,
-            story_state=cluster[0].get("state"),
+            story_state=cluster[0].get("state") if cluster else None,
         )
         scoring_out = FeedRankingEngine.compute_final_score(
             objective_importance=imp_score,
             urgency=urg_score,
-            freshness=100.0,
+            freshness=frs_score,
             personal_relevance=rel_score,
             verification_confidence=ver_score,
             dimensions=dims,
@@ -627,6 +676,41 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
                 existing_card.priority_reason = scoring_out.priority_reason
                 existing_card.impact_evidence = dims.model_dump()
                 existing_card.verification_type = "cross_verified" if len(cluster) > 1 else "single_source"
+
+                # Ingest articles if not already present
+                for art in cluster:
+                    link = art.get("link")
+                    if link:
+                        existing_art = db.query(Article).filter(Article.url == link).first()
+                        if not existing_art:
+                            src_name = art.get("source", "Web News")
+                            src = db.query(Source).filter(Source.name == src_name).first()
+                            if not src:
+                                src = Source(
+                                    id=new_id(),
+                                    name=src_name,
+                                    category=cat_for_engine,
+                                    region=cluster[0].get("state") if cluster else None,
+                                    trust_tier="1" if any(t in str(src_name).lower() for t in TIER_1_SOURCES) else "2",
+                                    source_type="rss",
+                                    is_active=True,
+                                )
+                                db.add(src)
+                                db.flush()
+                            db.add(
+                                Article(
+                                    id=new_id(),
+                                    source_id=src.id,
+                                    url=link,
+                                    title=art.get("title", headline)[:1024],
+                                    raw_text=art.get("summary", "") or "",
+                                    category=cat_for_engine,
+                                    state=cluster[0].get("state") if cluster else None,
+                                    published_at=pub_dt,
+                                    ingested_at=now,
+                                    cluster_id=existing_card.cluster_id,
+                                )
+                            )
                 db.commit()
                 return True
 
@@ -644,10 +728,10 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
                 headline=headline,
                 summary=summary,
                 category=canonical_cat,  # Store Title-case canonical value
-                state=cluster[0].get("state"),
+                state=cluster[0].get("state") if cluster else None,
                 verified_status="published",
                 verification_type="cross_verified" if len(cluster) > 1 else "single_source",
-                published_at=datetime.now(timezone.utc),
+                published_at=pub_dt,
                 objective_score=scoring_out.objective_importance,
                 priority_score=int(card_data.get("priority_score", 5)),
                 importance_score=scoring_out.objective_importance,
@@ -674,6 +758,40 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
                 )
                 db.add(cs)
 
+                # Persist to articles table with URL deduplication
+                link = art.get("link")
+                if link:
+                    existing_art = db.query(Article).filter(Article.url == link).first()
+                    if not existing_art:
+                        src_name = art.get("source", "Web News")
+                        src = db.query(Source).filter(Source.name == src_name).first()
+                        if not src:
+                            src = Source(
+                                id=new_id(),
+                                name=src_name,
+                                category=cat_for_engine,
+                                region=cluster[0].get("state") if cluster else None,
+                                trust_tier="1" if any(t in str(src_name).lower() for t in TIER_1_SOURCES) else "2",
+                                source_type="rss",
+                                is_active=True,
+                            )
+                            db.add(src)
+                            db.flush()
+                        db.add(
+                            Article(
+                                id=new_id(),
+                                source_id=src.id,
+                                url=link,
+                                title=art.get("title", headline)[:1024],
+                                raw_text=art.get("summary", "") or "",
+                                category=cat_for_engine,
+                                state=cluster[0].get("state") if cluster else None,
+                                published_at=pub_dt,
+                                ingested_at=now,
+                                cluster_id=sc.id,
+                            )
+                        )
+
             try:
                 assign_card_visuals(card, db)
             except Exception:
@@ -683,7 +801,8 @@ def sync_to_newsreels_monorepo(card_data: Dict[str, Any], cluster: List[Dict[str
             return True
         finally:
             db.close()
-    except Exception:
+    except Exception as exc:
+        logger.error(f"Error syncing to newsreels.db: {exc}", exc_info=True)
         return False
 
 

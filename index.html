@@ -1,1594 +1,2144 @@
-<!DOCTYPE html>
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <!-- PWA & Mobile Web Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="default"
+    />
+    <meta name="apple-mobile-web-app-title" content="NEWZZ" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
-<html class="dark" lang="en">
+    <title>NEWZZ | Editorial Intelligence &amp; Verified Dispatches</title>
 
-<head>
+    <meta
+      name="description"
+      content="Contemporary Editorial Intelligence platform with algorithmic explainability, multi-dimensional verification, and personalized priority ranking."
+    />
 
+    <!-- Google Fonts: Newsreader & Inter -->
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
 
-  <meta charset="utf-8"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <title>NEWZZ | Editorial Intelligence &amp; Verified Dispatches</title>
+    <!-- Material Symbols Outlined -->
 
-  <meta name="description" content="Contemporary Editorial Intelligence platform with algorithmic explainability, multi-dimensional verification, and personalized priority ranking."/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
 
-  
+    <!-- Tailwind CSS CDN + Stitch Editorial Theme Configuration -->
 
-  <!-- Google Fonts: Newsreader & Inter -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
 
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+        theme: {
+          extend: {
+            colors: {
+              surface: "#f7f7f7",
+              "on-surface": "#111111",
+              background: "#ffffff",
+              "on-background": "#111111",
+              primary: "#ff7a00",
+              "on-primary": "#ffffff",
+              "primary-container": "#ff7a00",
+              "on-primary-container": "#ffffff",
+              "surface-tint": "#ff8f26",
+              "surface-container": "#f3f3f3",
+              "surface-container-low": "#f7f7f7",
+              "surface-container-high": "#eeeeee",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#e5e5e5",
+              outline: "#888888",
+              "outline-variant": "#d1d1d1",
+              "on-surface-variant": "#555555",
+              secondary: "#ff9533",
+              "on-secondary": "#ffffff",
+              "secondary-container": "#fff0e0",
+              "on-secondary-container": "#993d00",
+              error: "#ef4444",
+              "on-error": "#ffffff",
+              tertiary: "#f59e0b",
+            },
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet"/>
+            spacing: {
+              "space-xs": "0.25rem",
 
-  <!-- Material Symbols Outlined -->
+              "space-sm": "0.5rem",
 
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+              "space-md": "1rem",
 
+              "space-lg": "1.5rem",
 
+              "space-xl": "2.5rem",
 
-  <!-- Tailwind CSS CDN + Stitch Editorial Theme Configuration -->
+              gutter: "1.5rem",
 
-  <script src="https://cdn.tailwindcss.com"></script>
+              margin: "3rem",
 
-  <script id="tailwind-config">
+              "gutter-mobile": "1rem",
 
-    tailwind.config = {
+              "margin-mobile": "1.25rem",
+            },
 
-      darkMode: "class",
+            fontFamily: {
+              "body-sans": ["Inter", "sans-serif"],
 
-      theme: {
+              "headline-lg": ["Newsreader", "serif"],
 
-        extend: {
+              "headline-md": ["Newsreader", "serif"],
 
-          colors: {
+              "headline-sm": ["Newsreader", "serif"],
 
-            "surface": "#141311",
+              "headline-display": ["Newsreader", "serif"],
 
-            "on-surface": "#e6e2de",
+              "body-lg": ["Newsreader", "serif"],
 
-            "on-primary-container": "#512700",
+              "body-md": ["Newsreader", "serif"],
 
-            "on-secondary-container": "#91bfa9",
+              "label-caps": ["Inter", "sans-serif"],
 
-            "on-tertiary": "#363017",
+              "label-md": ["Inter", "sans-serif"],
 
-            "primary-container": "#eb7d00",
+              "label-sm": ["Inter", "sans-serif"],
+            },
 
-            "surface-tint": "#ffb780",
+            fontSize: {
+              "label-caps": [
+                "11px",
+                {
+                  lineHeight: "14px",
+                  letterSpacing: "0.08em",
+                  fontWeight: "600",
+                },
+              ],
 
-            "error": "#ffb4ab",
+              "label-md": ["13px", { lineHeight: "18px", fontWeight: "500" }],
 
-            "surface-container": "#211f1d",
+              "label-sm": ["11px", { lineHeight: "14px", fontWeight: "500" }],
 
-            "inverse-surface": "#e6e2de",
+              "headline-display": [
+                "56px",
+                { lineHeight: "64px", letterSpacing: "-0.02em" },
+              ],
 
-            "outline-variant": "#564335",
+              "headline-lg": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.015em" },
+              ],
 
-            "on-surface-variant": "#ddc1af",
+              "headline-md": [
+                "28px",
+                { lineHeight: "34px", letterSpacing: "-0.01em" },
+              ],
 
-            "secondary-fixed": "#beedd5",
+              "headline-sm": ["22px", { lineHeight: "28px" }],
 
-            "on-error": "#690005",
+              "body-lg": ["20px", { lineHeight: "32px" }],
 
-            "error-container": "#93000a",
+              "body-md": ["17px", { lineHeight: "28px" }],
 
-            "tertiary": "#d0c7a2",
-
-            "secondary-fixed-dim": "#a2d1ba",
-
-            "surface-container-lowest": "#0f0e0c",
-
-            "surface-container-highest": "#363432",
-
-            "inverse-on-surface": "#32302e",
-
-            "on-error-container": "#ffdad6",
-
-            "surface-variant": "#363432",
-
-            "primary-fixed": "#ffdcc4",
-
-            "on-tertiary-fixed": "#201c05",
-
-            "on-tertiary-fixed-variant": "#4d472b",
-
-            "on-tertiary-container": "#373218",
-
-            "tertiary-fixed": "#ede3bd",
-
-            "on-primary-fixed-variant": "#6f3800",
-
-            "on-secondary": "#083827",
-
-            "on-primary-fixed": "#2f1400",
-
-            "secondary-container": "#234f3d",
-
-            "secondary": "#a2d1ba",
-
-            "surface-container-high": "#2b2a27",
-
-            "surface-dim": "#141311",
-
-            "tertiary-container": "#a39a78",
-
-            "background": "#141311",
-
-            "primary": "#ffb780",
-
-            "surface-bright": "#3b3936",
-
-            "surface-container-low": "#1d1b19",
-
-            "outline": "#a48c7b",
-
-            "inverse-primary": "#924c00",
-
-            "on-secondary-fixed-variant": "#234f3d",
-
-            "on-primary": "#4e2600",
-
-            "on-background": "#e6e2de",
-
-            "primary-fixed-dim": "#ffb780",
-
-            "on-secondary-fixed": "#002115",
-
-            "tertiary-fixed-dim": "#d0c7a2"
-
+              "body-sans": ["15px", { lineHeight: "24px" }],
+            },
           },
+        },
+      };
+    </script>
 
-          spacing: {
-
-            "space-xs": "0.25rem",
-
-            "space-sm": "0.5rem",
-
-            "space-md": "1rem",
-
-            "space-lg": "1.5rem",
-
-            "space-xl": "2.5rem",
-
-            "gutter": "1.5rem",
-
-            "margin": "3rem",
-
-            "gutter-mobile": "1rem",
-
-            "margin-mobile": "1.25rem"
-
-          },
-
-          fontFamily: {
-
-            "body-sans": ["Inter", "sans-serif"],
-
-            "headline-lg": ["Newsreader", "serif"],
-
-            "headline-md": ["Newsreader", "serif"],
-
-            "headline-sm": ["Newsreader", "serif"],
-
-            "headline-display": ["Newsreader", "serif"],
-
-            "body-lg": ["Newsreader", "serif"],
-
-            "body-md": ["Newsreader", "serif"],
-
-            "label-caps": ["Inter", "sans-serif"],
-
-            "label-md": ["Inter", "sans-serif"],
-
-            "label-sm": ["Inter", "sans-serif"]
-
-          },
-
-          fontSize: {
-
-            "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "600" }],
-
-            "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
-
-            "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
-
-            "headline-display": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em" }],
-
-            "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.015em" }],
-
-            "headline-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em" }],
-
-            "headline-sm": ["22px", { "lineHeight": "28px" }],
-
-            "body-lg": ["20px", { "lineHeight": "32px" }],
-
-            "body-md": ["17px", { "lineHeight": "28px" }],
-
-            "body-sans": ["15px", { "lineHeight": "24px" }]
-
-          }
-
-        }
-
+    <style>
+      /* Universal Mobile Auto-Scaling and Fluid Responsiveness */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+        min-height: 100dvh;
+        -webkit-text-size-adjust: 100%;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
 
-    };
+      /* Architectural Hairline Rules & Micro-animations */
 
-  </script>
+      .border-editorial {
+        border-color: rgba(235, 227, 167, 0.1);
+      }
 
+      .border-editorial-subtle {
+        border-color: rgba(235, 227, 167, 0.06);
+      }
 
+      @keyframes spinFeed {
+        from {
+          transform: rotate(0deg);
+        }
 
-  <style>
-    /* Universal Mobile Auto-Scaling and Fluid Responsiveness */
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-    html, body {
-      width: 100%;
-      max-width: 100vw;
-      overflow-x: hidden;
-      min-height: 100dvh;
-      -webkit-text-size-adjust: 100%;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
+      .refreshing svg,
+      .refreshing .material-symbols-outlined {
+        animation: spinFeed 0.75s linear infinite;
+      }
 
-    /* Architectural Hairline Rules & Micro-animations */
+      /* Modal Backdrop & Transitions */
 
-    .border-editorial { border-color: rgba(235, 227, 167, 0.10); }
+      .modal-backdrop {
+        position: fixed;
 
-    .border-editorial-subtle { border-color: rgba(235, 227, 167, 0.06); }
+        inset: 0;
 
-    
+        z-index: 999;
 
-    @keyframes spinFeed {
+        display: flex;
 
-      from { transform: rotate(0deg); }
+        align-items: center;
 
-      to { transform: rotate(360deg); }
+        justify-content: center;
 
-    }
+        background: rgba(10, 9, 8, 0.85);
 
-    .refreshing svg,
+        backdrop-filter: blur(8px);
 
-    .refreshing .material-symbols-outlined {
+        padding: 1rem;
+      }
 
-      animation: spinFeed 0.75s linear infinite;
+      .modal-backdrop.hidden {
+        display: none !important;
+      }
 
-    }
+      /* Custom Scrollbars */
 
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
 
+      ::-webkit-scrollbar-track {
+        background: #f3f3f3;
+      }
 
-    /* Modal Backdrop & Transitions */
+      ::-webkit-scrollbar-thumb {
+        background: #d1d1d1;
+      }
 
-    .modal-backdrop {
+      ::-webkit-scrollbar-thumb:hover {
+        background: #ff7a00;
+      }
 
-      position: fixed;
+      /* Floating Feed Toast */
 
-      inset: 0;
+      .feed-toast {
+        position: fixed;
 
-      z-index: 999;
+        top: 5rem;
 
-      display: flex;
+        left: 50%;
 
-      align-items: center;
+        transform: translateX(-50%) translateY(0);
 
-      justify-content: center;
+        background: rgba(16, 185, 129, 0.95);
 
-      background: rgba(10, 9, 8, 0.85);
+        color: #ffffff;
 
-      backdrop-filter: blur(8px);
+        font-family: "Inter", sans-serif;
 
-      padding: 1rem;
+        font-size: 0.85rem;
 
-    }
+        font-weight: 600;
 
-    .modal-backdrop.hidden { display: none !important; }
+        padding: 0.5rem 1.25rem;
 
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 
+        z-index: 1000;
 
-    /* Custom Scrollbars */
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-
-    ::-webkit-scrollbar-track { background: #0f0e0c; }
-
-    ::-webkit-scrollbar-thumb { background: #363432; }
-
-    ::-webkit-scrollbar-thumb:hover { background: #564335; }
-
-
-
-    /* Floating Feed Toast */
-
-    .feed-toast {
-
-      position: fixed;
-
-      top: 5rem;
-
-      left: 50%;
-
-      transform: translateX(-50%) translateY(0);
-
-      background: rgba(16, 185, 129, 0.95);
-
-      color: #ffffff;
-
-      font-family: 'Inter', sans-serif;
-
-      font-size: 0.85rem;
-
-      font-weight: 600;
-
-      padding: 0.5rem 1.25rem;
-
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-
-      z-index: 1000;
-
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-
-      pointer-events: none;
-
-    }
-
-    .feed-toast.hidden {
-
-      opacity: 0;
-
-      transform: translateX(-50%) translateY(-10px);
-
-    }
-
-    
-
-    /* Interest Chip Styles */
-
-    .interest-chip {
-
-      display: inline-flex;
-
-      align-items: center;
-
-      gap: 0.5rem;
-
-      padding: 0.5rem 0.85rem;
-
-      background: #211f1d;
-
-      border: 1px solid #564335;
-
-      color: #ddc1af;
-
-      font-family: 'Inter', sans-serif;
-
-      font-size: 0.8rem;
-
-      font-weight: 500;
-
-      cursor: pointer;
-
-      transition: all 0.2s ease;
-
-    }
-
-    .interest-chip.selected {
-
-      background: #eb7d00;
-
-      color: #ffffff;
-
-      border-color: #ffb780;
-
-    }
-
-    
-
-    /* Priority Item Styles */
-
-    .priority-item {
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      padding: 0.65rem 0.85rem;
-
-      background: #1d1b19;
-
-      border: 1px solid #363432;
-
-      margin-bottom: 0.4rem;
-
-    }
-
-    .priority-item-left {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 0.75rem;
-
-    }
-
-    .priority-rank-badge {
-
-      font-family: 'Inter', sans-serif;
-
-      font-size: 0.75rem;
-
-      font-weight: 700;
-
-      color: #eb7d00;
-
-    }
-
-    .priority-name {
-
-      font-family: 'Inter', sans-serif;
-
-      font-size: 0.85rem;
-
-      color: #e6e2de;
-
-    }
-
-    .btn-priority-move {
-
-      background: #2b2a27;
-
-      color: #e6e2de;
-
-      border: 1px solid #564335;
-
-      padding: 0.25rem 0.5rem;
-
-      font-size: 0.75rem;
-
-      cursor: pointer;
-
-      margin-left: 0.25rem;
-
-    }
-
-    .btn-priority-move:disabled {
-
-      opacity: 0.3;
-
-      cursor: not-allowed;
-
-    }
-
-  
-    /* Auto-scaling viewport and dynamic mobile adjustments */
-    html, body {
-      min-height: 100dvh;
-      -webkit-text-size-adjust: 100%;
-    }
-    @supports (min-height: 100dvh) {
-      .min-h-screen { min-height: 100dvh; }
-    }
-    .safe-bottom {
-      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    }
-
-    /* === UNIFIED BUTTON SYSTEM (Standardized to 4 cohesive styles) === */
-    .btn-primary {
-      min-height: 40px;
-      padding: 0.5rem 1rem;
-      background-color: #ffb782;
-      color: #4f2500;
-      font-size: 0.75rem; /* text-xs */
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-radius: 0.125rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: background-color 0.15s ease, opacity 0.15s ease;
-      cursor: pointer;
-    }
-    .btn-primary:hover { background-color: rgba(255, 183, 130, 0.9); }
-
-    .btn-secondary {
-      min-height: 40px;
-      padding: 0.5rem 0.875rem;
-      background-color: #211f1d;
-      color: #e6e2de;
-      border: 1px solid rgba(147, 143, 137, 0.3);
-      font-size: 0.75rem; /* text-xs */
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-radius: 0.125rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
-      cursor: pointer;
-    }
-    .btn-secondary:hover { background-color: #2b2a27; border-color: rgba(147, 143, 137, 0.5); }
-
-    .btn-action-link {
-      min-height: 40px;
-      padding: 0.5rem 0.875rem;
-      color: #ffb782;
-      font-size: 0.8125rem; /* 13px */
-      font-weight: 600;
-      letter-spacing: 0.025em;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.375rem;
-      background-color: rgba(255, 183, 130, 0.06);
-      border: 1px solid rgba(255, 183, 130, 0.2);
-      border-radius: 0.125rem;
-      transition: background-color 0.15s ease, color 0.15s ease;
-      cursor: pointer;
-    }
-    .btn-action-link:hover {
-      background-color: rgba(255, 183, 130, 0.15);
-      color: #ffdcc3;
-    }
-
-    .btn-filter-pill {
-      min-height: 36px;
-      padding: 0.375rem 0.875rem;
-      border-radius: 9999px;
-      font-size: 0.75rem; /* text-xs */
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(147, 143, 137, 0.2);
-      transition: all 0.15s ease;
-      cursor: pointer;
-    }
-
-  </style>
-
-  <link rel="stylesheet" href="style.css"/>
-
-</head>
-
-
-
-<body class="bg-surface font-body-sans text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary selection:text-on-primary">
-
-
-
-  <!-- =========================================================================
+        pointer-events: none;
+      }
+
+      .feed-toast.hidden {
+        opacity: 0;
+
+        transform: translateX(-50%) translateY(-10px);
+      }
+
+      /* Interest Chip Styles */
+
+      .interest-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.85rem;
+        background: #f3f3f3;
+        border: 1px solid #e5e5e5;
+        color: #555555;
+        font-family: "Inter", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .interest-chip.selected {
+        background: #ff7a00;
+        color: #ffffff;
+        font-weight: 700;
+        border-color: #ff9533;
+      }
+
+      /* Priority Item Styles */
+
+      .priority-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.65rem 0.85rem;
+        background: #f7f7f7;
+        border: 1px solid #e5e5e5;
+        margin-bottom: 0.4rem;
+      }
+
+      .priority-item-left {
+        display: flex;
+
+        align-items: center;
+
+        gap: 0.75rem;
+      }
+
+      .priority-rank-badge {
+        font-family: "Inter", sans-serif;
+
+        font-size: 0.75rem;
+
+        font-weight: 700;
+
+        color: #ff7a00;
+      }
+
+      .priority-name {
+        font-family: "Inter", sans-serif;
+        font-size: 0.85rem;
+        color: #111111;
+      }
+
+      .btn-priority-move {
+        background: #f3f3f3;
+        color: #111111;
+        border: 1px solid #d1d1d1;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        cursor: pointer;
+        margin-left: 0.25rem;
+        border-radius: 2px;
+      }
+
+      .btn-priority-move:disabled {
+        opacity: 0.3;
+
+        cursor: not-allowed;
+      }
+
+      /* Auto-scaling viewport and dynamic mobile adjustments */
+      html,
+      body {
+        min-height: 100dvh;
+        -webkit-text-size-adjust: 100%;
+      }
+      @supports (min-height: 100dvh) {
+        .min-h-screen {
+          min-height: 100dvh;
+        }
+      }
+      .safe-bottom {
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+      }
+
+      /* === UNIFIED BUTTON SYSTEM (Standardized to 4 cohesive styles) === */
+      .btn-primary {
+        min-height: 40px;
+        padding: 0.5rem 1rem;
+        background-color: #ff7a00;
+        color: #ffffff;
+        font-size: 0.75rem; /* text-xs */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 0.125rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition:
+          background-color 0.15s ease,
+          opacity 0.15s ease;
+        cursor: pointer;
+      }
+      .btn-primary:hover {
+        background-color: #e06d00;
+      }
+
+      .btn-secondary {
+        min-height: 40px;
+        padding: 0.5rem 0.875rem;
+        background-color: #f3f3f3;
+        color: #111111;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        font-size: 0.75rem; /* text-xs */
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 0.125rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition:
+          background-color 0.15s ease,
+          border-color 0.15s ease;
+        cursor: pointer;
+      }
+      .btn-secondary:hover {
+        background-color: #e8e8e8;
+        border-color: rgba(0, 0, 0, 0.25);
+      }
+
+      .btn-action-link {
+        min-height: 40px;
+        padding: 0.5rem 0.875rem;
+        color: #cc6200;
+        font-size: 0.8125rem; /* 13px */
+        font-weight: 600;
+        letter-spacing: 0.025em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        background-color: rgba(255, 122, 0, 0.06);
+        border: 1px solid rgba(255, 122, 0, 0.2);
+        border-radius: 0.125rem;
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
+        cursor: pointer;
+      }
+      .btn-action-link:hover {
+        background-color: rgba(255, 122, 0, 0.12);
+        color: #993d00;
+      }
+
+      .btn-filter-pill {
+        min-height: 36px;
+        padding: 0.375rem 0.875rem;
+        border-radius: 9999px;
+        font-size: 0.75rem; /* text-xs */
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        transition: all 0.15s ease;
+        cursor: pointer;
+      }
+    </style>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body
+    class="bg-background text-on-surface font-body-sans min-h-screen selection:bg-primary selection:text-on-primary"
+  >
+    <!-- =========================================================================
 
        TOP STICKY MASTHEAD NAVIGATION
 
        ========================================================================= -->
 
-  <header class="sticky top-0 z-50 w-full bg-[#141311] border-b border-outline-variant/20 will-change-transform">
+    <header
+      class="sticky top-0 z-50 w-full bg-background border-b border-outline-variant/40 will-change-transform"
+    >
+      <div
+        class="h-16 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-gutter"
+      >
+        <!-- Brand & Tagline -->
 
-    <div class="h-16 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-gutter">
+        <div class="flex items-center gap-space-md shrink-0">
+          <a class="flex items-center gap-space-sm group" href="#">
+            <span
+              class="font-headline-md text-headline-md tracking-tight uppercase text-on-surface group-hover:text-primary transition-colors"
+              >NEWZZ</span
+            >
+          </a>
 
-      <!-- Brand & Tagline -->
+          <div class="h-4 w-px bg-outline-variant/30 hidden sm:block"></div>
 
-      <div class="flex items-center gap-space-md shrink-0">
-
-        <a class="flex items-center gap-space-sm group" href="#">
-
-          <span class="font-headline-md text-headline-md tracking-tight uppercase text-on-surface group-hover:text-primary transition-colors">NEWZZ</span>
-
-        </a>
-
-        <div class="h-4 w-px bg-outline-variant/30 hidden sm:block"></div>
-
-        <span class="hidden md:inline-block font-body-md text-[12px] italic text-outline leading-none">Know What Matters.</span>
-
-      </div>
-
-
-
-      <!-- Center Desktop Nav Links -->
-
-      <nav class="hidden xl:flex items-center gap-space-lg h-full">
-
-        <a class="tracking-wide transition-colors py-space-sm text-on-surface border-b-2 border-primary font-medium" id="nav-for-you" href="#">For You</a>
-
-        <a class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm" id="nav-latest" href="#">Latest</a>
-
-        <a class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm" id="nav-categories" href="#">Categories</a>
-
-        <a class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm flex items-center gap-1" id="nav-state-edition" href="#">
-
-          <span id="nav-state-label">Telangana Desk</span>
-
-        </a>
-
-        <a class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm" id="nav-method" href="#">Editorial Method</a>
-
-      </nav>
-
-
-
-      <!-- Right Action Affordances -->
-
-      <div class="flex items-center gap-space-md shrink-0">
-
-        <!-- Search Intelligence Bar -->
-
-        <div class="hidden lg:flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-1.5 border border-outline-variant/30 text-outline">
-
-          <span class="material-symbols-outlined text-[16px]">search</span>
-
-          <input type="text" id="input-search-intelligence" placeholder="Search intelligence..." class="bg-transparent text-[13px] text-on-surface outline-none w-36 font-body-sans"/>
-
-          <kbd class="font-label-caps text-[10px] px-1 bg-surface-container border border-outline-variant/40 text-on-surface-variant">/</kbd>
-
+          <span
+            class="hidden md:inline-block font-body-md text-[12px] italic text-outline leading-none"
+            >Know What Matters.</span
+          >
         </div>
 
+        <!-- Center Desktop Nav Links -->
 
+        <nav class="hidden xl:flex items-center gap-space-lg h-full">
+          <a
+            class="tracking-wide transition-colors py-space-sm text-on-surface border-b-2 border-primary font-medium"
+            id="nav-for-you"
+            href="#"
+            >For You</a
+          >
 
-        <!-- Location Badge Selector Button -->
+          <a
+            class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm"
+            id="nav-latest"
+            href="#"
+            >Latest</a
+          >
 
-        <a href="state-selection.html" id="btn-open-location-modal" class="flex items-center gap-1 bg-surface-container-low hover:bg-surface-container px-space-sm py-1.5 border border-outline-variant/25 cursor-pointer text-left transition-colors" title="Change State">
+          <a
+            class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm"
+            id="nav-categories"
+            href="#"
+            >Categories</a
+          >
 
-          <span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+          <a
+            class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm flex items-center gap-1"
+            id="nav-state-edition"
+            href="#"
+          >
+            <span id="nav-state-label">Telangana Desk</span>
+          </a>
 
-          <span id="label-user-location" class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold">Telangana</span>
+          <a
+            class="text-on-surface-variant hover:text-on-surface text-label-md font-label-md tracking-wide transition-colors py-space-sm"
+            id="nav-method"
+            href="#"
+            >Editorial Method</a
+          >
+        </nav>
 
-          <span class="material-symbols-outlined text-[14px] text-outline">arrow_drop_down</span>
+        <!-- Right Action Affordances -->
 
-        </a>
+        <div class="flex items-center gap-space-md shrink-0">
+          <!-- Search Intelligence Bar -->
 
+          <div
+            class="flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-1.5 border border-outline-variant/30 text-outline"
+          >
+            <span class="material-symbols-outlined text-[16px]">search</span>
 
+            <input
+              type="text"
+              id="input-search-intelligence"
+              placeholder="Search intelligence..."
+              class="bg-transparent text-[13px] text-on-surface outline-none w-36 font-body-sans"
+            />
 
-        <!-- Refresh Live Feed Button -->
+            <kbd
+              class="font-label-caps text-[10px] px-1 bg-surface-container border border-outline-variant/40 text-on-surface-variant"
+              >/</kbd
+            >
+          </div>
 
-        <button id="btn-refresh-feed" class="p-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant/25 text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Refresh Live Feed">
+          <!-- Location Badge Selector Button -->
 
-          <span class="material-symbols-outlined text-[18px]">refresh</span>
+          <a
+            href="state-selection.html"
+            id="btn-open-location-modal"
+            class="flex items-center gap-1 bg-surface-container-low hover:bg-surface-container px-space-sm py-1.5 border border-outline-variant/25 cursor-pointer text-left transition-colors"
+            title="Change State"
+          >
+            <span class="material-symbols-outlined text-[15px] text-primary"
+              >location_on</span
+            >
 
-        </button>
+            <span
+              id="label-user-location"
+              class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold"
+              >Telangana</span
+            >
+
+            <span class="material-symbols-outlined text-[14px] text-outline"
+              >arrow_drop_down</span
+            >
+          </a>
+
+          <!-- Vernacular Language Toggle (EN | हि) -->
+          <button
+            id="btn-lang-toggle"
+            class="flex items-center gap-1 bg-[#f0f2f5] hover:bg-[#e4e6eb] text-[#ff7a00] border border-[#d1d5db] px-2.5 py-1.5 font-mono text-xs font-bold tracking-wider rounded-sm transition-colors cursor-pointer"
+            title="Switch Language / भाषा बदलें"
+          >
+            <span class="text-[13px]">🇮🇳</span>
+            <span id="lang-toggle-text">EN</span>
+          </button>
+
+          <!-- Quick Read (60-Word Reels) Toggle Button -->
+          <button
+            id="btn-toggle-quick-read"
+            class="flex items-center gap-1.5 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 px-space-sm py-1.5 font-label-sm text-label-sm font-semibold tracking-wider uppercase transition-colors cursor-pointer"
+            title="Switch to 60-Word Card Reel"
+          >
+            <span class="material-symbols-outlined text-[16px] text-primary"
+              >bolt</span
+            >
+            <span class="hidden sm:inline">60-Word Reels</span>
+          </button>
+
+          <!-- Refresh Live Feed Button -->
+
+          <button
+            id="btn-refresh-feed"
+            class="p-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant/25 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+            title="Refresh Live Feed"
+          >
+            <span class="material-symbols-outlined text-[18px]">refresh</span>
+          </button>
+        </div>
       </div>
+    </header>
+
+    <!-- Live Feed Toast Notification -->
+
+    <div
+      id="feed-toast"
+      class="feed-toast hidden"
+      role="status"
+      aria-live="polite"
+    >
+      Feed updated
     </div>
-  </header>
 
-
-
-  <!-- Live Feed Toast Notification -->
-
-  <div id="feed-toast" class="feed-toast hidden" role="status" aria-live="polite">Feed updated</div>
-
-
-
-  <!-- =========================================================================
+    <!-- =========================================================================
 
        MAIN CONTENT CONTAINER
 
        ========================================================================= -->
 
-  <main class="w-full flex-1 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 bg-surface">
+    <main
+      class="w-full flex-1 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 bg-surface"
+    >
+      <div class="flex flex-col w-full">
+        <!-- TOP PERSONALIZATION & MASTHEAD BANNER -->
 
-    <div class="flex flex-col w-full">
-
-
-
-      <!-- TOP PERSONALIZATION & MASTHEAD BANNER -->
-
-      <section class="w-full bg-surface-container-lowest/80 p-4 sm:p-5 mb-5 border border-outline-variant/20 rounded-sm">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-3">
-          <div>
-            <!-- Issues 3 & 4: Sentence case, 12px min body/label size -->
-            <div class="flex items-center gap-2 text-xs text-outline mb-1 font-medium">
-              <span id="masthead-date">Today's Dispatch</span>
-              <span>•</span>
-              <span class="text-primary font-semibold" id="masthead-edition">Telangana Edition</span>
-              <span>•</span>
-              <span id="verified-stories-count">948 Verified Stories Active</span>
+        <section
+          class="w-full bg-surface-container-lowest/80 p-4 sm:p-5 mb-5 border border-outline-variant/20 rounded-sm"
+        >
+          <div
+            class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-3"
+          >
+            <div>
+              <!-- Issues 3 & 4: Sentence case, 12px min body/label size -->
+              <div
+                class="flex items-center gap-2 text-xs text-outline mb-1 font-medium"
+              >
+                <span id="masthead-date">Today's Dispatch</span>
+                <span>•</span>
+                <span class="text-primary font-semibold" id="masthead-edition"
+                  >Telangana Edition</span
+                >
+                <span>•</span>
+                <span id="verified-stories-count"
+                  >948 Verified Stories Active</span
+                >
+                <span class="hidden sm:inline">•</span>
+                <span
+                  id="reading-streak-badge"
+                  class="px-2 py-0.5 bg-[#f0f2f5] border border-[#e2e8f0] text-[#111111] font-mono rounded text-[11px] inline-flex items-center gap-1"
+                >
+                  <span>🔥</span>
+                  <span id="reading-streak-text">Streak: 1 Day • 0 Read</span>
+                </span>
+              </div>
+              <!-- Issue 11: Compact heading saving ~120px viewport space -->
+              <div class="flex flex-wrap items-baseline gap-2">
+                <h1
+                  class="font-serif text-xl sm:text-2xl text-on-surface font-bold tracking-tight"
+                >
+                  Good morning,
+                  <span
+                    class="italic font-normal text-surface-tint"
+                    id="greeting-name"
+                    >Reader</span
+                  >.
+                </h1>
+                <span class="text-xs text-outline hidden sm:inline"
+                  >Calibrated verified intelligence feed.</span
+                >
+              </div>
             </div>
-            <!-- Issue 11: Compact heading saving ~120px viewport space -->
-            <div class="flex flex-wrap items-baseline gap-2">
-              <h1 class="font-serif text-xl sm:text-2xl text-on-surface font-bold tracking-tight">
-                Good morning, <span class="italic font-normal text-surface-tint" id="greeting-name">Reader</span>.
-              </h1>
-              <span class="text-xs text-outline hidden sm:inline">Calibrated verified intelligence feed.</span>
+
+            <!-- State & Priority Controls -->
+            <div class="flex items-center gap-2 shrink-0">
+              <div
+                class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-surface-container border border-outline-variant/20 text-xs text-on-surface rounded-sm"
+              >
+                <span class="w-2 h-2 rounded-full bg-primary"></span>
+                <span class="text-outline uppercase text-[11px] font-mono"
+                  >STATE:</span
+                >
+                <span class="font-semibold" id="banner-state-name"
+                  >Telangana</span
+                >
+              </div>
+              <button
+                class="btn-secondary"
+                id="btn-change-state-banner"
+                type="button"
+              >
+                Change State
+              </button>
+              <a
+                href="priority-ranking.html"
+                class="btn-primary"
+                id="btn-edit-priority-banner"
+              >
+                <span class="material-symbols-outlined text-[15px]">tune</span>
+                <span>Edit Priority</span>
+              </a>
             </div>
           </div>
 
-          <!-- State & Priority Controls -->
-          <div class="flex items-center gap-2 shrink-0">
-            <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-surface-container border border-outline-variant/20 text-xs text-on-surface rounded-sm">
-              <span class="w-2 h-2 rounded-full bg-primary"></span>
-              <span class="text-outline uppercase text-[11px] font-mono">STATE:</span>
-              <span class="font-semibold" id="banner-state-name">Telangana</span>
+          <!-- Calibrated Rank Chips (Standardized font size text-xs) -->
+          <div
+            class="flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/15 text-xs text-outline"
+          >
+            <span
+              class="font-mono text-[11px] uppercase tracking-wider text-outline"
+              >CALIBRATED RANK:</span
+            >
+            <div
+              class="flex flex-wrap items-center gap-1.5"
+              id="calibrated-rank-container"
+            >
+              <span
+                class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"
+                ><b class="text-primary">01</b> Politics</span
+              >
+              <span
+                class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"
+                ><b class="text-primary">02</b> Technology</span
+              >
+              <span
+                class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"
+                ><b class="text-primary">03</b> National</span
+              >
+              <span
+                class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"
+                ><b class="text-primary">04</b> Business</span
+              >
             </div>
-            <button class="btn-secondary" id="btn-change-state-banner" type="button">
-              Change State
+          </div>
+        </section>
+
+        <!-- HORIZONTAL FILTER / CATEGORY SWITCHER RIBBON -->
+
+        <nav
+          aria-label="Editorial Categories"
+          class="w-full overflow-x-auto no-scrollbar mb-4 sm:mb-6"
+        >
+          <div
+            class="flex items-center gap-1.5 min-w-max"
+            id="category-tabs-bar"
+          >
+            <button
+              class="category-tab active bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 flex items-center gap-1.5 font-semibold cursor-pointer"
+              data-category="for_you"
+              id="tab-for-you"
+            >
+              <span class="w-1.5 h-1.5 bg-on-primary inline-block"></span>
+
+              For You
             </button>
-            <a href="priority-ranking.html" class="btn-primary" id="btn-edit-priority-banner">
-              <span class="material-symbols-outlined text-[15px]">tune</span>
-              <span>Edit Priority</span>
-            </a>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="all"
+              id="tab-all"
+            >
+              All News
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="politics"
+              id="tab-politics"
+            >
+              Politics
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="technology"
+              id="tab-technology"
+            >
+              Technology
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="national"
+              id="tab-national"
+            >
+              National
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="state"
+              id="tab-state"
+            >
+              State
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="business"
+              id="tab-business"
+            >
+              Business
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="world"
+              id="tab-world"
+            >
+              World
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="science"
+              id="tab-science"
+            >
+              Science
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="health"
+              id="tab-health"
+            >
+              Health
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="sports"
+              id="tab-sports"
+            >
+              Sports
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="education"
+              id="tab-education"
+            >
+              Education
+            </button>
+
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer"
+              data-category="environment"
+              id="tab-environment"
+            >
+              Environment
+            </button>
+            <button
+              class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer flex items-center gap-1.5"
+              data-category="saved"
+              id="tab-saved"
+            >
+              <span class="material-symbols-outlined text-[15px] text-primary"
+                >bookmark</span
+              >
+              Saved
+            </button>
+          </div>
+
+          <div
+            class="hidden lg:flex items-center gap-space-xs shrink-0 font-label-caps text-label-caps text-outline"
+          >
+            <span class="w-1.5 h-1.5 bg-outline inline-block"></span>
+
+            <span
+              >Showing
+              <strong class="text-on-surface" id="stat-showing-count"
+                >30</strong
+              >
+              of
+              <strong class="text-on-surface" id="stat-total-count">948</strong>
+              verified dispatches</span
+            >
+          </div>
+        </nav>
+
+        <!-- Live Trending Topics Strip -->
+        <div
+          id="trending-topics-container"
+          class="mb-space-md py-2 px-3 bg-[#f8f9fa] border border-[#e2e8f0] rounded flex items-center gap-2 overflow-x-auto no-scrollbar"
+        >
+          <div
+            class="flex items-center gap-1 shrink-0 text-xs font-mono uppercase text-[#ff7a00] font-bold"
+          >
+            <span class="material-symbols-outlined text-[16px]"
+              >trending_up</span
+            >
+            <span class="tracking-wider">Trending:</span>
+          </div>
+          <div
+            id="trending-chips-list"
+            class="flex items-center gap-1.5 shrink-0"
+          >
+            <!-- Dynamically populated chips -->
           </div>
         </div>
 
-        <!-- Calibrated Rank Chips (Standardized font size text-xs) -->
-        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/15 text-xs text-outline">
-          <span class="font-mono text-[11px] uppercase tracking-wider text-outline">CALIBRATED RANK:</span>
-          <div class="flex flex-wrap items-center gap-1.5" id="calibrated-rank-container">
-            <span class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"><b class="text-primary">01</b> Politics</span>
-            <span class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"><b class="text-primary">02</b> Technology</span>
-            <span class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"><b class="text-primary">03</b> National</span>
-            <span class="px-2 py-0.5 bg-surface-container text-on-surface rounded-sm text-xs"><b class="text-primary">04</b> Business</span>
-          </div>
-        </div>
-      </section>
-
-
-
-      <!-- HORIZONTAL FILTER / CATEGORY SWITCHER RIBBON -->
-
-      <nav aria-label="Editorial Categories" class="w-full overflow-x-auto no-scrollbar mb-4 sm:mb-6">
-
-        <div class="flex items-center gap-1.5 min-w-max" id="category-tabs-bar">
-
-          <button class="category-tab active bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 flex items-center gap-1.5 font-semibold cursor-pointer" data-category="all" id="tab-for-you">
-
-            <span class="w-1.5 h-1.5 bg-on-primary inline-block"></span>
-
-            For You
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="all" id="tab-all">
-
-            All News
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="politics" id="tab-politics">
-
-            Politics
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="technology" id="tab-technology">
-
-            Technology
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="national" id="tab-national">
-
-            National
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="state" id="tab-state">
-
-            State
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="business" id="tab-business">
-
-            Business
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="world" id="tab-world">
-
-            World
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="science" id="tab-science">
-
-            Science
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="health" id="tab-health">
-
-            Health
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="sports" id="tab-sports">
-
-            Sports
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="education" id="tab-education">
-
-            Education
-
-          </button>
-
-          <button class="category-tab bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md px-3 py-1.5 transition-colors cursor-pointer" data-category="environment" id="tab-environment">
-
-            Environment
-
-          </button>
-
-        </div>
-
-        <div class="hidden lg:flex items-center gap-space-xs shrink-0 font-label-caps text-label-caps text-outline">
-
-          <span class="w-1.5 h-1.5 bg-outline inline-block"></span>
-
-          <span>Showing <strong class="text-on-surface" id="stat-showing-count">30</strong> of <strong class="text-on-surface" id="stat-total-count">948</strong> verified dispatches</span>
-
-        </div>
-
-      </nav>
-
-
-
-      <!-- =====================================================================
+        <!-- =====================================================================
 
            MAIN EDITORIAL GRID (68% Main Feed / 32% Intelligence Sidebar)
 
            ===================================================================== -->
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+          <!-- PRIMARY EDITORIAL FLOW (8 cols of 12) -->
 
+          <div
+            class="lg:col-span-8 flex flex-col gap-space-xl"
+            id="editorial-main-flow"
+          >
+            <!-- 1. HERO LEAD STORY (DYNAMIC TOP PRIORITY DISPATCH) -->
 
+            <section id="hero-lead-container">
+              <!-- Populated dynamically by app.js (or instant 0ms fallback) -->
 
-        <!-- PRIMARY EDITORIAL FLOW (8 cols of 12) -->
+              <article
+                class="bg-surface-container-low p-space-lg md:p-space-xl relative overflow-hidden shadow-sm border-l-4 border-primary-container"
+              >
+                <div
+                  class="flex flex-wrap items-center justify-between gap-space-xs mb-space-sm"
+                >
+                  <div class="flex items-center gap-space-xs">
+                    <span
+                      class="w-2 h-2 bg-primary-container inline-block"
+                    ></span>
 
-        <div class="lg:col-span-8 flex flex-col gap-space-xl" id="editorial-main-flow">
+                    <span
+                      class="font-label-caps text-label-caps text-primary uppercase tracking-widest font-semibold"
+                      id="hero-category"
+                    >
+                      POLITICS &amp; GOVERNANCE
+                    </span>
 
+                    <span class="text-outline text-label-caps">&#8226;</span>
 
+                    <span
+                      class="font-label-caps text-label-caps text-secondary uppercase tracking-wider"
+                      >Top Calibrated Lead</span
+                    >
+                  </div>
 
-          <!-- 1. HERO LEAD STORY (DYNAMIC TOP PRIORITY DISPATCH) -->
+                  <div
+                    class="flex items-center gap-space-sm text-outline font-label-sm text-label-sm"
+                  >
+                    <span id="hero-time">Just now</span>
 
-          <section id="hero-lead-container">
+                    <span>&#8226;</span>
 
-            <!-- Populated dynamically by app.js (or instant 0ms fallback) -->
-
-            <article class="bg-surface-container-low p-space-lg md:p-space-xl relative overflow-hidden shadow-sm border-l-4 border-primary-container">
-
-              <div class="flex flex-wrap items-center justify-between gap-space-xs mb-space-sm">
-
-                <div class="flex items-center gap-space-xs">
-
-                  <span class="w-2 h-2 bg-primary-container inline-block"></span>
-
-                  <span class="font-label-caps text-label-caps text-primary uppercase tracking-widest font-semibold" id="hero-category">
-
-                    POLITICS &amp; GOVERNANCE
-
-                  </span>
-
-                  <span class="text-outline text-label-caps">&#8226;</span>
-
-                  <span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Top Calibrated Lead</span>
-
+                    <span>Verified Wire</span>
+                  </div>
                 </div>
 
-                <div class="flex items-center gap-space-sm text-outline font-label-sm text-label-sm">
+                <h2
+                  id="hero-headline"
+                  class="font-headline-md md:font-headline-lg text-headline-md md:text-headline-lg text-on-surface hover:text-primary transition-colors cursor-pointer mb-space-sm"
+                >
+                  Modi Cabinet Reshuffle Likely, Women and Youth to Join
+                </h2>
 
-                  <span id="hero-time">Just now</span>
+                <p
+                  id="hero-summary"
+                  class="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-surface-variant mb-space-md"
+                >
+                  Political analysts report that Prime Minister Narendra Modi is
+                  expected to announce a strategic cabinet reshuffle in the
+                  coming weeks. The initiative brings experienced leadership
+                  together with emerging regional voices to accelerate national
+                  infrastructure, public administration, and technology
+                  programs.
+                </p>
 
-                  <span>&#8226;</span>
+                <!-- Verification & Sourcing Attribution Bar -->
 
-                  <span>Verified Wire</span>
+                <div
+                  class="flex flex-wrap items-center justify-between gap-space-sm bg-surface-container p-space-sm mb-space-md text-on-surface border border-outline-variant/20"
+                >
+                  <div
+                    class="flex items-center gap-space-xs font-label-md text-label-md"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[18px] text-secondary"
+                      >verified</span
+                    >
 
+                    <span class="font-semibold text-on-surface" id="hero-source"
+                      >Verified Primary Wire Service</span
+                    >
+
+                    <span class="text-outline">&#8226;</span>
+
+                    <span
+                      class="text-on-surface-variant text-[13px]"
+                      id="hero-verification-note"
+                      >Verified by independent news wire logs</span
+                    >
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="font-label-caps text-[10px] px-1.5 py-0.5 bg-surface-container-high text-on-surface uppercase"
+                      >Full Audit Available</span
+                    >
+                  </div>
                 </div>
 
-              </div>
+                <!-- Story Footer Actions -->
 
-
-
-              <h2 id="hero-headline" class="font-headline-md md:font-headline-lg text-headline-md md:text-headline-lg text-on-surface hover:text-primary transition-colors cursor-pointer mb-space-sm">
-
-                Modi Cabinet Reshuffle Likely, Women and Youth to Join
-
-              </h2>
-
-
-
-              <p id="hero-summary" class="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-surface-variant mb-space-md">
-
-                Political analysts report that Prime Minister Narendra Modi is expected to announce a strategic cabinet reshuffle in the coming weeks. The initiative brings experienced leadership together with emerging regional voices to accelerate national infrastructure, public administration, and technology programs.
-
-              </p>
-
-
-
-              <!-- Verification & Sourcing Attribution Bar -->
-
-              <div class="flex flex-wrap items-center justify-between gap-space-sm bg-surface-container p-space-sm mb-space-md text-on-surface border border-outline-variant/20">
-
-                <div class="flex items-center gap-space-xs font-label-md text-label-md">
-
-                  <span class="material-symbols-outlined text-[18px] text-secondary">verified</span>
-
-                  <span class="font-semibold text-on-surface" id="hero-source">Verified Primary Wire Service</span>
-
-                  <span class="text-outline">&#8226;</span>
-
-                  <span class="text-on-surface-variant text-[13px]" id="hero-verification-note">Verified by independent news wire logs</span>
-
-                </div>
-
-                <div class="flex items-center gap-2">
-
-                  <span class="font-label-caps text-[10px] px-1.5 py-0.5 bg-surface-container-high text-on-surface uppercase">Full Audit Available</span>
-
-                </div>
-
-              </div>
-
-
-
-              <!-- Story Footer Actions -->
-
-              <div class="flex items-center justify-between pt-space-xs">
-
-                <button id="btn-hero-read-dossier" class="font-body-md text-body-md italic text-primary hover:text-surface-tint underline underline-offset-4 flex items-center gap-1 font-medium cursor-pointer" type="button">
-
-                  Read Story &amp; Verification Dossier &rarr;
-
-                </button>
-
-                <div class="flex items-center gap-space-xs text-on-surface-variant">
-
-                  <button id="btn-hero-share" class="p-2 hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" title="Share Verified Intelligence">
-
-                    <span class="material-symbols-outlined text-[19px]">share</span>
-
+                <div class="flex items-center justify-between pt-space-xs">
+                  <button
+                    id="btn-hero-read-dossier"
+                    class="font-body-md text-body-md italic text-primary hover:text-surface-tint underline underline-offset-4 flex items-center gap-1 font-medium cursor-pointer"
+                    type="button"
+                  >
+                    Read Story &amp; Verification Dossier &rarr;
                   </button>
 
+                  <div
+                    class="flex items-center gap-space-xs text-on-surface-variant"
+                  >
+                    <button
+                      id="btn-hero-share"
+                      class="p-2 hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer"
+                      title="Share Verified Intelligence"
+                    >
+                      <span class="material-symbols-outlined text-[19px]"
+                        >share</span
+                      >
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </section>
+
+            <!-- 2. SECONDARY EDITORIAL PAIR (CARDS #2 & #3) -->
+
+            <section
+              class="grid grid-cols-1 md:grid-cols-2 gap-gutter"
+              id="secondary-grid-container"
+            >
+              <!-- Dynamically populated by app.js -->
+            </section>
+
+            <!-- 3. CURATED 'STATE IN FOCUS' DESK -->
+
+            <section
+              class="bg-surface-container-lowest p-space-lg md:p-space-xl border border-outline-variant/15"
+              id="state-focus-section"
+            >
+              <div
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs pb-space-sm mb-space-md bg-surface-container-low p-space-sm border border-outline-variant/20"
+              >
+                <div class="flex items-center gap-space-xs">
+                  <span
+                    class="w-2.5 h-2.5 bg-primary-container inline-block"
+                  ></span>
+
+                  <h3
+                    class="text-xs sm:text-sm font-semibold tracking-wider text-on-surface uppercase"
+                    id="state-focus-title"
+                  >
+                    STATE IN FOCUS: TELANGANA DEVELOPMENTS
+                  </h3>
                 </div>
 
+                <span class="font-label-sm text-[12px] text-outline"
+                  >Regional Corridors Desk</span
+                >
               </div>
 
-            </article>
-
-          </section>
-
-
-
-          <!-- 2. SECONDARY EDITORIAL PAIR (CARDS #2 & #3) -->
-
-          <section class="grid grid-cols-1 md:grid-cols-2 gap-gutter" id="secondary-grid-container">
-
-            <!-- Dynamically populated by app.js -->
-
-          </section>
-
-
-
-          <!-- 3. CURATED 'STATE IN FOCUS' DESK -->
-
-          <section class="bg-surface-container-lowest p-space-lg md:p-space-xl border border-outline-variant/15" id="state-focus-section">
-
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs pb-space-sm mb-space-md bg-surface-container-low p-space-sm border border-outline-variant/20">
-
-              <div class="flex items-center gap-space-xs">
-
-                <span class="w-2.5 h-2.5 bg-primary-container inline-block"></span>
-
-                <h3 class="text-xs sm:text-sm font-semibold tracking-wider text-on-surface uppercase" id="state-focus-title">
-
-                  STATE IN FOCUS: TELANGANA DEVELOPMENTS
-
-                </h3>
-
+              <div
+                class="flex flex-col gap-space-sm"
+                id="state-focus-container"
+              >
+                <!-- Dynamically populated by app.js -->
               </div>
+            </section>
 
-              <span class="font-label-sm text-[12px] text-outline">Regional Corridors Desk</span>
+            <!-- 4. STREAM FEED (ADDITIONAL RANKED STORIES) -->
 
-            </div>
-
-            
-
-            <div class="flex flex-col gap-space-sm" id="state-focus-container">
-
+            <section
+              class="flex flex-col gap-space-md"
+              id="stream-feed-container"
+            >
               <!-- Dynamically populated by app.js -->
+            </section>
 
+            <!-- FEED PAGINATION & STATUS BAR -->
+
+            <div
+              class="p-space-lg bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-md text-center sm:text-left border border-outline-variant/20"
+              id="feed-pagination-status"
+            >
+              <div class="flex items-center gap-space-xs text-outline">
+                <span
+                  class="material-symbols-outlined text-[18px] text-secondary"
+                  >check_circle</span
+                >
+
+                <span
+                  class="font-label-md text-label-md text-on-surface"
+                  id="status-caught-up-msg"
+                  >You are completely caught up with high-priority briefs.</span
+                >
+              </div>
+
+              <div class="flex items-center gap-space-sm">
+                <button
+                  id="btn-load-more"
+                  class="bg-surface-container hover:bg-surface-container-high px-4 py-2 text-on-surface font-label-md text-label-md tracking-wider uppercase transition-colors border border-outline-variant/30 cursor-pointer"
+                >
+                  Load More Stories
+                </button>
+              </div>
             </div>
-
-          </section>
-
-
-
-          <!-- 4. STREAM FEED (ADDITIONAL RANKED STORIES) -->
-
-          <section class="flex flex-col gap-space-md" id="stream-feed-container">
-
-            <!-- Dynamically populated by app.js -->
-
-          </section>
-
-
-
-          <!-- FEED PAGINATION & STATUS BAR -->
-
-          <div class="p-space-lg bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-md text-center sm:text-left border border-outline-variant/20" id="feed-pagination-status">
-
-            <div class="flex items-center gap-space-xs text-outline">
-
-              <span class="material-symbols-outlined text-[18px] text-secondary">check_circle</span>
-
-              <span class="font-label-md text-label-md text-on-surface" id="status-caught-up-msg">You are completely caught up with high-priority briefs.</span>
-
-            </div>
-
-            <div class="flex items-center gap-space-sm">
-
-              <button id="btn-load-more" class="bg-surface-container hover:bg-surface-container-high px-4 py-2 text-on-surface font-label-md text-label-md tracking-wider uppercase transition-colors border border-outline-variant/30 cursor-pointer">
-
-                Load More Stories
-
-              </button>
-
-            </div>
-
           </div>
 
-
-
-        </div>
-
-
-
-        <!-- =====================================================================
+          <!-- =====================================================================
 
              INTELLIGENCE SIDEBAR (4 cols of 12)
 
              ===================================================================== -->
 
-        <aside class="lg:col-span-4 flex flex-col gap-space-lg sticky top-20">
+          <aside class="lg:col-span-4 flex flex-col gap-space-lg sticky top-20">
+            <!-- Today's Intelligence Brief Card -->
 
+            <section
+              class="bg-surface-container p-space-lg shadow-sm border border-outline-variant/20"
+            >
+              <div class="flex items-center justify-between mb-space-md">
+                <div class="flex items-center gap-space-xs">
+                  <span class="relative flex h-2.5 w-2.5">
+                    <span
+                      class="animate-ping absolute inline-flex h-full w-full bg-primary opacity-75"
+                    ></span>
 
+                    <span
+                      class="relative inline-flex h-2.5 w-2.5 bg-primary-container"
+                    ></span>
+                  </span>
 
-          <!-- Today's Intelligence Brief Card -->
+                  <h3 class="font-serif font-bold text-sm text-on-surface">
+                    The Morning Brief
+                  </h3>
+                </div>
 
-          <section class="bg-surface-container p-space-lg shadow-sm border border-outline-variant/20">
+                <span
+                  class="font-label-caps text-[10px] text-outline uppercase tracking-wider"
+                  >Fast Scan</span
+                >
+              </div>
 
-            <div class="flex items-center justify-between mb-space-md">
+              <div
+                class="flex flex-col gap-space-md"
+                id="morning-brief-container"
+              >
+                <!-- Dynamically populated by app.js -->
+              </div>
+            </section>
 
-              <div class="flex items-center gap-space-xs">
+            <!-- Editorial Intelligence Overview -->
 
-                <span class="relative flex h-2.5 w-2.5">
+            <section
+              class="bg-surface-container-high p-space-lg shadow-sm border border-outline-variant/25"
+            >
+              <div class="flex items-center gap-space-xs mb-space-xs">
+                <span class="material-symbols-outlined text-[18px] text-primary"
+                  >verified_user</span
+                >
 
-                  <span class="animate-ping absolute inline-flex h-full w-full bg-primary opacity-75"></span>
+                <h3
+                  class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest font-bold"
+                >
+                  EDITORIAL PROTOCOL
+                </h3>
+              </div>
 
-                  <span class="relative inline-flex h-2.5 w-2.5 bg-primary-container"></span>
+              <p
+                class="font-body-md text-[14px] leading-normal text-on-surface-variant/90 mb-space-md"
+              >
+                Stories are cross-referenced across primary wire services,
+                filtered by state gazettes, and arranged by your
+                <span
+                  id="radar-persona-text"
+                  class="text-on-surface font-medium"
+                  >configured priority rank</span
+                >.
+              </p>
 
+              <div
+                class="flex flex-col gap-2.5 mb-space-md text-[13px] font-body-sans text-on-surface-variant"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 bg-secondary inline-block"></span>
+
+                  <span>Multi-source wire verification &amp; fact checks</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 bg-primary inline-block"></span>
+
+                  <span>Dynamic priority ordering based on your interests</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 bg-outline inline-block"></span>
+
+                  <span>Regional state desk continuous monitoring</span>
+                </div>
+              </div>
+
+              <div
+                class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15"
+              >
+                <span
+                  class="font-label-caps text-[11px] text-primary uppercase tracking-wider"
+                  >High Fidelity Dispatch</span
+                >
+
+                <span
+                  class="font-label-caps text-[11px] text-secondary font-semibold"
+                  >100% Verified</span
+                >
+              </div>
+            </section>
+
+            <!-- Local Regional Bureau Mini-Dossier -->
+
+            <section
+              class="bg-surface-container-low p-space-md border border-outline-variant/20"
+            >
+              <div class="flex items-center gap-space-xs mb-space-xs">
+                <span class="w-2 h-2 bg-secondary inline-block"></span>
+
+                <span
+                  class="font-label-caps text-label-caps text-secondary uppercase tracking-widest font-semibold"
+                  id="bureau-copilot-heading"
+                >
+                  REGIONAL DESK CO-PILOT
                 </span>
-
-                <h3 class="font-serif font-bold text-sm text-on-surface">The Morning Brief</h3>
-
               </div>
 
-              <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider">Fast Scan</span>
-
-            </div>
-
-            
-
-            <div class="flex flex-col gap-space-md" id="morning-brief-container">
-
-              <!-- Dynamically populated by app.js -->
-
-            </div>
-
-          </section>
-
-
-
-          <!-- Editorial Intelligence Overview -->
-
-          <section class="bg-surface-container-high p-space-lg shadow-sm border border-outline-variant/25">
-
-            <div class="flex items-center gap-space-xs mb-space-xs">
-
-              <span class="material-symbols-outlined text-[18px] text-primary">verified_user</span>
-
-              <h3 class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest font-bold">
-
-                EDITORIAL PROTOCOL
-
-              </h3>
-
-            </div>
-
-            <p class="font-body-md text-[14px] leading-normal text-on-surface-variant/90 mb-space-md">
-
-              Stories are cross-referenced across primary wire services, filtered by state gazettes, and arranged by your <span id="radar-persona-text" class="text-on-surface font-medium">configured priority rank</span>.
-
-            </p>
-
-            <div class="flex flex-col gap-2.5 mb-space-md text-[13px] font-body-sans text-on-surface-variant">
-
-              <div class="flex items-center gap-2">
-
-                <span class="w-1.5 h-1.5 bg-secondary inline-block"></span>
-
-                <span>Multi-source wire verification &amp; fact checks</span>
-
-              </div>
-
-              <div class="flex items-center gap-2">
-
-                <span class="w-1.5 h-1.5 bg-primary inline-block"></span>
-
-                <span>Dynamic priority ordering based on your interests</span>
-
-              </div>
-
-              <div class="flex items-center gap-2">
-
-                <span class="w-1.5 h-1.5 bg-outline inline-block"></span>
-
-                <span>Regional state desk continuous monitoring</span>
-
-              </div>
-
-            </div>
-
-            <div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15">
-
-              <span class="font-label-caps text-[11px] text-primary uppercase tracking-wider">High Fidelity Dispatch</span>
-
-              <span class="font-label-caps text-[11px] text-secondary font-semibold">100% Verified</span>
-
-            </div>
-
-          </section>
-
-
-
-          <!-- Local Regional Bureau Mini-Dossier -->
-
-          <section class="bg-surface-container-low p-space-md border border-outline-variant/20">
-
-            <div class="flex items-center gap-space-xs mb-space-xs">
-
-              <span class="w-2 h-2 bg-secondary inline-block"></span>
-
-              <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest font-semibold" id="bureau-copilot-heading">
-
-                REGIONAL DESK CO-PILOT
-
-              </span>
-
-            </div>
-
-            <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed" id="bureau-copilot-desc">
-
-              Active bureau monitoring 48 state gazettes, 14 local civic bodies, and regional university repositories for fact-checked announcements.
-
-            </p>
-
-          </section>
-
-
-
-        </aside>
-
-
-
+              <p
+                class="font-body-md text-[13px] text-on-surface-variant leading-relaxed"
+                id="bureau-copilot-desc"
+              >
+                Active bureau monitoring 48 state gazettes, 14 local civic
+                bodies, and regional university repositories for fact-checked
+                announcements.
+              </p>
+            </section>
+          </aside>
+        </div>
       </div>
+    </main>
 
-    </div>
-
-  </main>
-
-
-
-  <!-- =========================================================================
+    <!-- =========================================================================
 
        FOOTER
 
        ========================================================================= -->
 
-  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/20 mt-space-xl">
+    <footer
+      class="w-full bg-surface-container-lowest border-t border-outline-variant/20 mt-space-xl"
+    >
+      <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-space-xl">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-gutter pb-space-lg border-b border-outline-variant/15"
+        >
+          <div class="lg:col-span-2 flex flex-col gap-space-sm pr-space-md">
+            <div class="flex items-center gap-space-sm">
+              <span
+                class="font-headline-sm text-headline-sm tracking-tight uppercase text-on-surface"
+                >NEWZZ</span
+              >
 
-    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-space-xl">
+              <div class="h-3 w-px bg-outline-variant/30"></div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-gutter pb-space-lg border-b border-outline-variant/15">
+              <span class="font-body-md text-[13px] italic text-outline"
+                >Know What Matters.</span
+              >
+            </div>
 
-        <div class="lg:col-span-2 flex flex-col gap-space-sm pr-space-md">
+            <p
+              class="font-body-md text-body-md text-on-surface-variant/80 max-w-sm"
+            >
+              Editorial discernment and contextual intelligence calibrated for
+              discerning global analysts, decision-makers, and active citizens.
+            </p>
 
-          <div class="flex items-center gap-space-sm">
+            <div class="flex items-center gap-space-xs pt-space-xs">
+              <span
+                class="inline-block w-1.5 h-1.5 bg-primary-container"
+              ></span>
 
-            <span class="font-headline-sm text-headline-sm tracking-tight uppercase text-on-surface">NEWZZ</span>
-
-            <div class="h-3 w-px bg-outline-variant/30"></div>
-
-            <span class="font-body-md text-[13px] italic text-outline">Know What Matters.</span>
-
+              <span
+                class="font-label-caps text-label-caps text-outline uppercase tracking-widest"
+                >Broadsheet High-Fidelity Dispatch</span
+              >
+            </div>
           </div>
 
-          <p class="font-body-md text-body-md text-on-surface-variant/80 max-w-sm">
+          <div class="flex flex-col gap-space-xs">
+            <span
+              class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs"
+              >Architecture</span
+            >
 
-            Editorial discernment and contextual intelligence calibrated for discerning global analysts, decision-makers, and active citizens.
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Editorial Method</a
+            >
 
-          </p>
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Verified Sources</a
+            >
 
-          <div class="flex items-center gap-space-xs pt-space-xs">
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Relevance Algorithm</a
+            >
 
-            <span class="inline-block w-1.5 h-1.5 bg-primary-container"></span>
-
-            <span class="font-label-caps text-label-caps text-outline uppercase tracking-widest">Broadsheet High-Fidelity Dispatch</span>
-
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Masthead &amp; Council</a
+            >
           </div>
 
+          <div class="flex flex-col gap-space-xs">
+            <span
+              class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs"
+              >Regional Desks</span
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Telangana State Edition</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >28 Indian States Coverage</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Union Territories</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >New Delhi Central Bureau</a
+            >
+          </div>
+
+          <div class="flex flex-col gap-space-xs">
+            <span
+              class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs"
+              >Taxonomy</span
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >All Categories</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Governance &amp; Policy</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Geopolitics &amp; Trade</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Financial Ecosystems</a
+            >
+          </div>
+
+          <div class="flex flex-col gap-space-xs">
+            <span
+              class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs"
+              >Governance</span
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Privacy Framework</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Terms of Dispatch</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Syndication Feeds</a
+            >
+
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              href="#"
+              >Editorial Inquiries</a
+            >
+          </div>
         </div>
 
-        
+        <div
+          class="pt-space-md flex flex-col md:flex-row items-center justify-between gap-space-sm"
+        >
+          <div
+            class="font-label-caps text-label-caps text-outline tracking-wider"
+          >
+            &copy; 2026 NEWZZ PUBLISHING GROUP. ALL RIGHTS RESERVED.
+          </div>
 
-        <div class="flex flex-col gap-space-xs">
+          <div
+            class="flex items-center gap-space-md font-label-caps text-label-caps text-outline tracking-wider"
+          >
+            <span class="hover:text-on-surface cursor-pointer">HYDERABAD</span>
 
-          <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs">Architecture</span>
+            <span>&#8226;</span>
 
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Editorial Method</a>
+            <span class="hover:text-on-surface cursor-pointer">NEW DELHI</span>
 
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Verified Sources</a>
+            <span>&#8226;</span>
 
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Relevance Algorithm</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Masthead &amp; Council</a>
-
+            <span class="hover:text-on-surface cursor-pointer">LONDON</span>
+          </div>
         </div>
-
-        
-
-        <div class="flex flex-col gap-space-xs">
-
-          <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs">Regional Desks</span>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Telangana State Edition</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">28 Indian States Coverage</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Union Territories</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">New Delhi Central Bureau</a>
-
-        </div>
-
-        
-
-        <div class="flex flex-col gap-space-xs">
-
-          <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs">Taxonomy</span>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">All Categories</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Governance &amp; Policy</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Geopolitics &amp; Trade</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Financial Ecosystems</a>
-
-        </div>
-
-        
-
-        <div class="flex flex-col gap-space-xs">
-
-          <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-xs">Governance</span>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacy Framework</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Terms of Dispatch</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Syndication Feeds</a>
-
-          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Editorial Inquiries</a>
-
-        </div>
-
       </div>
+    </footer>
 
-      
-
-      <div class="pt-space-md flex flex-col md:flex-row items-center justify-between gap-space-sm">
-
-        <div class="font-label-caps text-label-caps text-outline tracking-wider">&copy; 2026 NEWZZ PUBLISHING GROUP. ALL RIGHTS RESERVED.</div>
-
-        <div class="flex items-center gap-space-md font-label-caps text-label-caps text-outline tracking-wider">
-
-          <span class="hover:text-on-surface cursor-pointer">HYDERABAD</span>
-
-          <span>&#8226;</span>
-
-          <span class="hover:text-on-surface cursor-pointer">NEW DELHI</span>
-
-          <span>&#8226;</span>
-
-          <span class="hover:text-on-surface cursor-pointer">LONDON</span>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </footer>
-
-
-
-  <!-- =========================================================================
+    <!-- =========================================================================
 
        MODALS: LOCATION, INTERESTS, PRIORITY, STORY DETAIL
 
        ========================================================================= -->
 
+    <!-- MODAL: Location Settings (All 28 States) -->
 
+    <div
+      class="modal-backdrop hidden"
+      id="modal-location"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="location-modal-title"
+    >
+      <div
+        class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl"
+      >
+        <div
+          class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20"
+        >
+          <h2
+            class="font-headline-sm text-headline-sm text-on-surface"
+            id="location-modal-title"
+          >
+            Select Your State
+          </h2>
 
-  <!-- MODAL: Location Settings (All 28 States) -->
-
-  <div class="modal-backdrop hidden" id="modal-location" role="dialog" aria-modal="true" aria-labelledby="location-modal-title">
-
-    <div class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl">
-
-      <div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20">
-
-        <h2 class="font-headline-sm text-headline-sm text-on-surface" id="location-modal-title">Select Your State</h2>
-
-        <button class="text-outline hover:text-on-surface text-[24px] cursor-pointer" id="btn-close-location-modal">&times;</button>
-
-      </div>
-
-      <div class="mb-space-md">
-
-        <p class="font-body-md text-[14px] text-on-surface-variant mb-space-md">
-
-          Configure your regional state so local developments and gazettes are accurately prioritized in your dispatch.
-
-        </p>
-
-        <div class="flex flex-col gap-1.5">
-
-          <label for="input-state" class="font-label-caps text-label-caps text-outline uppercase tracking-wider">State / Union Territory</label>
-
-          <select id="input-state" class="w-full bg-surface-container border border-outline-variant/30 text-on-surface px-3 py-2 text-sm outline-none focus:border-primary rounded-sm">
-            <option value="">-- Select Your State or UT (36 Available) --</option>
-            <optgroup label="28 Indian States">
-              <option value="Andhra Pradesh">Andhra Pradesh — Amaravati</option>
-              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-              <option value="Assam">Assam</option>
-              <option value="Bihar">Bihar</option>
-              <option value="Chhattisgarh">Chhattisgarh</option>
-              <option value="Goa">Goa</option>
-              <option value="Gujarat">Gujarat — Gandhinagar</option>
-              <option value="Haryana">Haryana</option>
-              <option value="Himachal Pradesh">Himachal Pradesh</option>
-              <option value="Jharkhand">Jharkhand</option>
-              <option value="Karnataka">Karnataka — Bengaluru</option>
-              <option value="Kerala">Kerala — Thiruvananthapuram</option>
-              <option value="Madhya Pradesh">Madhya Pradesh</option>
-              <option value="Maharashtra">Maharashtra — Mumbai</option>
-              <option value="Manipur">Manipur</option>
-              <option value="Meghalaya">Meghalaya</option>
-              <option value="Mizoram">Mizoram</option>
-              <option value="Nagaland">Nagaland</option>
-              <option value="Odisha">Odisha</option>
-              <option value="Punjab">Punjab</option>
-              <option value="Rajasthan">Rajasthan</option>
-              <option value="Sikkim">Sikkim</option>
-              <option value="Tamil Nadu">Tamil Nadu — Chennai</option>
-              <option value="Telangana">Telangana — Hyderabad</option>
-              <option value="Tripura">Tripura</option>
-              <option value="Uttar Pradesh">Uttar Pradesh</option>
-              <option value="Uttarakhand">Uttarakhand</option>
-              <option value="West Bengal">West Bengal — Kolkata</option>
-            </optgroup>
-            <optgroup label="8 Union Territories">
-              <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-              <option value="Chandigarh">Chandigarh</option>
-              <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
-              <option value="Delhi">Delhi (NCT) — New Delhi</option>
-              <option value="Jammu and Kashmir">Jammu and Kashmir — Srinagar / Jammu</option>
-              <option value="Ladakh">Ladakh</option>
-              <option value="Lakshadweep">Lakshadweep</option>
-              <option value="Puducherry">Puducherry</option>
-            </optgroup>
-          </select>
-
+          <button
+            class="text-outline hover:text-on-surface text-[24px] cursor-pointer"
+            id="btn-close-location-modal"
+          >
+            &times;
+          </button>
         </div>
 
+        <div class="mb-space-md">
+          <p
+            class="font-body-md text-[14px] text-on-surface-variant mb-space-md"
+          >
+            Configure your regional state so local developments and gazettes are
+            accurately prioritized in your dispatch.
+          </p>
+
+          <div class="flex flex-col gap-1.5">
+            <label
+              for="input-state"
+              class="font-label-caps text-label-caps text-outline uppercase tracking-wider"
+              >State / Union Territory</label
+            >
+
+            <select
+              id="input-state"
+              class="w-full bg-surface-container border border-outline-variant/30 text-on-surface px-3 py-2 text-sm outline-none focus:border-primary rounded-sm"
+            >
+              <option value="">
+                -- Select Your State or UT (36 Available) --
+              </option>
+              <optgroup label="28 Indian States">
+                <option value="Andhra Pradesh">
+                  Andhra Pradesh — Amaravati
+                </option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat — Gandhinagar</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka — Bengaluru</option>
+                <option value="Kerala">Kerala — Thiruvananthapuram</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra — Mumbai</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu — Chennai</option>
+                <option value="Telangana">Telangana — Hyderabad</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal — Kolkata</option>
+              </optgroup>
+              <optgroup label="8 Union Territories">
+                <option value="Andaman and Nicobar Islands">
+                  Andaman and Nicobar Islands
+                </option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Dadra and Nagar Haveli and Daman and Diu">
+                  Dadra and Nagar Haveli and Daman and Diu
+                </option>
+                <option value="Delhi">Delhi (NCT) — New Delhi</option>
+                <option value="Jammu and Kashmir">
+                  Jammu and Kashmir — Srinagar / Jammu
+                </option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Puducherry">Puducherry</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div
+          class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20"
+        >
+          <button
+            class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer"
+            id="btn-skip-location"
+            type="button"
+          >
+            Skip
+          </button>
+
+          <button
+            class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer"
+            id="btn-save-location"
+            type="button"
+          >
+            Save State
+          </button>
+        </div>
       </div>
-
-      <div class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20">
-
-        <button class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-skip-location" type="button">Skip</button>
-
-        <button class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-save-location" type="button">Save State</button>
-
-      </div>
-
     </div>
 
-  </div>
+    <!-- MODAL: Interest Preferences -->
 
+    <div
+      class="modal-backdrop hidden"
+      id="modal-interests"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="interests-modal-title"
+    >
+      <div
+        class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl"
+      >
+        <div
+          class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20"
+        >
+          <h2
+            class="font-headline-sm text-headline-sm text-on-surface"
+            id="interests-modal-title"
+          >
+            Editorial Preferences
+          </h2>
 
-
-  <!-- MODAL: Interest Preferences -->
-
-  <div class="modal-backdrop hidden" id="modal-interests" role="dialog" aria-modal="true" aria-labelledby="interests-modal-title">
-
-    <div class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl">
-
-      <div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20">
-
-        <h2 class="font-headline-sm text-headline-sm text-on-surface" id="interests-modal-title">Editorial Preferences</h2>
-
-        <button class="text-outline hover:text-on-surface text-[24px] cursor-pointer" id="btn-close-interests-modal">&times;</button>
-
-      </div>
-
-      <div class="mb-space-md">
-
-        <p class="font-body-md text-[14px] text-on-surface-variant mb-space-md">
-
-          Select the news categories you follow. In the next step, you can order them by personal priority.
-
-        </p>
-
-        <div class="flex flex-wrap gap-2" id="interest-chips-container">
-
-          <!-- Populated by JS -->
-
+          <button
+            class="text-outline hover:text-on-surface text-[24px] cursor-pointer"
+            id="btn-close-interests-modal"
+          >
+            &times;
+          </button>
         </div>
 
+        <div class="mb-space-md">
+          <p
+            class="font-body-md text-[14px] text-on-surface-variant mb-space-md"
+          >
+            Select the news categories you follow. In the next step, you can
+            order them by personal priority.
+          </p>
+
+          <div class="flex flex-wrap gap-2" id="interest-chips-container">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div
+          class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20"
+        >
+          <button
+            class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer"
+            id="btn-reset-interests"
+            type="button"
+          >
+            Reset
+          </button>
+
+          <button
+            class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer"
+            id="btn-save-interests"
+            type="button"
+          >
+            Continue &rarr;
+          </button>
+        </div>
       </div>
-
-      <div class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20">
-
-        <button class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-reset-interests" type="button">Reset</button>
-
-        <button class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-save-interests" type="button">Continue &rarr;</button>
-
-      </div>
-
     </div>
 
-  </div>
+    <!-- MODAL: Priority Ranking -->
 
+    <div
+      class="modal-backdrop hidden"
+      id="modal-priority"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="priority-modal-title"
+    >
+      <div
+        class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl"
+      >
+        <div
+          class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20"
+        >
+          <h2
+            class="font-headline-sm text-headline-sm text-on-surface"
+            id="priority-modal-title"
+          >
+            Set Topic Priorities
+          </h2>
 
-
-  <!-- MODAL: Priority Ranking -->
-
-  <div class="modal-backdrop hidden" id="modal-priority" role="dialog" aria-modal="true" aria-labelledby="priority-modal-title">
-
-    <div class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-lg w-full p-space-lg shadow-2xl">
-
-      <div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20">
-
-        <h2 class="font-headline-sm text-headline-sm text-on-surface" id="priority-modal-title">Set Topic Priorities</h2>
-
-        <button class="text-outline hover:text-on-surface text-[24px] cursor-pointer" id="btn-close-priority-modal">&times;</button>
-
-      </div>
-
-      <div class="mb-space-md">
-
-        <p class="font-body-md text-[14px] text-on-surface-variant mb-space-md">
-
-          Which topics matter most? Order categories from highest (#1) to lowest. Stories matching #1 will lead your feed.
-
-        </p>
-
-        <div id="priority-error-banner" class="hidden p-2 bg-error-container text-error text-[12px] font-label-md mb-2">
-
-          <span id="priority-error-msg">Error saving priorities</span>
-
+          <button
+            class="text-outline hover:text-on-surface text-[24px] cursor-pointer"
+            id="btn-close-priority-modal"
+          >
+            &times;
+          </button>
         </div>
 
-        <div id="priority-list-container" class="max-h-64 overflow-y-auto pr-1">
+        <div class="mb-space-md">
+          <p
+            class="font-body-md text-[14px] text-on-surface-variant mb-space-md"
+          >
+            Which topics matter most? Order categories from highest (#1) to
+            lowest. Stories matching #1 will lead your feed.
+          </p>
 
-          <!-- Populated by JS -->
+          <div
+            id="priority-error-banner"
+            class="hidden p-2 bg-error-container text-error text-[12px] font-label-md mb-2"
+          >
+            <span id="priority-error-msg">Error saving priorities</span>
+          </div>
 
+          <div
+            id="priority-list-container"
+            class="max-h-64 overflow-y-auto pr-1"
+          >
+            <!-- Populated by JS -->
+          </div>
         </div>
 
+        <div
+          class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20"
+        >
+          <button
+            class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer"
+            id="btn-back-priority"
+            type="button"
+          >
+            Back
+          </button>
+
+          <button
+            class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer"
+            id="btn-save-priority"
+            type="button"
+          >
+            Save Priorities
+          </button>
+        </div>
       </div>
-
-      <div class="flex items-center justify-end gap-space-sm pt-space-sm border-t border-outline-variant/20">
-
-        <button class="bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-back-priority" type="button">Back</button>
-
-        <button class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors cursor-pointer" id="btn-save-priority" type="button">Save Priorities</button>
-
-      </div>
-
     </div>
 
-  </div>
+    <!-- MODAL: Story Detail & Deep Breakdown -->
 
+    <div
+      class="modal-backdrop hidden"
+      id="modal-story-detail"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="detail-headline"
+    >
+      <div
+        class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-2xl w-full p-space-lg shadow-2xl overflow-y-auto max-h-[92vh]"
+      >
+        <div
+          class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20"
+        >
+          <div class="flex items-center gap-space-xs">
+            <span
+              class="font-label-caps text-[11px] bg-surface-container-high text-primary px-2 py-0.5 uppercase tracking-wider"
+              id="detail-category-badge"
+              >Category</span
+            >
 
+            <span
+              class="font-label-caps text-[11px] bg-surface-container-high text-secondary px-2 py-0.5 uppercase tracking-wider"
+              id="detail-verification-badge"
+              >Verified</span
+            >
+          </div>
 
-  <!-- MODAL: Story Detail & Deep Breakdown -->
-
-  <div class="modal-backdrop hidden" id="modal-story-detail" role="dialog" aria-modal="true" aria-labelledby="detail-headline">
-
-    <div class="bg-surface-container border border-outline-variant/30 text-on-surface max-w-2xl w-full p-space-lg shadow-2xl overflow-y-auto max-h-[92vh]">
-
-      <div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/20">
-
-        <div class="flex items-center gap-space-xs">
-
-          <span class="font-label-caps text-[11px] bg-surface-container-high text-primary px-2 py-0.5 uppercase tracking-wider" id="detail-category-badge">Category</span>
-
-          <span class="font-label-caps text-[11px] bg-surface-container-high text-secondary px-2 py-0.5 uppercase tracking-wider" id="detail-verification-badge">Verified</span>
-
+          <button
+            class="text-outline hover:text-on-surface text-[24px] cursor-pointer"
+            id="btn-close-detail-modal"
+          >
+            &times;
+          </button>
         </div>
 
-        <button class="text-outline hover:text-on-surface text-[24px] cursor-pointer" id="btn-close-detail-modal">&times;</button>
+        <div class="mb-space-md">
+          <div
+            class="flex items-center gap-space-xs font-label-sm text-[12px] text-outline mb-1"
+          >
+            <span id="detail-source-author">Source Name</span>
 
-      </div>
+            <span>&#8226;</span>
 
-      
+            <span id="detail-time">Recent</span>
+          </div>
 
-      <div class="mb-space-md">
+          <h2
+            class="font-headline-md text-headline-md text-on-surface mb-space-sm leading-tight"
+            id="detail-headline"
+          >
+            Story Headline
+          </h2>
 
-        <div class="flex items-center gap-space-xs font-label-sm text-[12px] text-outline mb-1">
-
-          <span id="detail-source-author">Source Name</span>
-
-          <span>&#8226;</span>
-
-          <span id="detail-time">Recent</span>
-
+          <div
+            class="font-body-md text-body-md text-on-surface-variant/95 leading-relaxed space-y-3 mb-space-md"
+            id="detail-summary-content"
+          >
+            <!-- Summary paragraphs -->
+          </div>
         </div>
 
-        <h2 class="font-headline-md text-headline-md text-on-surface mb-space-sm leading-tight" id="detail-headline">
+        <!-- Ground News-Style Corroboration Spectrum -->
+        <div
+          id="detail-corroboration-spectrum"
+          class="mb-space-md p-3.5 bg-[#f8f9fa] border border-[#e2e8f0] rounded-sm"
+        >
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span
+              class="font-mono uppercase text-[#64748b] font-semibold flex items-center gap-1"
+            >
+              <span class="material-symbols-outlined text-primary text-[15px]"
+                >verified</span
+              >
+              <span>Corroboration Spectrum</span>
+            </span>
+            <span
+              id="detail-corroboration-count"
+              class="font-mono text-primary font-bold"
+              >2 Sources Verified</span
+            >
+          </div>
+          <div
+            class="w-full h-2 bg-[#e2e8f0] rounded-full overflow-hidden flex mb-2"
+          >
+            <div
+              id="spectrum-bar-fill"
+              class="h-full bg-primary"
+              style="width: 85%"
+            ></div>
+          </div>
+          <div
+            id="detail-spectrum-sources-chips"
+            class="flex flex-wrap gap-1.5 text-[11px] font-mono"
+          >
+            <!-- Dynamically injected source chips -->
+          </div>
+        </div>
 
-          Story Headline
+        <!-- ELI5 / Explain Simply Box -->
+        <div
+          id="detail-eli5-box"
+          class="hidden mb-space-md p-4 bg-[#f8f9fa] border-l-4 border-l-[#ff7a00] border border-[#e2e8f0] rounded-sm"
+        >
+          <div
+            class="flex items-center gap-1.5 text-xs font-mono uppercase text-[#ff7a00] font-bold mb-1.5"
+          >
+            <span class="material-symbols-outlined text-[16px]">bolt</span>
+            <span>Explained Simply (ELI5)</span>
+          </div>
+          <p
+            id="detail-eli5-text"
+            class="text-sm font-sans text-[#111111] leading-relaxed"
+          >
+            Loading simplified context...
+          </p>
+        </div>
 
-        </h2>
-
-        <div class="font-body-md text-body-md text-on-surface-variant/95 leading-relaxed space-y-3 mb-space-md" id="detail-summary-content">
-
-          <!-- Summary paragraphs -->
-
+        <div
+          class="flex items-center justify-between pt-space-sm border-t border-outline-variant/20 flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-2">
+            <button
+              id="btn-modal-listen"
+              class="flex items-center gap-1 px-3 py-1.5 bg-[#f0f2f5] hover:bg-[#e4e6eb] border border-[#d1d5db] text-primary text-xs font-semibold rounded-sm transition-colors cursor-pointer"
+            >
+              <span
+                class="material-symbols-outlined text-[16px]"
+                id="modal-listen-icon"
+                >volume_up</span
+              >
+              <span id="modal-listen-label">Listen</span>
+            </button>
+            <button
+              id="btn-modal-eli5"
+              class="flex items-center gap-1 px-3 py-1.5 bg-[#f0f2f5] hover:bg-[#e4e6eb] border border-[#d1d5db] text-[#111111] hover:text-[#ff7a00] text-xs font-semibold rounded-sm transition-colors cursor-pointer"
+              title="Explain Like I'm 10"
+            >
+              <span class="material-symbols-outlined text-[16px] text-primary"
+                >psychology</span
+              >
+              <span>Explain Simply</span>
+            </button>
+            <button
+              id="btn-modal-bookmark"
+              class="p-1.5 hover:bg-[#f0f2f5] text-outline hover:text-primary transition-colors cursor-pointer"
+              title="Save Story"
+            >
+              <span
+                class="material-symbols-outlined text-[20px]"
+                id="modal-bookmark-icon"
+                >bookmark_border</span
+              >
+            </button>
+          </div>
+          <a
+            id="btn-open-original-article"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors inline-flex items-center gap-1"
+          >
+            Open Original Wire &rarr;
+          </a>
         </div>
       </div>
-
-      <div class="flex items-center justify-between pt-space-sm border-t border-outline-variant/20">
-
-        <span class="font-label-caps text-[11px] text-outline uppercase">Editorial Intelligence Certified</span>
-
-        <a id="btn-open-original-article" href="#" target="_blank" rel="noopener noreferrer" class="bg-primary hover:bg-surface-tint text-on-primary font-label-md font-semibold px-4 py-2 uppercase tracking-wider transition-colors inline-flex items-center gap-1">
-
-          Open Original Wire &rarr;
-
-        </a>
-
-      </div>
-
     </div>
 
-  </div>
+    <!-- FULLSCREEN 60-WORD QUICK READ CARD REEL (InShorts Mode) -->
+    <div
+      id="quick-read-overlay"
+      class="fixed inset-0 z-50 bg-[#ffffff] text-[#111111] hidden flex-col select-none overflow-hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="60-Word Quick Read Card Reel"
+    >
+      <!-- Quick Read Header -->
+      <header
+        class="flex items-center justify-between px-4 py-3 border-b border-[#e2e8f0] bg-[#ffffff]/95 backdrop-blur-md shrink-0"
+      >
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]"
+            >bolt</span
+          >
+          <span
+            class="font-headline text-sm font-bold tracking-wider uppercase text-on-surface"
+            >NEWZZ <span class="text-primary font-normal">Reels</span></span
+          >
+          <span
+            class="text-[11px] font-mono px-2 py-0.5 bg-surface-container rounded-sm text-outline"
+            id="qr-counter"
+            >1 / 490</span
+          >
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            id="btn-qr-listen"
+            class="flex items-center gap-1 px-2.5 py-1 bg-[#f0f2f5] hover:bg-[#e4e6eb] border border-[#d1d5db] rounded text-xs text-primary transition-colors cursor-pointer"
+            title="Listen to 60s Reel"
+          >
+            <span
+              class="material-symbols-outlined text-[17px]"
+              id="qr-listen-icon"
+              >volume_up</span
+            >
+            <span
+              class="text-[11px] font-mono font-medium hidden sm:inline"
+              id="qr-listen-label"
+              >Listen</span
+            >
+          </button>
+          <button
+            id="btn-qr-bookmark"
+            class="p-1.5 hover:bg-[#f0f2f5] text-outline hover:text-primary transition-colors cursor-pointer"
+            title="Save Story"
+          >
+            <span
+              class="material-symbols-outlined text-[20px]"
+              id="qr-bookmark-icon"
+              >bookmark_border</span
+            >
+          </button>
+          <button
+            id="btn-qr-share"
+            class="p-1.5 hover:bg-[#f0f2f5] text-outline hover:text-on-surface transition-colors cursor-pointer"
+            title="Share Story"
+          >
+            <span class="material-symbols-outlined text-[18px]">share</span>
+          </button>
+          <button
+            id="btn-close-quick-read"
+            class="p-1.5 hover:bg-[#f0f2f5] text-outline hover:text-on-surface transition-colors cursor-pointer"
+            title="Close Quick Read (Esc)"
+          >
+            <span class="material-symbols-outlined text-[22px]">close</span>
+          </button>
+        </div>
+      </header>
 
+      <!-- Quick Read Card Container -->
+      <main
+        class="flex-1 flex items-center justify-center p-3 sm:p-6 overflow-hidden relative"
+        id="qr-touch-area"
+      >
+        <!-- Active Card Frame -->
+        <article
+          class="w-full max-w-xl bg-[#ffffff] border border-[#e2e8f0] border-l-4 border-l-[#ff7a00] rounded-lg p-5 sm:p-7 shadow-2xl flex flex-col justify-between min-h-[440px] max-h-[85vh] transition-all duration-200"
+          id="qr-card-article"
+        >
+          <div>
+            <!-- Visual Topic / Photo Banner -->
+            <div
+              id="qr-visual-banner"
+              class="w-full h-32 sm:h-36 mb-3 rounded overflow-hidden relative border border-[#e2e8f0] bg-[#f8f9fa] flex items-center justify-center"
+            >
+              <!-- Dynamically injected visual banner -->
+            </div>
 
+            <!-- Meta Pill Row -->
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span
+                  id="qr-category-badge"
+                  class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 bg-primary/15 text-primary font-bold rounded-sm"
+                  >National</span
+                >
+                <span
+                  id="qr-state-badge"
+                  class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 bg-secondary/15 text-secondary font-bold rounded-sm hidden"
+                  >Telangana</span
+                >
+                <span
+                  id="qr-trust-badge"
+                  class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 bg-surface-container-high text-outline rounded-sm"
+                  >Tier-1 Corroborated</span
+                >
+              </div>
+              <span id="qr-time-ago" class="font-mono text-[11px] text-outline"
+                >5h ago</span
+              >
+            </div>
 
-  <!-- Primary Application Script -->
+            <!-- Headline -->
+            <h2
+              id="qr-headline"
+              class="font-headline text-lg sm:text-2xl font-bold text-on-surface leading-snug mb-3"
+            >
+              Headline goes here
+            </h2>
 
-  <script src="app.js"></script>
+            <!-- 60-Word Distilled Summary -->
+            <p
+              id="qr-summary"
+              class="font-serif text-sm sm:text-base text-on-surface-variant leading-relaxed mb-4"
+            >
+              Summary content goes here.
+            </p>
 
-</body>
+            <!-- Key Facts Bullets -->
+            <div
+              id="qr-key-facts"
+              class="space-y-1.5 mb-4 p-3 bg-[#f8f9fa] border-l-2 border-primary rounded-sm"
+            >
+              <!-- Fact points injected via JS -->
+            </div>
+          </div>
 
+          <!-- Footer / Action Row -->
+          <div
+            class="pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs text-outline"
+          >
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px] text-primary"
+                >verified</span
+              >
+              <span id="qr-source-name" class="font-semibold text-on-surface"
+                >The Hindu</span
+              >
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                id="qr-btn-full-dossier"
+                class="px-3 py-1 bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold rounded-sm transition-colors cursor-pointer"
+              >
+                Full Dossier
+              </button>
+              <a
+                id="qr-btn-original"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="px-3 py-1 bg-primary hover:bg-surface-tint text-on-primary text-xs font-semibold uppercase tracking-wider rounded-sm transition-colors inline-flex items-center gap-1"
+              >
+                Read Wire &rarr;
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Floating Desktop Navigation Controls -->
+        <button
+          id="qr-nav-prev"
+          class="flex absolute top-1/2 -translate-y-16 right-4 sm:right-8 w-11 h-11 rounded-full bg-surface-container/80 hover:bg-surface-container border border-outline-variant/30 text-on-surface items-center justify-center transition-all cursor-pointer shadow-lg"
+          title="Previous Story (Arrow Up)"
+        >
+          <span class="material-symbols-outlined text-[24px]"
+            >keyboard_arrow_up</span
+          >
+        </button>
+        <button
+          id="qr-nav-next"
+          class="flex absolute top-1/2 translate-y-4 right-4 sm:right-8 w-11 h-11 rounded-full bg-primary hover:bg-surface-tint text-on-primary items-center justify-center transition-all cursor-pointer shadow-lg"
+          title="Next Story (Arrow Down / Space)"
+        >
+          <span class="material-symbols-outlined text-[24px]"
+            >keyboard_arrow_down</span
+          >
+        </button>
+      </main>
+
+      <!-- Bottom Swipe / Keyboard Hint Bar -->
+      <footer
+        class="py-2 px-4 border-t border-[#e2e8f0] bg-[#ffffff]/90 flex items-center justify-between text-[11px] font-mono text-outline shrink-0"
+      >
+        <span class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]"
+            >swipe_vertical</span
+          >
+          Swipe up/down or use &uarr;&darr; keys
+        </span>
+        <span>28 States &bull; 8 UTs &bull; Zero Ads</span>
+      </footer>
+        <span class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]"
+            >swipe_vertical</span
+          >
+          Swipe up/down or use &uarr;&darr; keys
+        </span>
+        <span>28 States &bull; 8 UTs &bull; Zero Ads</span>
+      </footer>
+    </div>
+
+    <!-- Primary Application Script -->
+
+    <script src="app.js"></script>
+  </body>
 </html>
-

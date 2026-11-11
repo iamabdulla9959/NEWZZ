@@ -1,8 +1,8 @@
-
 /* ==========================================================================
    High-Performance Scrolling & Hardware Acceleration Tokens
    ========================================================================== */
-html, body {
+html,
+body {
   scroll-behavior: auto !important;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
@@ -10,66 +10,68 @@ html, body {
 }
 
 header.sticky {
-  background-color: #141311 !important;
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #e5e5e5 !important;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   will-change: transform;
 }
 
-article, section {
+article,
+section {
   contain: content;
 }
 
 .modal-backdrop {
-  background: rgba(10, 9, 8, 0.88) !important;
+  background: rgba(0, 0, 0, 0.92) !important;
 }
 
 /* ==========================================================================
-   News Reels — Premium Dark Editorial Design System
+   NEWZZ — Clean White Editorial Design System
    Color Palette:
-   - Near-Black Base: #0A0D12 / #11151F
-   - Tangerine Accent: #EB7D00 (Highlights, Primary Actions, Urgent Indicators)
-   - Vanilla Warm Cream: #EBE3A7 (Headlines, Contrast Accents, Key Numbers)
-   - Brunswick Green: #2C5745 (Verification, Trust Badges, High Credibility)
-   - Dark Brown: #2E2910 (Subtle Surface Depth, Dark Accents, Warm Shadowing)
+   - White Base: #FFFFFF / #F7F7F7
+   - Tangerine Accent: #FF7A00 (Highlights, Primary Actions, Urgent Indicators)
+   - Ink Black: #111111 (Headlines, Body Text)
+   - Verified Green: #059669 (Verification, Trust Badges, High Credibility)
+   - Warm Gray: #F3F3F3 (Subtle Surface Depth, Card Backgrounds)
    ========================================================================== */
 
 :root {
-  /* Core Brand Colors — Premium Warm Editorial Dark Theme */
-  --bg-primary: #141311;
-  --bg-secondary: #1a1815;
-  --bg-card: rgba(26, 24, 21, 0.90);
-  --bg-card-hover: rgba(33, 30, 26, 0.96);
-  --bg-modal: #181613;
-  --bg-overlay: rgba(14, 13, 11, 0.85);
+  /* Core Brand Colors — Clean White & Vivid Orange Editorial System */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f7f7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fdf4ec;
+  --bg-modal: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.75);
 
   /* Theme Accents (Brand Identity) */
-  --accent-orange: #EB7D00;
-  --accent-orange-hover: #fa8808;
-  --accent-orange-glow: rgba(235, 125, 0, 0.22);
-  --accent-orange-subtle: rgba(235, 125, 0, 0.10);
+  --accent-orange: #ff7a00;
+  --accent-orange-hover: #e06d00;
+  --accent-orange-glow: rgba(255, 122, 0, 0.22);
+  --accent-orange-subtle: rgba(255, 122, 0, 0.09);
 
-  --accent-cream: #EBE3A7;
-  --accent-cream-glow: rgba(235, 227, 167, 0.18);
-  --accent-cream-subtle: rgba(235, 227, 167, 0.08);
+  --accent-cream: #111111;
+  --accent-cream-glow: rgba(17, 17, 17, 0.12);
+  --accent-cream-subtle: rgba(17, 17, 17, 0.06);
 
-  --accent-green: #2C5745;
-  --accent-green-light: #447761;
-  --accent-green-subtle: rgba(44, 87, 69, 0.28);
+  --accent-green: #059669;
+  --accent-green-light: #10b981;
+  --accent-green-subtle: rgba(5, 150, 105, 0.12);
 
-  --accent-brown: #2E2910;
-  --accent-brown-subtle: rgba(46, 41, 16, 0.40);
+  --accent-brown: #f3f3f3;
+  --accent-brown-subtle: rgba(243, 243, 243, 0.8);
 
   /* Neutrals & Typography */
-  --text-primary: #fcfbf7;
-  --text-secondary: #b5b0a2;
-  --text-muted: #7d786d;
-  --text-cream: #EBE3A7;
+  --text-primary: #111111;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+  --text-cream: #111111;
 
   /* Borders & Dividers */
-  --border-subtle: rgba(235, 227, 167, 0.09);
-  --border-medium: rgba(235, 227, 167, 0.16);
-  --border-highlight: rgba(235, 125, 0, 0.38);
+  --border-subtle: #e5e5e5;
+  --border-medium: #d1d1d1;
+  --border-highlight: rgba(255, 122, 0, 0.5);
 
   /* Shapes & Radii */
   --radius-xs: 4px;
@@ -79,19 +81,22 @@ article, section {
   --radius-full: 9999px;
 
   /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Plus Jakarta Sans', var(--font-sans);
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Plus Jakarta Sans", var(--font-sans);
 
   /* Shadows */
   --shadow-card: 0 8px 32px rgba(8, 7, 6, 0.55);
-  --shadow-elevated: 0 16px 48px rgba(6, 5, 4, 0.70);
+  --shadow-elevated: 0 16px 48px rgba(6, 5, 4, 0.7);
 }
 
 /* ==========================================================================
    Base Reset & Typography
    ========================================================================== */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -105,11 +110,7 @@ html {
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-primary);
-  background-image:
-    radial-gradient(circle at 12% 14%, rgba(46, 41, 16, 0.38) 0px, transparent 45%),
-    radial-gradient(circle at 88% 82%, rgba(44, 87, 69, 0.22) 0px, transparent 48%),
-    radial-gradient(circle at 50% 35%, rgba(235, 125, 0, 0.035) 0px, transparent 60%),
-    linear-gradient(180deg, #161513 0%, #12110F 100%);
+  background-image: none;
   background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
@@ -155,9 +156,8 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  
-  
-  background: rgba(10, 13, 19, 0.88);
+
+  background: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid var(--border-subtle);
   width: 100%;
 }
@@ -186,7 +186,11 @@ body {
   width: 38px;
   height: 38px;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--accent-orange), var(--accent-brown));
+  background: linear-gradient(
+    135deg,
+    var(--accent-orange),
+    var(--accent-brown)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,8 +240,15 @@ body {
 }
 
 @keyframes pulseDot {
-  0%, 100% { opacity: 0.4; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.15); }
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
 }
 
 .header-actions,
@@ -293,10 +304,9 @@ body {
    ========================================================================== */
 
 .category-nav {
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-  background: rgba(8, 11, 16, 0.65);
-  
-  
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(247, 247, 247, 0.95);
+
   width: 100%;
 }
 
@@ -339,13 +349,13 @@ body {
 .category-tab:hover,
 .tab-btn:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .category-tab.active,
 .tab-btn.active {
   background: var(--accent-orange);
-  color: #0b0e14;
+  color: #ffffff;
   border-color: var(--accent-orange);
   font-weight: 700;
   box-shadow: 0 2px 12px var(--accent-orange-glow);
@@ -383,9 +393,8 @@ body {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  background: rgba(10, 13, 19, 0.88);
-  
-  
+  background: rgba(255, 255, 255, 0.92);
+
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-full);
   padding: 0.4rem 0.95rem;
@@ -394,7 +403,7 @@ body {
   color: var(--text-secondary);
   z-index: 40;
   pointer-events: none;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   letter-spacing: 0.03em;
 }
 
@@ -424,8 +433,7 @@ body {
 
 .scroll-card-inner {
   background: var(--bg-card);
-  
-  
+
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 2rem 2.25rem;
@@ -482,18 +490,18 @@ body {
   font-size: 1.85rem;
   font-weight: 800;
   line-height: 1.32;
-  color: #fbf9f1;
+  color: #111111;
   letter-spacing: -0.025em;
   transition: color 0.2s ease;
 }
 
 .scroll-card-inner:hover .scroll-headline {
-  color: var(--accent-cream);
+  color: var(--accent-orange);
 }
 
 .scroll-summary {
   font-size: 1.05rem;
-  color: #c9c4b5;
+  color: #444444;
   line-height: 1.72;
   display: -webkit-box;
   -webkit-line-clamp: 6;
@@ -547,7 +555,7 @@ body {
   outline: none;
   font-family: inherit;
   line-height: 1.2;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.04);
   border: 1px solid var(--border-medium);
   color: var(--text-secondary);
 }
@@ -562,18 +570,18 @@ body {
 }
 
 .scroll-action-btn:hover {
-  background: rgba(235, 227, 167, 0.08);
-  color: var(--text-cream);
-  border-color: rgba(235, 227, 167, 0.30);
+  background: rgba(255, 122, 0, 0.08);
+  color: var(--accent-orange);
+  border-color: var(--accent-orange);
   transform: translateY(-1px);
 }
 
 .scroll-action-primary {
-  background: linear-gradient(135deg, #EB7D00 0%, #d67000 100%);
-  color: #12110F;
+  background: linear-gradient(135deg, #eb7d00 0%, #d67000 100%);
+  color: #12110f;
   border: 1px solid transparent;
   font-weight: 700;
-  box-shadow: 0 2px 10px rgba(235, 125, 0, 0.20);
+  box-shadow: 0 2px 10px rgba(235, 125, 0, 0.2);
 }
 
 .scroll-action-primary:hover {
@@ -617,7 +625,7 @@ body {
 }
 
 .secondary-btn {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.04);
   color: var(--text-primary);
   font-weight: 600;
   border: 1px solid var(--border-subtle);
@@ -636,7 +644,7 @@ body {
 }
 
 .secondary-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
   border-color: var(--border-medium);
   transform: translateY(-1px);
 }
@@ -672,8 +680,7 @@ body {
   position: fixed;
   inset: 0;
   background: var(--bg-overlay);
-  
-  
+
   z-index: 100;
   display: flex;
   align-items: center;
@@ -693,7 +700,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
   position: relative;
 }
 
@@ -726,12 +733,12 @@ body {
   font-family: var(--font-display);
   font-size: 1.35rem;
   font-weight: 700;
-  color: var(--text-cream);
+  color: var(--text-primary);
 }
 
 .modal-text {
   font-size: 0.92rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -743,7 +750,7 @@ body {
 }
 
 .feature-item {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.03);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 0.85rem;
@@ -759,7 +766,7 @@ body {
 .feature-text h4 {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 0.2rem;
 }
 
@@ -782,7 +789,7 @@ body {
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   width: 30%;
@@ -790,8 +797,12 @@ body {
   background: var(--border-subtle);
 }
 
-.divider::before { left: 0; }
-.divider::after { right: 0; }
+.divider::before {
+  left: 0;
+}
+.divider::after {
+  right: 0;
+}
 
 .form-group {
   display: flex;
@@ -809,12 +820,12 @@ body {
 .form-input,
 .input-field {
   width: 100%;
-  background: rgba(5, 7, 10, 0.65);
+  background: rgba(0, 0, 0, 0.03);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   padding: 0.65rem 0.85rem;
   font-size: 0.9rem;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: inherit;
   outline: none;
   transition: all 0.2s ease;
@@ -852,7 +863,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.04);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
   padding: 0.5rem 0.95rem;
@@ -868,7 +879,7 @@ body {
 
 .interest-chip:hover,
 .interest-pill:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.08);
   color: var(--text-primary);
   border-color: var(--border-medium);
   transform: translateY(-1px);
@@ -906,7 +917,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.03);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 0.65rem 0.85rem;
@@ -914,7 +925,7 @@ body {
 }
 
 .priority-item:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.06);
   border-color: var(--border-medium);
 }
 
@@ -956,7 +967,7 @@ body {
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.05);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
@@ -1011,7 +1022,7 @@ body {
   font-family: var(--font-display);
   font-size: 1.35rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   line-height: 1.35;
   margin: 0.5rem 0 0.25rem 0;
 }
@@ -1023,7 +1034,7 @@ body {
 }
 
 .detail-explainability-box {
-  background: rgba(14, 18, 26, 0.85);
+  background: rgba(255, 122, 0, 0.04);
   border: 1px solid var(--border-subtle);
   border-left: 3px solid var(--accent-orange);
   border-radius: var(--radius-sm);
@@ -1056,7 +1067,7 @@ body {
 
 .explain-reason {
   font-size: 0.88rem;
-  color: #e2e8f0;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
@@ -1064,7 +1075,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   padding-top: 0.75rem;
 }
 
@@ -1090,7 +1101,7 @@ body {
 .progress-bar-wrap {
   width: 100%;
   height: 5px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: var(--radius-full);
   overflow: hidden;
   margin-top: 0.2rem;
@@ -1105,7 +1116,7 @@ body {
 
 .detail-summary-content {
   font-size: 0.95rem;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 1.25rem;
 }
@@ -1203,7 +1214,9 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-text {
@@ -1344,8 +1357,6 @@ body {
   }
 }
 
-
-
 /* ==========================================================================
    Form Select, Refresh Animation & Live Feed Toast
    ========================================================================== */
@@ -1373,8 +1384,12 @@ select.form-input option,
 }
 
 @keyframes spinFeed {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .feed-toast {
@@ -1389,7 +1404,7 @@ select.form-input option,
   padding: 0.45rem 1rem;
   border-radius: 9999px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  
+
   z-index: 1000;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;

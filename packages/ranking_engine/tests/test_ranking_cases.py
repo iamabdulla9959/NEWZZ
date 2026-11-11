@@ -88,9 +88,9 @@ def test_freshness_curve_and_precedence():
     t72h = now - timedelta(hours=72)
     assert FreshnessEngine.calculate_freshness(published_at=t72h, current_time=now) == 5.0
 
-    # Future timestamp safely handled
+    # Future timestamp conservatively handled (never 100.0)
     tfuture = now + timedelta(hours=2)
-    assert FreshnessEngine.calculate_freshness(published_at=tfuture, current_time=now) == 100.0
+    assert FreshnessEngine.calculate_freshness(published_at=tfuture, current_time=now) == 25.0
 
 
 def test_verification_trust_model():

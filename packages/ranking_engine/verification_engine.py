@@ -27,23 +27,54 @@ class VerificationEngine:
                 "conflict_detected": conflict_detected,
             }
 
-        # Clean publisher names
-        unique_names = set()
+        # Clean publisher entities to prevent double-counting multiple feeds from same publisher
+        unique_publishers = set()
         tier1_count = 0
         tier2_count = 0
 
         for s in sources:
             name = str(s.get("name", "")).strip().lower()
-            if not name:
+            tier = str(s.get("tier", s.get("trust_tier", ""))).strip().lower()
+            url = str(s.get("url", "")).strip().lower()
+            # Explicit guard: Sentinel / unresolved sources never count toward publisher diversity or trust
+            if (
+                not name
+                or tier in ("3", "unresolved", "unknown", "legacy_unresolved")
+                or "unresolved" in name
+                or "legacy unresolved provenance" in name
+                or "news.google.com" in url
+            ):
                 continue
-            if name not in unique_names:
-                unique_names.add(name)
+
+            # Determine canonical entity key
+            pub_key = name
+            if "hindu" in name or "thehindu.com" in url:
+                pub_key = "the_hindu"
+            elif "bbc" in name or "bbc.com" in url or "bbci.co.uk" in url:
+                pub_key = "bbc"
+            elif "times of india" in name or "indiatimes.com" in url or name == "toi":
+                pub_key = "times_of_india"
+            elif "hindustan times" in name or "hindustantimes.com" in url:
+                pub_key = "hindustan_times"
+            elif "indian express" in name or "indianexpress.com" in url:
+                pub_key = "indian_express"
+            elif "ndtv" in name or "ndtv.com" in url:
+                pub_key = "ndtv"
+            elif "reuters" in name or "reuters.com" in url:
+                pub_key = "reuters"
+            elif "associated press" in name or "apnews.com" in url or name == "ap":
+                pub_key = "associated_press"
+            elif "guardian" in name or "theguardian.com" in url:
+                pub_key = "the_guardian"
+
+            if pub_key not in unique_publishers:
+                unique_publishers.add(pub_key)
                 if any(t in name for t in RankingConfig.TIER_1_SOURCES):
                     tier1_count += 1
                 elif any(t in name for t in RankingConfig.TIER_2_SOURCES):
                     tier2_count += 1
 
-        independent_count = len(unique_names)
+        independent_count = len(unique_publishers)
 
         # Conflict penalty
         if conflict_detected:

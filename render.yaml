@@ -1,14 +1,46 @@
+# ==============================================================================
+# NEWZZ Production Infrastructure Configuration (Render)
+#
+# Persistence & Architecture Notice:
+# 1. Plan Tier: The 'starter' plan ensures services run continuously and do not
+#    spin down due to inactivity (unlike free tier web services).
+# 2. Ephemeral Filesystems: Render container filesystems are strictly EPHEMERAL
+#    by default across deploys, restarts, and redeployments.
+# 3. Durable Storage: All durable relational state (sources, articles, clusters,
+#    cards, worker runs, preferences) MUST reside in managed PostgreSQL.
+# 4. No Local Shared State: Neither the API nor the worker uses local filesystem
+#    storage for durable state. No persistent disk attachment is required.
+# ==============================================================================
+
 services:
+  # 1. FastAPI Web API Service
   - type: web
     name: newzz-api
-    plan: free
+    plan: starter
     runtime: python
     buildCommand: pip install -r apps/api/requirements.txt
     startCommand: bash start.sh
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
+      - key: APP_ENV
+        value: production
       - key: CORS_ORIGINS
-        value: "*"
+        value: "https://newszzzz.netlify.app,http://localhost:3000,http://localhost:8081"
       - key: DATABASE_URL
-        value: sqlite:///newsreels.db
+        sync: false
+
+  # 2. Dedicated Background Ingestion Worker Service
+  - type: worker
+    name: newzz-worker
+    plan: starter
+    runtime: python
+    buildCommand: pip install -r apps/worker/requirements.txt
+    startCommand: bash worker_start.sh
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false

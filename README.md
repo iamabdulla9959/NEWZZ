@@ -1,8 +1,10 @@
-# Newzz — Structured Importance & Multi-Dimensional News Platform
+# NEWZZ — Structured Importance & Multi-Dimensional News Intelligence Platform
 
-A verification-forward, local-relevant, and explainable news platform. News Reels clusters multi-source coverage, verifies facts, and ranks real-world events using an objective 5-dimension scoring engine that answers:
+A verification-forward, local-relevant, and explainable news intelligence platform. NEWZZ clusters multi-source coverage, verifies facts, and ranks real-world events using an objective 5-dimension scoring engine that answers:
 
 > **“What news event is most important for this user to know right now?”**
+
+For complete system documentation, see the authoritative [NEWZZ Specification](docs/NEWZZ_SPECIFICATION.md).
 
 ---
 
@@ -22,10 +24,10 @@ These concepts are never conflated into a single ambiguous number. A major earth
 
 * **Platform Scope**: **Web-Only**. High-performance, responsive editorial web application designed for modern desktop, tablet, and mobile browsers.
 * **Language Scope**: **English-Only**. Ingestion, analysis, summarization, and feeds operate strictly in English.
-* **Onboarding Flow**: Clean, zero-friction 4-step configuration:
-  $$\text{Welcome} \longrightarrow \text{State Selection} \longrightarrow \text{Category Interests} \longrightarrow \text{Priority Ranking} \longrightarrow \text{Live Reels Feed}$$
+* **User Personalization Flow**: Voluntary, zero-friction personalization accessible from the header at any time (the default landing is the broadsheet newsroom feed):
+  $$\text{State Selection} \longrightarrow \text{Topic Selection} \longrightarrow \text{Priority Ranking} \longrightarrow \text{Editorial Feed}$$
 * **No Geolocation / GPS Requirement**: Fast, privacy-respecting user state selection without requiring browser GPS permissions, reverse-geocoding latency, or district ambiguity.
-* **10 Primary Categories** (>= 40 distinct reels each; 948 reels total):
+* **10 Primary Categories**: The production system is designed to support the required category and state coverage across:
   1. `Technology`
   2. `Politics`
   3. `Business`
@@ -36,8 +38,10 @@ These concepts are never conflated into a single ambiguous number. A major earth
   8. `Sports`
   9. `Entertainment`
   10. `Environment`
-* **All 28 Indian States Supported**:
-  * Andhra Pradesh, Arunachal Pradesh, Assam, Bihar, Chhattisgarh, Goa, Gujarat, Haryana, Himachal Pradesh, Jharkhand, Karnataka, Kerala, Madhya Pradesh, Maharashtra, Manipur, Meghalaya, Mizoram, Nagaland, Odisha, Punjab, Rajasthan, Sikkim, Tamil Nadu, Telangana, Tripura, Uttar Pradesh, Uttarakhand, West Bengal.
+  *(Note: Regional `State` coverage is organized via dedicated State Desks rather than treated as a primary subject category).*
+* **Geographic Coverage**: The core product requirement remains all **28 Indian States**, with extended crawler coverage spanning all **36 Indian Jurisdictions** (28 States + 8 Union Territories):
+  * **28 States**: Andhra Pradesh, Arunachal Pradesh, Assam, Bihar, Chhattisgarh, Goa, Gujarat, Haryana, Himachal Pradesh, Jharkhand, Karnataka, Kerala, Madhya Pradesh, Maharashtra, Manipur, Meghalaya, Mizoram, Nagaland, Odisha, Punjab, Rajasthan, Sikkim, Tamil Nadu, Telangana, Tripura, Uttar Pradesh, Uttarakhand, West Bengal.
+  * **8 Union Territories**: Andaman and Nicobar Islands, Chandigarh, Dadra and Nagar Haveli and Daman and Diu, Delhi, Jammu and Kashmir, Ladakh, Lakshadweep, Puducherry.
   * User state selection dynamically adjusts the **Personal Relevance (0–100)** score while leaving objective societal importance and trust verification invariant.
 
 ---
@@ -75,10 +79,10 @@ d:\News\
 ├── apps/
 │   ├── api/                    # FastAPI backend & Web Application
 │   │   ├── app/                # Routers (feed, admin, location), models, schemas
-│   │   ├── app/static/         # Web frontend (index.html, style.css, app.js)
+│   │   ├── app/static/         # Web frontend mirror (index.html, style.css, app.js)
 │   │   ├── alembic/            # Database schema migrations
 │   │   └── tests/              # API & integration test suite
-│   └── worker/                 # Background worker pipeline & validation gates
+│   └── worker/                 # Worker pipeline & validation gates (tests & scheduler)
 ├── packages/
 │   └── ranking_engine/         # Centralized Multi-Dimensional Ranking Package
 │       ├── config.py           # Configurable weights, bounds, decay curve
@@ -91,8 +95,15 @@ d:\News\
 │       ├── feed_ranking_engine.py # Master formula & explainability generator
 │       └── tests/              # 10 benchmark scenarios & property invariants
 ├── website_scraping/           # Automated RSS scraper & multi-source clustering bot
-├── docs/                       # Specifications and handoff documentation
+├── docs/
+│   └── NEWZZ_SPECIFICATION.md  # Single authoritative system & product specification
+├── archive/                    # Historical prototypes & deprecated documentation
+│   ├── apps/mobile/            # Historical React Native / Expo prototype
+│   ├── packages/shared/        # Historical TypeScript shared package
+│   └── docs/                   # Historical PRDs, SRSs, and handoff guides
 ├── .env.example                # Environment variables template
+├── netlify.toml                # Netlify CDN frontend hosting configuration
+├── render.yaml                 # Render backend web service configuration
 └── docker-compose.yml
 ```
 
@@ -230,7 +241,7 @@ Open **`http://localhost:8000/`** in any web browser.
 # Ingest live RSS feeds from feeds.yaml
 python website_scraping/auto_news_crawler.py
 
-# Deduplicate, summarize, rank, and sync to News Reels database
+# Deduplicate, summarize, rank, and sync to NEWZZ database
 python website_scraping/process_news.py --limit 15
 ```
 
@@ -268,7 +279,7 @@ pytest packages/ranking_engine/tests/test_ranking_cases.py -v
 # 2. Controlled Ranking Discrimination (Casualty context vs active emergency):
 python scratch/test_ranking_discrimination.py
 
-# 3. Capacity & Distribution Verification (948 cards, 10 categories >= 40, 28 states):
+# 3. Capacity & Distribution Verification (category capacity and state coverage):
 python scratch/b15_6_verify_capacity.py
 
 # 4. Comprehensive Browser User Acceptance Test (B17 UAT - Onboarding, Feeds, Infinite Scroll):
@@ -288,4 +299,4 @@ python scratch/run_b17_uat.py
 ## 8. Known Limitations & Operating Notes
 
 1. **RSS Snippet Evidence vs Full Article**: The automated crawler collects headlines and summaries from reputable wire feeds and publisher RSS sources. The Importance Engine conservatively scores missing factual data (e.g., exact unconfirmed financial damages) at baseline rather than hallucinating estimates.
-2. **Current Release Focus**: The current production release of News Reels is **Web-Only** (optimized for modern mobile, tablet, and desktop browsers). Native mobile prototypes in `apps/mobile/` are maintained separately for historical reference.
+2. **Current Release Focus**: NEWZZ is strictly an editorial web application (optimized for modern mobile, tablet, and desktop browsers). Historical mobile prototypes have been moved to `archive/apps/mobile/` for historical reference. See [NEWZZ Specification](docs/NEWZZ_SPECIFICATION.md) for full details.

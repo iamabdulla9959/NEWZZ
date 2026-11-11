@@ -21,10 +21,14 @@ ENV/
 newsreels.db
 *.db
 *.sqlite3
+backups/
 news.json
 summarized_news.json
 
 # Scratch temporary artifacts & logs (preserve permanent audit test scripts)
+archive/
+artifacts/
+scratch/
 scratch/__pycache__/
 scratch/*.png
 scratch/*.json

@@ -78,11 +78,30 @@ def evaluate_cluster(db: Session, cluster: StoryCluster) -> None:
     db.commit()
 
 
-def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
+def process_eligible_clusters(
+    db: Session,
+    llm: LLMClient,
+    expected_lease_holder: str | None = None,
+    expected_lease_generation: int | None = None,
+    lease_name: str = "canonical_ingestion",
+) -> list[str]:
     produced: list[str] = []
     clusters = db.query(StoryCluster).filter(StoryCluster.eligible.is_(True)).all()
     print(f"[Pipeline] Found {len(clusters)} eligible clusters to process", flush=True)
     for idx, cluster in enumerate(clusters):
+        if expected_lease_holder is not None and expected_lease_generation is not None:
+            from worker.coordination import validate_lease_fencing, StaleLeaseError
+            if not validate_lease_fencing(
+                db,
+                lease_name=lease_name,
+                holder_id=expected_lease_holder,
+                expected_generation=expected_lease_generation,
+            ):
+                db.rollback()
+                raise StaleLeaseError(
+                    f"Lease fencing failed for '{lease_name}': holder '{expected_lease_holder}' at gen {expected_lease_generation} superseded"
+                )
+
         existing = (
             db.query(Card)
             .filter(Card.cluster_id == cluster.id, Card.verified_status != "rejected")
@@ -159,10 +178,11 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
             judge = judge_fact_consistency(llm, card.summary, source_verifications)
         except Exception as exc:  # fail closed
             judge = {"consistent": False, "issues": [f"judge_error:{exc}"]}
+        raw_issues = []
         if not judge.get("consistent"):
             raw_issues = judge.get("issues")
-        issues_list = raw_issues if isinstance(raw_issues, list) else ["fact_inconsistent"]
-        reasons.extend([str(i) for i in issues_list])
+            issues_list = raw_issues if isinstance(raw_issues, list) else ["fact_inconsistent"]
+            reasons.extend([str(i) for i in issues_list])
 
         if reasons:
             card.verified_status = "pending_review"
@@ -178,7 +198,19 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
             print(f"[Pipeline] -> Card queued: {reasons}", flush=True)
         else:
             card.verified_status = "published"
-            card.published_at = datetime.now(timezone.utc)
+
+            best_published_at = None
+            best_ingested_at = None
+            for a in articles:
+                if a.published_at:
+                    if best_published_at is None or a.published_at < best_published_at:
+                        best_published_at = a.published_at
+                if a.ingested_at:
+                    if best_ingested_at is None or a.ingested_at < best_ingested_at:
+                        best_ingested_at = a.ingested_at
+
+            card.published_at = best_published_at
+
             obj_score, impact_hits = calculate_objective_score(
                 articles=articles,
                 headline=card.headline,
@@ -195,6 +227,7 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
                 from packages.ranking_engine.urgency_engine import UrgencyEngine
                 from packages.ranking_engine.verification_engine import VerificationEngine
                 from packages.ranking_engine.feed_ranking_engine import FeedRankingEngine
+                from packages.ranking_engine.freshness_engine import FreshnessEngine
 
                 dims, imp_score = ImportanceEngine.analyze_event_text(
                     title=card.headline,
@@ -207,13 +240,18 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
                     is_developing=True,
                 )
                 ver_score, ver_meta = VerificationEngine.calculate_verification(
-                    sources=[{"name": getattr(a.source, "name", "Wire"), "url": getattr(a, "url", "")} for a in articles],
+                    sources=[{"name": getattr(a.source, "name", "Wire"), "url": getattr(a, "url", ""), "tier": getattr(a.source, "trust_tier", "2")} for a in articles],
                     conflict_detected=cluster.flagged_conflict,
                 )
+                frsh_score = FreshnessEngine.calculate_freshness(
+                    published_at=best_published_at,
+                    current_time=datetime.now(timezone.utc)
+                )
+
                 scoring_out = FeedRankingEngine.compute_final_score(
                     objective_importance=imp_score,
                     urgency=urg_score,
-                    freshness=100.0,
+                    freshness=frsh_score,
                     personal_relevance=25.0,
                     verification_confidence=ver_score,
                     dimensions=dims,
@@ -222,7 +260,7 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
                 )
                 card.importance_score = imp_score
                 card.urgency_score = urg_score
-                card.freshness_score = 100.0
+                card.freshness_score = frsh_score
                 card.verification_score = ver_score
                 card.personal_relevance_score = 25.0
                 card.final_feed_score = scoring_out.final_feed_score
@@ -232,6 +270,24 @@ def process_eligible_clusters(db: Session, llm: LLMClient) -> list[str]:
                 print(f"[Pipeline] Ranking engine fallback warning: {rank_err}", flush=True)
 
             print(f"[Pipeline] -> Card published (score={card.final_feed_score or obj_score}): '{card.headline}'", flush=True)
+        if expected_lease_holder is not None and expected_lease_generation is not None:
+            from worker.coordination import validate_lease_fencing, StaleLeaseError
+            if not validate_lease_fencing(
+                db,
+                lease_name=lease_name,
+                holder_id=expected_lease_holder,
+                expected_generation=expected_lease_generation,
+            ):
+                db.rollback()
+                print(
+                    f"[Pipeline] Stale lease detected! Holder '{expected_lease_holder}' gen {expected_lease_generation} "
+                    f"superseded on lease '{lease_name}'. Aborting card publication.",
+                    flush=True,
+                )
+                raise StaleLeaseError(
+                    f"Lease fencing failed for '{lease_name}': holder '{expected_lease_holder}' at gen {expected_lease_generation} superseded"
+                )
+
         db.commit()
         produced.append(card.id)
     return produced

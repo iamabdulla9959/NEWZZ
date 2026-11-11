@@ -1,3 +1,4 @@
+import html
 import json
 import logging
 import os
@@ -18,14 +19,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger("NewsAggregator")
 
-# Output destination file (always resolves to website_scraping/news.json)
+_repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+for _p in [_repo_root, os.path.join(_repo_root, "apps", "api"), os.path.join(_repo_root, "website_scraping"), os.path.join(_repo_root, "apps", "worker")]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 # Output destination file (always resolves to website_scraping/news.json)
 OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "news.json")
 FEED_JSON_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "feed.json"))
 STATIC_FEED_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "apps", "api", "app", "static", "feed.json"))
 
-# Scheduling interval in minutes
-INTERVAL_MINUTES = 10
+# Target Render deployment endpoint to keep warmed (sub-200ms latency)
+KEEP_ALIVE_URL = os.getenv("RENDER_KEEP_ALIVE_URL", "https://newzz-5e19.onrender.com")
+
+# Scheduling interval in minutes (13.5 minutes = 810s, safely inside Render's 15-minute inactivity limit)
+INTERVAL_MINUTES = float(os.getenv("CRAWLER_INTERVAL_MINUTES", "13.5"))
 
 # Max fresh articles to extract per feed per cycle
 # Increased to allow >= 40 distinct clusters per category after deduplication
@@ -321,12 +329,50 @@ def parse_feed_articles(
             title = str(getattr(entry, "title", "Untitled")).strip()
             clean_title = re.sub(r"\s+-\s+[^-]+$", "", title) if " - " in title else title
 
+            # Strict newsroom quality guard: reject word puzzle hints, horoscopes, and trivial gaming/clickbait
+            title_low = clean_title.lower()
+            if any(bad in title_low for bad in [
+                "quordle hint", "wordle hint", "connections hint", "strands hint",
+                "daily clue", "clues and answers", "horoscope today", "daily horoscope",
+                "today's tarot", "crossword clue", "word puzzle", "answers today", "hints and answers"
+            ]):
+                continue
+
             summary = ""
-            if hasattr(entry, "summary"):
+            if hasattr(entry, "content") and entry.content:
+                try:
+                    summary = str(entry.content[0].get("value", ""))
+                except Exception:
+                    summary = ""
+            if not summary and hasattr(entry, "summary"):
                 summary = str(entry.summary)
-            elif hasattr(entry, "description"):
+            elif not summary and hasattr(entry, "description"):
                 summary = str(entry.description)
-            summary = re.sub(r"<[^>]+>", " ", summary).strip()
+            raw_html_summary = summary
+            # Extract multi-item list if present (e.g. Google News multi-source coverage)
+            list_items = re.findall(r'<li[^>]*><a[^>]*>(.*?)<\/a>(?:&nbsp;&nbsp;<font[^>]*>(.*?)<\/font>)?', raw_html_summary)
+            if list_items and len(list_items) > 1:
+                corrob = []
+                for it_t, it_s in list_items[1:4]:
+                    clean_it_t = html.unescape(re.sub(r"<[^>]+>", " ", it_t)).strip()
+                    clean_it_s = html.unescape(it_s).strip() if it_s else ""
+                    if clean_it_t and clean_it_t.lower() != clean_title.lower():
+                        if clean_it_s:
+                            corrob.append(f"{clean_it_s} reports: {clean_it_t}")
+                        else:
+                            corrob.append(clean_it_t)
+                if corrob:
+                    summary = ". ".join(corrob) + "."
+                else:
+                    summary = html.unescape(raw_html_summary)
+                    summary = re.sub(r"<[^>]+>", " ", summary)
+                    summary = re.sub(r"\s+", " ", summary).strip()
+                    summary = re.sub(r"&nbsp;&nbsp;.*$", "", summary).strip()
+            else:
+                summary = html.unescape(raw_html_summary)
+                summary = re.sub(r"<[^>]+>", " ", summary)
+                summary = re.sub(r"\s+", " ", summary).strip()
+                summary = re.sub(r"&nbsp;&nbsp;.*$", "", summary).strip()
 
             author = str(getattr(entry, "author", extract_publisher(entry, default_source))).strip()
             pub_date_raw = str(getattr(entry, "published", getattr(entry, "updated", ""))).strip()
@@ -370,51 +416,49 @@ def parse_feed_articles(
     return new_articles
 
 
-def generate_rich_200w_summary(headline: str, state: Optional[str], category: str, source_name: str, raw_snippet: str = "") -> Tuple[str, List[str], int]:
-    """Generates a structured, multi-paragraph summary strictly between 150 and 225 words in clear, 8th-grade English."""
+def generate_factual_article_summary(
+    headline: str, state: Optional[str], category: str, source_name: str, raw_snippet: str = ""
+) -> Tuple[str, List[str], int]:
+    """Generates a strictly factual summary derived purely from real article headline, source, and snippet without boilerplate filler."""
     clean_head = re.sub(r"\s+-\s+[^-]+$", "", headline).strip()
-    st = state or "National"
     src = source_name or "Verified Wire"
-    cat = (category or "General").capitalize()
-    
+    st = state or "National"
+
     clean_snippet = re.sub(r"<[^>]+>", " ", raw_snippet or "").strip()
-    snippet_context = f" Initial dispatches indicate: {clean_snippet[:90]}." if len(clean_snippet) > 20 else ""
-    
-    p1 = (
-        f"In a notable {cat.lower()} dispatch verified by {src}, {clean_head}.{snippet_context} "
-        f"Administrative authorities and civic departments in {st} confirmed that coordinated measures are actively underway "
-        f"to oversee operational developments and ensure consistent public dissemination across the region. "
-        f"Key representatives have engaged field personnel to monitor ground implementation and uphold public accountability."
-    )
-    
-    p2 = (
-        f"From a wider standpoint, this event represents an important milestone for ongoing {cat.lower()} initiatives in {st}. "
-        f"Over recent months, authorities, industry observers, and community stakeholders have emphasized regulatory governance, "
-        f"institutional modernization, and civic stability. Analysts tracking regional public affairs note that sustainable progress "
-        f"relies on transparent reporting, cross-departmental coordination, and proactive civic engagement."
-    )
-    
-    p3 = (
-        f"Moving forward, this announcement establishes clear operational direction for related community and public programs in {st}. "
-        f"Official monitoring teams confirmed that follow-up directives, progress evaluations, and verified public advisories "
-        f"will be released through official communication channels in the days ahead to keep all citizens and observers fully informed, "
-        f"ensuring uninterrupted public services and transparent updates throughout the region."
-    )
-    
-    full_summary = f"{p1}\n\n{p2}\n\n{p3}"
+    clean_snippet = html.unescape(clean_snippet)
+    clean_snippet = re.sub(r"\s+-\s+[^-]+$", "", clean_snippet).strip()
+
+    sentences = []
+    # If snippet has genuine content distinct from the headline:
+    if clean_snippet and clean_snippet.lower() != clean_head.lower() and len(clean_snippet) > 15:
+        if clean_head.lower() not in clean_snippet.lower():
+            sentences.append(f"{clean_head}.")
+        sentences.append(clean_snippet)
+    else:
+        # Bounded factual reporting statement:
+        sentences.append(f"Reporting from {src}: {clean_head}.")
+
+    full_summary = " ".join(sentences)
     words = len(full_summary.split())
-    
+
     key_facts = [
-        f"Verified dispatch from {src} detailing latest developments on {clean_head[:70]}.",
-        f"Administrative oversight and operational monitoring active in {st}.",
-        f"Subsequent public updates and follow-up directives scheduled through official channels."
+        clean_head[:100],
+        f"Source: {src}",
     ]
-    
+    if clean_snippet and clean_snippet.lower() != clean_head.lower() and len(clean_snippet) > 20:
+        key_facts.append(clean_snippet[:100])
+    else:
+        key_facts.append(f"Region: {st}")
+
     return full_summary, key_facts, words
 
 
+# Backward-compatible alias for any legacy callers
+generate_rich_200w_summary = generate_factual_article_summary
+
+
 def sync_articles_to_feed_json(articles: List[Dict]) -> None:
-    """Syncs fresh crawled articles into feed.json so live frontend refresh sees new news immediately with >200w summaries."""
+    """Syncs fresh crawled articles into feed.json so live frontend refresh sees new news immediately with verified factual summaries."""
     if not articles:
         return
     import uuid
@@ -426,7 +470,7 @@ def sync_articles_to_feed_json(articles: List[Dict]) -> None:
                 data = json.load(f)
             items = data.get("items", [])
             existing_links = {it.get("canonical_url") or it.get("source_url") for it in items if it}
-            
+
             new_cards = []
             for art in articles:
                 link = art.get("link")
@@ -438,12 +482,12 @@ def sync_articles_to_feed_json(articles: List[Dict]) -> None:
                 source = art.get("source") or "Verified News Wire"
                 raw_snip = art.get("summary", "")
 
-                summary_text, key_facts, word_count = generate_rich_200w_summary(
+                summary_text, key_facts, word_count = generate_factual_article_summary(
                     headline=headline,
                     state=st,
                     category=cat,
                     source_name=source,
-                    raw_snippet=raw_snip
+                    raw_snippet=raw_snip,
                 )
 
                 new_cards.append({
@@ -458,12 +502,21 @@ def sync_articles_to_feed_json(articles: List[Dict]) -> None:
                     "created_at": datetime.now(timezone.utc).isoformat(),
                     "source_name": source,
                     "canonical_url": link,
+                    "url": link,
+                    "sources": [
+                        {
+                            "source_id": str(uuid.uuid4()),
+                            "name": source,
+                            "url": link,
+                            "trust_tier": "1"
+                        }
+                    ],
                     "verification_type": "cross_verified",
                     "verification_score": 92.0,
                     "final_feed_score": 55.0,
-                    "priority_reason": "Freshly ingested, categorized, and synthesized into 200+ word verified briefing."
+                    "priority_reason": "Freshly ingested and categorized from verified news reporting.",
                 })
-            
+
             if new_cards:
                 data["items"] = new_cards + items
                 temp_file = target_path + ".tmp"
@@ -474,8 +527,55 @@ def sync_articles_to_feed_json(articles: List[Dict]) -> None:
             logger.warning(f"Could not sync to feed.json: {err}")
 
 
+def sync_articles_to_newsreels_db(articles: List[Dict]) -> int:
+    """Syncs fresh crawled articles into newsreels.db using the existing ranking and sync pipeline."""
+    if not articles:
+        return 0
+    try:
+        from process_news import sync_to_newsreels_monorepo, clean_text
+        synced = 0
+        for art in articles:
+            headline = clean_text(art.get("title", ""))
+            if not headline:
+                continue
+            raw_summary = clean_text(art.get("summary", ""))
+            src = art.get("source", "news wire")
+
+            # Grounded factual summary derived strictly from article content
+            clean_head = re.sub(r"\s+-\s+[^-]+$", "", headline).strip()
+            clean_snip = re.sub(r"\s+-\s+[^-]+$", "", raw_summary).strip()
+
+            clean_snip = re.sub(r"&nbsp;&nbsp;.*$", "", clean_snip).strip()
+
+            if clean_snip and len(clean_snip) > 20 and clean_snip.lower() != clean_head.lower():
+                if clean_head.lower() not in clean_snip.lower():
+                    summary = f"{clean_head}. {clean_snip}"
+                else:
+                    summary = clean_snip
+            else:
+                summary = f"{clean_head}. Reported by {src}."
+
+            card_data = {
+                "headline": clean_head,
+                "summary": summary,
+                "category": art.get("category", "National"),
+                "state": art.get("state"),
+                "priority_score": 5,
+                "published_at": art.get("published_date") or art.get("fetched_at"),
+            }
+            cluster = [art]
+            if sync_to_newsreels_monorepo(card_data, cluster):
+                synced += 1
+        if synced > 0:
+            logger.info(f" -> [Database Sync  : newsreels.db  ]: +{synced} fresh card(s) synced to SQLite")
+        return synced
+    except Exception as err:
+        logger.warning(f"Could not sync articles to newsreels.db: {err}")
+        return 0
+
+
 def append_articles_to_file(filepath: str, articles: List[Dict]) -> None:
-    """Saves newly discovered unique articles to destination JSON as a valid standard JSON array and syncs to feed.json."""
+    """Saves newly discovered unique articles to destination JSON as a valid standard JSON array and syncs to feed.json and newsreels.db."""
     if not articles:
         return
 
@@ -506,6 +606,8 @@ def append_articles_to_file(filepath: str, articles: List[Dict]) -> None:
     os.replace(temp_file, filepath)
 
     sync_articles_to_feed_json(articles)
+    if fresh_unique:
+        sync_articles_to_newsreels_db(fresh_unique)
 
 
 def run_crawl_cycle(seen_links: Set[str]) -> int:
@@ -605,12 +707,83 @@ def run_crawl_cycle(seen_links: Set[str]) -> int:
     logger.info(f"NEW articles appended to '{OUTPUT_FILE}': {total_new}")
     logger.info(f"TOTAL unique articles in '{OUTPUT_FILE}': {len(seen_links)}")
     logger.info("=" * 72)
+
+    # Record WorkerRun in newsreels.db for health monitoring
+    try:
+        from app.db import SessionLocal
+        from app.models import WorkerRun, new_id
+        db = SessionLocal()
+        try:
+            total_feeds = len(GLOBAL_BASELINES) + len(GLOBAL_CATEGORY_FEEDS) + len(INDIA_CATEGORY_FEEDS) + (len(INDIAN_STATES) * 2)
+            run_row = WorkerRun(
+                id=new_id(),
+                provider="crawler_rss",
+                timestamp=datetime.now(timezone.utc),
+                sources_polled=total_feeds,
+                articles_ingested=total_new,
+                credits_used=0,
+                errors=None,
+                duration_seconds=elapsed,
+            )
+            db.add(run_row)
+            db.commit()
+        finally:
+            db.close()
+    except Exception as exc:
+        logger.debug(f"Failed to record WorkerRun: {exc}")
+
     return total_new
 
 
+def ping_render_keep_alive(base_url: str = KEEP_ALIVE_URL) -> bool:
+    """Pings Render backend endpoints every 13.5 - 14 minutes to prevent the free/starter tier
+    from entering 15-minute inactivity sleep mode. Keeps API warmed for sub-200ms user latency."""
+    import urllib.request
+    endpoints = ["/health", "/feed?state=National&limit=5"]
+    success = True
+    for ep in endpoints:
+        target = f"{base_url.rstrip('/')}{ep}"
+        try:
+            t0 = time.time()
+            req = urllib.request.Request(
+                target,
+                headers={"User-Agent": "NEWZZ-KeepAlive-Worker/1.0", "Accept": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=25) as resp:
+                elapsed_ms = (time.time() - t0) * 1000
+                logger.info(f"[KeepAlive] Render warm ping -> {target} | Status: {resp.status} OK | Latency: {elapsed_ms:.1f}ms")
+        except Exception as exc:
+            logger.warning(f"[KeepAlive] Render ping notice for {target}: {exc}")
+            success = False
+    return success
+
+
+def _keep_alive_daemon_loop(interval_seconds: float = 810.0):
+    """Background daemon thread that continuously pings Render every 13.5 minutes (810s),
+    guaranteeing Render's reverse proxy inactivity timer never expires."""
+    logger.info(f"[KeepAlive] Daemon thread started. Pinging {KEEP_ALIVE_URL} every {interval_seconds/60:.1f} minutes.")
+    while True:
+        try:
+            ping_render_keep_alive()
+        except Exception as exc:
+            logger.warning(f"[KeepAlive] Error during keepalive ping: {exc}")
+        time.sleep(interval_seconds)
+
+
+def start_keep_alive_daemon(interval_seconds: float = 810.0):
+    import threading
+    t = threading.Thread(target=_keep_alive_daemon_loop, args=(interval_seconds,), daemon=True)
+    t.start()
+    return t
+
+
 def main():
+    # Start background keep-alive loop to prevent Render from entering 15-minute sleep mode
+    start_keep_alive_daemon(interval_seconds=INTERVAL_MINUTES * 60)
+
     logger.info("=" * 75)
     logger.info("  Automated Multi-Source News Aggregator Active")
+    logger.info(f"  Render Keep-Alive : Active ({KEEP_ALIVE_URL} every {INTERVAL_MINUTES} min)")
     logger.info("  Global Categories : Technology, World, Science, Politics,")
     logger.info("                      Business, Health, Sports, Entertainment,")
     logger.info("                      Environment, Education")
@@ -636,6 +809,8 @@ def main():
             time.sleep(sleep_seconds)
             cycle_num += 1
             logger.info(f"Waking up for Cycle #{cycle_num}...")
+            # Ping Render server to ensure it is awake and warmed
+            ping_render_keep_alive()
             run_crawl_cycle(seen_links)
 
     except KeyboardInterrupt:

@@ -200,9 +200,9 @@ class ImportanceEngine:
             dims.human_impact = DimensionEvidence(score=0.0, evidence="No mass casualty or displacement reported")
 
         # 2. Public Safety / Life (0..20)
-        if re.search(r"\b(cyclone|earthquake|tsunami|flash flood|major flood|flooding|evacuat|landslide|toxic leak|chemical spill|toxic plume|state of emergency|emergency declared)\b", combined):
+        if re.search(r"\b(cyclone|earthquake|tsunami|flash flood|major flood|flooding|evacuat|landslide|toxic leak|chemical spill|toxic plume|state of emergency|emergency declared|air pollution|aqi severe|grap stage)\b", combined):
             dims.safety_impact = DimensionEvidence(score=18.0, evidence="Active natural disaster or life safety threat")
-        elif re.search(r"\b(epidemic|virus outbreak|fire breaks out|building collapse|terror attack|strike on|emergency room diversion|ambulances diverted|patient.*offline)\b", combined):
+        elif re.search(r"\b(epidemic|disease outbreak|virus outbreak|fire breaks out|building collapse|terror attack|strike on|emergency room diversion|ambulances diverted|patient.*offline)\b", combined):
             dims.safety_impact = DimensionEvidence(score=15.0, evidence="Serious acute danger to public life/safety")
         elif re.search(r"\b(warning issued|alert sounded|precautionary advisory|storm alert)\b", combined):
             dims.safety_impact = DimensionEvidence(score=10.0, evidence="Official alert or hazard warning in effect")
@@ -232,7 +232,7 @@ class ImportanceEngine:
             dims.economic_impact = DimensionEvidence(score=0.0, evidence="No macroeconomic consequence")
         elif re.search(r"\b(market crash|sensex plunges|recession|gdp contracted|sanctions imposed|bank collapse|tariff war)\b", combined):
             dims.economic_impact = DimensionEvidence(score=9.0, evidence="Critical macro financial disruption")
-        elif re.search(r"\b(union budget|interest rate|repo rate|inflation surges|tax bill|trade agreement|currency settlement|liquidity boost)\b", combined):
+        elif re.search(r"\b(union budget|interest rate|repo rate|inflation surges|tax bill|trade agreement|currency settlement|liquidity boost|food supply|commodity prices)\b", combined):
             dims.economic_impact = DimensionEvidence(score=7.0, evidence="Major national economic or trade policy")
         elif re.search(r"\b(derailment|chemical spill|toxic plume|hazardous waste|factory explosion|building collapse)\b", combined):
             dims.economic_impact = DimensionEvidence(score=5.0, evidence="Major industrial or disaster damage")

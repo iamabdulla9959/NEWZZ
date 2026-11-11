@@ -3,9 +3,18 @@ from __future__ import annotations
 import os
 import sys
 import time
+from pathlib import Path
 
 if sys.stdout.encoding.lower() != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
+
+# Ensure apps/worker, apps/api, and repo root are on sys.path before any project imports
+_worker_root = Path(__file__).resolve().parents[1]
+_api_root = Path(__file__).resolve().parents[2] / "api"
+_repo_root = Path(__file__).resolve().parents[3]
+for p in [str(_worker_root), str(_api_root), str(_repo_root)]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from dotenv import load_dotenv
@@ -13,12 +22,32 @@ from dotenv import load_dotenv
 from worker import paths  # noqa: F401
 
 from app.db import SessionLocal
-from app.models import StoryCluster, WorkerRun, new_id
+from app.models import Source, StoryCluster, WorkerRun, new_id
 from worker.llm import MultiProviderClient
 from worker.newsdata import NEWSDATA_POLL_INTERVAL_MINUTES, poll_newsdata_sources
 from worker.currents import CURRENTS_POLL_INTERVAL_MINUTES, poll_currents_sources
 from worker.pipeline import cluster_unassigned_articles, evaluate_cluster, process_eligible_clusters
 from worker.scoring import recalculate_recent_cards_decay
+import httpx
+from worker.ingest import ingest_rss_source, USER_AGENT
+from worker.coordination import (
+    acquire_lease,
+    acquire_lease_with_generation,
+    renew_lease,
+    release_lease,
+    is_lease_valid,
+    validate_lease_fencing,
+    atomic_claim_request_with_lease,
+    claim_pending_request,
+    finish_request,
+    recover_abandoned_requests,
+    heartbeat_lease,
+    heartbeat_request,
+    IngestionHeartbeat,
+    StaleLeaseError,
+)
+
+WORKER_ID = f"worker-{os.getpid()}-{int(time.time())}"
 
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".env"))
 
@@ -29,6 +58,12 @@ NEWSDATA_INGEST_INTERVAL_MINUTES: int = int(
 RECENCY_DECAY_INTERVAL_MINUTES: int = int(os.getenv("RECENCY_DECAY_INTERVAL_MINUTES", "60"))  # 1-2 hours default
 CURRENTS_INGEST_INTERVAL_MINUTES: int = int(
     os.getenv("CURRENTS_INGEST_INTERVAL_MINUTES", str(CURRENTS_POLL_INTERVAL_MINUTES))
+)
+RSS_INGEST_INTERVAL_MINUTES: int = int(os.getenv("RSS_INGEST_INTERVAL_MINUTES", "15"))
+RSS_INGEST_INTERVAL_SECONDS: int | None = (
+    int(os.getenv("RSS_INGEST_INTERVAL_SECONDS"))
+    if os.getenv("RSS_INGEST_INTERVAL_SECONDS")
+    else None
 )
 
 # Hard architectural guard:
@@ -46,6 +81,122 @@ def _get_llm_client() -> MultiProviderClient | None:
         os.getenv("OPENROUTER_API_KEY"),
     ])
     return MultiProviderClient() if has_llm_key else None
+
+
+def run_rss_once(
+    llm: MultiProviderClient | None = None,
+    http_client: httpx.Client | None = None,
+    require_lease: bool = False,
+    worker_id: str | None = None,
+    lease_generation: int | None = None,
+) -> None:
+    """Runs canonical RSS ingestion across active sources into articles and clusters."""
+    start_time = time.time()
+    w_id = worker_id or WORKER_ID
+    db = SessionLocal()
+    current_gen = lease_generation
+    if require_lease:
+        acquired, gen = acquire_lease_with_generation(
+            db, lease_name="canonical_ingestion", holder_id=w_id, ttl_seconds=300
+        )
+        if not acquired:
+            print(f"[{w_id}] Skipped RSS run: execution lease held by another process", flush=True)
+            db.close()
+            return
+        current_gen = gen
+
+    polled = 0
+    created = 0
+    errors: list[str] = []
+    active_llm = llm if llm is not None else _get_llm_client()
+
+    try:
+        sources = db.query(Source).filter(Source.is_active == True, Source.rss_url.isnot(None)).all()
+        if not sources:
+            try:
+                from scripts.ingest_live import ensure_sources
+                sources = ensure_sources(db)
+            except ImportError:
+                try:
+                    from worker.scripts.ingest_live import ensure_sources
+                    sources = ensure_sources(db)
+                except ImportError:
+                    sources = []
+
+        owns_client = http_client is None
+        client = http_client or httpx.Client(timeout=30.0, headers={"User-Agent": USER_AGENT}, follow_redirects=True)
+        try:
+            for src in sources:
+                polled += 1
+                try:
+                    new_arts = ingest_rss_source(
+                        db,
+                        src,
+                        client=client,
+                        llm=active_llm,
+                        expected_lease_holder=w_id if (require_lease or current_gen is not None) else None,
+                        expected_lease_generation=current_gen,
+                    )
+                    created += new_arts
+                except Exception as src_exc:
+                    err = f"RSS poll failed for {src.name}: {src_exc}"
+                    errors.append(err)
+        finally:
+            if owns_client:
+                client.close()
+
+        if current_gen is not None:
+            if not validate_lease_fencing(db, lease_name="canonical_ingestion", holder_id=w_id, expected_generation=current_gen):
+                db.rollback()
+                raise StaleLeaseError(f"Lease superseded for worker '{w_id}' at gen {current_gen} before clustering")
+
+        clustered = cluster_unassigned_articles(db)
+        for cluster in db.query(StoryCluster).all():
+            evaluate_cluster(db, cluster)
+
+        published_or_queued: list[str] = []
+        if active_llm:
+            published_or_queued = process_eligible_clusters(
+                db,
+                active_llm,
+                expected_lease_holder=w_id if require_lease else None,
+                expected_lease_generation=current_gen if require_lease else None,
+            )
+
+        print(
+            f"[RSS] sources_polled={polled} ingest_new={created} clustered={clustered} "
+            f"cards={len(published_or_queued)} errors={len(errors)}"
+        )
+    except StaleLeaseError as stale_exc:
+        err_msg = f"RSS worker stale lease: {stale_exc}"
+        print(err_msg, flush=True)
+        errors.append(err_msg)
+        raise
+    except Exception as exc:
+        err_msg = f"RSS worker run exception: {exc}"
+        print(err_msg, flush=True)
+        errors.append(err_msg)
+    finally:
+        if require_lease:
+            release_lease(db, lease_name="canonical_ingestion", holder_id=w_id, expected_generation=current_gen)
+        duration = time.time() - start_time
+        try:
+            is_stale = any("stale" in str(e).lower() or "superseded" in str(e).lower() for e in errors)
+            run_row = WorkerRun(
+                id=new_id(),
+                provider="rss_pipeline",
+                sources_polled=polled,
+                articles_ingested=0 if is_stale else created,
+                credits_used=0,
+                errors=errors if errors else None,
+                duration_seconds=round(duration, 3),
+            )
+            db.add(run_row)
+            db.commit()
+        except Exception as exc:
+            print(f"Failed to record RSS WorkerRun: {exc}")
+        finally:
+            db.close()
 
 
 def run_newsdata_once(llm: MultiProviderClient | None = None) -> None:
@@ -181,9 +332,72 @@ def run_recency_decay_once() -> int:
             db.close()
 
 
+def process_pending_requests(
+    worker_id: str | None = None,
+    llm: MultiProviderClient | None = None,
+) -> int:
+    """Discovers, claims, and executes any pending manual IngestionRequests."""
+    w_id = worker_id or WORKER_ID
+    db = SessionLocal()
+    processed = 0
+    try:
+        # Recover any crashed/abandoned running requests before claiming
+        recover_abandoned_requests(db, max_age_seconds=300, max_retries=3)
+
+        # Atomically claim request and acquire execution lease
+        req, gen = atomic_claim_request_with_lease(db, worker_id=w_id, ttl_seconds=300)
+        if not req:
+            return 0
+
+        print(f"[{w_id}] Processing manual IngestionRequest {req.id} (lease gen {gen})...", flush=True)
+        with IngestionHeartbeat(
+            session_factory=SessionLocal,
+            lease_name="canonical_ingestion",
+            holder_id=w_id,
+            generation=gen,
+            request_id=req.id,
+            interval_seconds=5.0,
+            ttl_seconds=300,
+        ) as hb:
+            try:
+                active_llm = llm if llm is not None else _get_llm_client()
+                run_rss_once(llm=active_llm, require_lease=False, worker_id=w_id, lease_generation=gen)
+                finish_request(
+                    db,
+                    request_id=req.id,
+                    worker_id=w_id,
+                    status="succeeded",
+                    result_summary={"message": "Canonical ingestion completed successfully"},
+                    expected_generation=gen,
+                )
+                processed += 1
+            except StaleLeaseError as stale_exc:
+                print(f"[{w_id}] Execution aborted due to stale lease: {stale_exc}", flush=True)
+            except Exception as exc:
+                finish_request(
+                    db,
+                    request_id=req.id,
+                    worker_id=w_id,
+                    status="failed",
+                    error_message=str(exc),
+                    expected_generation=gen,
+                )
+            finally:
+                release_lease(db, lease_name="canonical_ingestion", holder_id=w_id, expected_generation=gen)
+    finally:
+        db.close()
+    return processed
+
+
+def run_scheduled_rss():
+    run_rss_once(require_lease=True)
+
+
 def run_once() -> None:
-    """Runs only the configured Currents and NewsData ingestion streams."""
+    """Runs RSS, Currents, NewsData, recency decay, and any pending manual requests."""
     llm = _get_llm_client()
+    process_pending_requests(llm=llm)
+    run_rss_once(llm=llm)
     run_currents_once(llm=llm)
     run_newsdata_once(llm=llm)
     run_recency_decay_once()
@@ -197,12 +411,45 @@ def main() -> None:
     from datetime import datetime, timedelta, timezone
     now = datetime.now(timezone.utc)
 
-    scheduler = BlockingScheduler()
+    # Recover any crashed/abandoned requests at startup
+    startup_db = SessionLocal()
+    try:
+        recover_abandoned_requests(startup_db, max_age_seconds=300, max_retries=3)
+    finally:
+        startup_db.close()
+
+    scheduler = BlockingScheduler(timezone="UTC", job_defaults={"misfire_grace_time": 60})
+    scheduler.add_job(
+        process_pending_requests,
+        "interval",
+        seconds=10,
+        next_run_time=now,
+        id="manual_requests_poll",
+        max_instances=1,
+    )
+    if RSS_INGEST_INTERVAL_SECONDS:
+        scheduler.add_job(
+            run_scheduled_rss,
+            "interval",
+            seconds=RSS_INGEST_INTERVAL_SECONDS,
+            next_run_time=now + timedelta(seconds=1),
+            id="rss_ingest",
+            max_instances=1,
+        )
+    else:
+        scheduler.add_job(
+            run_scheduled_rss,
+            "interval",
+            minutes=RSS_INGEST_INTERVAL_MINUTES,
+            next_run_time=now + timedelta(seconds=2),
+            id="rss_ingest",
+            max_instances=1,
+        )
     scheduler.add_job(
         run_currents_once,
         "interval",
         minutes=CURRENTS_INGEST_INTERVAL_MINUTES,
-        next_run_time=now,
+        next_run_time=now + timedelta(minutes=2),
         id="currents_ingest",
         max_instances=1,
     )
@@ -222,10 +469,19 @@ def main() -> None:
         id="recency_decay",
         max_instances=1,
     )
+    rss_display = (
+        f"{RSS_INGEST_INTERVAL_SECONDS}s"
+        if RSS_INGEST_INTERVAL_SECONDS
+        else f"{RSS_INGEST_INTERVAL_MINUTES}m"
+    )
     print(
-        f"Worker started with schedules: Currents every {CURRENTS_INGEST_INTERVAL_MINUTES}m, "
+        f"Worker [{WORKER_ID}] started with schedules: "
+        f"ManualRequestsPoll every 10s, "
+        f"RSS every {rss_display}, "
+        f"Currents every {CURRENTS_INGEST_INTERVAL_MINUTES}m, "
         f"NewsData every {NEWSDATA_INGEST_INTERVAL_MINUTES}m, "
-        f"RecencyDecay every {RECENCY_DECAY_INTERVAL_MINUTES}m"
+        f"RecencyDecay every {RECENCY_DECAY_INTERVAL_MINUTES}m",
+        flush=True,
     )
     try:
         scheduler.start()
@@ -233,7 +489,5 @@ def main() -> None:
         scheduler.shutdown()
 
 
-
 if __name__ == "__main__":
     main()
-

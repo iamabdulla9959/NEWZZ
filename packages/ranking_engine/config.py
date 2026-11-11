@@ -48,10 +48,26 @@ class RankingConfig:
         (240.0, 70.0),    # 2 to 4 hours
         (480.0, 55.0),    # 4 to 8 hours
         (720.0, 40.0),    # 8 to 12 hours
-        (1440.0, 25.0),   # 12 to 24 hours
-        (2880.0, 10.0),   # 24 to 48 hours
-        (float("inf"), 5.0), # 48+ hours
+        (1440.0, 25.0),   # 12 to 24 hours (Fresh threshold >= 25.0)
+        (2880.0, 10.0),   # 24 to 48 hours (Recent threshold >= 10.0)
+        (float("inf"), 5.0), # 48+ hours (Historical <= 5.0)
     ]
+
+    # -------------------------------------------------------------------------
+    # Feed Freshness Contract (Production Rules)
+    # -------------------------------------------------------------------------
+    # Fresh: < 24h (< 1440m) -> freshness >= 25.0
+    # Recent: 24–48h (1440–2880m) -> freshness >= 10.0
+    # Historical: >= 48h (>= 2880m) -> freshness <= 5.0
+    FRESH_SCORE_THRESHOLD: float = 25.0
+    RECENT_SCORE_THRESHOLD: float = 10.0
+
+    # Historical time decay multipliers for effective ranking
+    RECENT_IMPORTANCE_DECAY: float = 0.75
+    HISTORICAL_IMPORTANCE_DECAY: float = 0.40
+
+    RECENT_MAX_URGENCY: float = 45.0
+    HISTORICAL_MAX_URGENCY: float = 25.0
 
     # -------------------------------------------------------------------------
     # Location Relevance Weights (0..50)

@@ -22,9 +22,7 @@ class UrgencyEngine:
         Computes the urgency score (0..100) and rationale.
         Considers active threat state, evacuation orders, and live developments.
         """
-        if llm_urgency is not None and 0.0 <= llm_urgency <= 100.0:
-            reason = llm_reason or "Assessed based on live situational development"
-            return round(float(llm_urgency), 2), reason
+
 
         combined = f"{title} {summary}".lower()
 
@@ -55,9 +53,10 @@ class UrgencyEngine:
         # Requires genuine active public-safety hazard, mass evacuation, active disaster
         if (
             re.search(
-                r"\b(evacuat(e|ion|ing)|take shelter|red alert|danger level|curfew imposed|"
+                r"\b((mandatory |immediate )?evacuat(e|ion|ing|ions)\b(?!\s+(protocols?|agreements?|frameworks?|drills?|plans?\b))|"
+                r"take shelter|red alert|danger level|curfew imposed|"
                 r"do not travel|immediate danger|emergency diversions? in effect|emergency declared|declared an emergency|"
-                r"state of emergency|flooding|flash flood|dam breach|cyclone warning|toxic plume)\b",
+                r"state of emergency|flash floods?|severe flooding|massive flooding|dam breach|cyclone warning|toxic plume)\b",
                 combined
             )
             or (action_required and not is_isolated_incident)

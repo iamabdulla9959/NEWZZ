@@ -35,13 +35,29 @@ class FeedRankingEngine:
         rel = max(0.0, min(100.0, float(personal_relevance)))
         ver = max(0.0, min(100.0, float(verification_confidence)))
 
-        # Authoritative Emergency Floor: Genuinely urgent civic emergency elevates importance floor
-        if urg >= RankingConfig.EMERGENCY_URGENCY_THRESHOLD:
+        # Authoritative Emergency Floor: Genuinely urgent civic emergency elevates importance floor.
+        # Only active, fresh emergencies (frsh >= 25.0, <24h) elevate the importance floor.
+        # Stale historical reports cannot indefinitely invoke an active emergency floor.
+        if urg >= RankingConfig.EMERGENCY_URGENCY_THRESHOLD and frsh >= RankingConfig.FRESH_SCORE_THRESHOLD:
             imp = max(imp, RankingConfig.EMERGENCY_IMPORTANCE_FLOOR)
 
+        # Feed Freshness Contract: Natural time decay on effective importance and situational urgency
+        # Fresh (<24h, frsh >= 25.0): 100% full weight
+        # Recent (24-48h, 10.0 <= frsh < 25.0): gentle decay so fresh news surfaces
+        # Historical (>=48h, frsh < 10.0): natural decay preventing old events from indefinitely dominating
+        if frsh < RankingConfig.RECENT_SCORE_THRESHOLD:
+            eff_imp = imp * RankingConfig.HISTORICAL_IMPORTANCE_DECAY
+            eff_urg = min(urg, RankingConfig.HISTORICAL_MAX_URGENCY)
+        elif frsh < RankingConfig.FRESH_SCORE_THRESHOLD:
+            eff_imp = imp * RankingConfig.RECENT_IMPORTANCE_DECAY
+            eff_urg = min(urg, RankingConfig.RECENT_MAX_URGENCY)
+        else:
+            eff_imp = imp
+            eff_urg = urg
+
         final_score = (
-            (imp * RankingConfig.WEIGHT_OBJECTIVE_IMPORTANCE)
-            + (urg * RankingConfig.WEIGHT_URGENCY)
+            (eff_imp * RankingConfig.WEIGHT_OBJECTIVE_IMPORTANCE)
+            + (eff_urg * RankingConfig.WEIGHT_URGENCY)
             + (frsh * RankingConfig.WEIGHT_FRESHNESS)
             + (rel * RankingConfig.WEIGHT_PERSONAL_RELEVANCE)
             + (ver * RankingConfig.WEIGHT_VERIFICATION)
@@ -152,11 +168,12 @@ class FeedRankingEngine:
         elif imp >= 70.0:
             clauses.append("High overall civic importance")
 
-        # 2. Urgency Clause
-        if urg >= 85.0:
-            clauses.append("actively unfolding emergency requiring immediate public vigilance")
-        elif urg >= 65.0:
-            clauses.append("developing news event confirmed today")
+        # 2. Urgency Clause (only for fresh news, frsh >= 25.0)
+        if frsh >= RankingConfig.FRESH_SCORE_THRESHOLD:
+            if urg >= 85.0:
+                clauses.append("actively unfolding emergency requiring immediate public vigilance")
+            elif urg >= 65.0:
+                clauses.append("developing news event confirmed today")
 
         # 3. Location Clause
         if rel >= 75.0:

@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from app.config import settings
+from app.config import normalize_database_url, settings
 from app.db import Base
 
 # Import models so metadata is populated for autogenerate (Task 2+).
@@ -13,7 +13,10 @@ except ImportError:
     pass
 
 config = context.config
-config.set_main_option("sqlalchemy.url", settings.database_url)
+raw_url = config.get_main_option("sqlalchemy.url")
+if not raw_url or raw_url == "driver://user:pass@localhost/dbname":
+    raw_url = settings.database_url
+config.set_main_option("sqlalchemy.url", normalize_database_url(raw_url))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

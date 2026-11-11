@@ -1,3 +1,5 @@
+import argparse
+import os
 import sys
 from pathlib import Path
 from datetime import datetime, timezone
@@ -10,6 +12,24 @@ for _p in [str(_api_dir), str(_repo_dir)]:
 
 from app.db import SessionLocal
 from app.models import Card, CardSource, Source, StoryCluster, new_id
+
+# Fixed historical timestamp (September 7, 2026) so demo records are NEVER represented as current live news
+HISTORICAL_SEED_TIMESTAMP = datetime(2026, 9, 7, 12, 0, 0, tzinfo=timezone.utc)
+
+
+def check_demo_seeding_authorized(force_flag: bool = False) -> None:
+    """Strict guard against accidental or automatic demo seeding in production."""
+    app_env = os.getenv("APP_ENV", os.getenv("ENV", "development")).strip().lower()
+    if app_env == "production":
+        raise RuntimeError("CRITICAL SAFETY BLOCK: Demo seeding is strictly forbidden when APP_ENV=production.")
+
+    allow_env = os.getenv("ALLOW_DEMO_SEEDING", "").strip().lower() in ("true", "1", "yes")
+    if not (force_flag or allow_env):
+        raise PermissionError(
+            "Demo seeding is disabled by default to protect database integrity. "
+            "To seed demo news for local development or testing, run with '--force-seed' "
+            "or set environment variable ALLOW_DEMO_SEEDING=true."
+        )
 
 null = None
 false = False
@@ -2593,8 +2613,15 @@ EXTRA_STORIES = [
 
 DEMO_STORIES.extend(EXTRA_STORIES)
 
-def seed_demo():
+def seed_demo(force: bool = False):
+    check_demo_seeding_authorized(force_flag=force)
     db = SessionLocal()
+
+    # Guard: Never wipe or overwrite a database that already has published cards!
+    existing_count = db.query(Card).filter(Card.verified_status == "published").count()
+    if existing_count > 0:
+        print(f"Database already contains {existing_count} published cards. Skipping demo seed to protect production news.")
+        return
 
     db.query(CardSource).delete()
     db.query(Card).delete()
@@ -2622,7 +2649,7 @@ def seed_demo():
             verification_type=s.get("verification_type", "cross_verified"),
             district=s.get("district"),
             state=s.get("state"),
-            published_at=datetime.now(timezone.utc),
+            published_at=HISTORICAL_SEED_TIMESTAMP,
             created_by="seed",
         )
 
@@ -2630,30 +2657,27 @@ def seed_demo():
         db.flush()
 
         for src in s["sources"]:
-            card_source = CardSource(
-                id=new_id(),
-                card_id=card.id,
-                source_id=cluster.id,
-                name=src["name"],
-                url=src["url"],
-                trust_tier=str(src["trust_tier"]),
-            )
             db_source = db.query(Source).filter(Source.name == src["name"]).first()
-            if db_source:
-                card_source.source_id = db_source.id
-            else:
-                new_src = Source(
+            if not db_source:
+                db_source = Source(
                     id=new_id(),
                     name=src["name"],
                     category=s["category"],
                     rss_url=src["url"],
-                    trust_tier=src["trust_tier"],
+                    trust_tier=str(src["trust_tier"]),
                     is_active=True,
                 )
-                db.add(new_src)
+                db.add(db_source)
                 db.flush()
-                card_source.source_id = new_src.id
 
+            card_source = CardSource(
+                id=new_id(),
+                card_id=card.id,
+                source_id=db_source.id,
+                name=src["name"],
+                url=src["url"],
+                trust_tier=str(src["trust_tier"]),
+            )
             db.add(card_source)
 
         count += 1
@@ -2662,4 +2686,7 @@ def seed_demo():
     print(f"Seeded {count} LIVE SERPAPI GOOGLE NEWS cards across all 10 categories. Total published: {db.query(Card).filter(Card.verified_status == 'published').count()}")
 
 if __name__ == "__main__":
-    seed_demo()
+    parser = argparse.ArgumentParser(description="Seed demo news cards (development / testing only)")
+    parser.add_argument("--force-seed", action="store_true", help="Authorize demo seeding in development")
+    args = parser.parse_args()
+    seed_demo(force=args.force_seed)

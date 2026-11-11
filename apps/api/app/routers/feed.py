@@ -70,7 +70,7 @@ def get_feed(
             .options(selectinload(Card.sources))
             .filter(
                 Card.verified_status == "published",
-                sa.or_(Card.created_by.is_(None), Card.created_by != "dev_testing"),
+                sa.or_(Card.created_by.is_(None), sa.and_(Card.created_by != "dev_testing", Card.created_by != "seed")),
                 Card.content_type == "NEWS",
             )
         )
@@ -145,7 +145,7 @@ def get_feed(
         urg, urg_reason = UrgencyEngine.calculate_urgency(card.headline, card.summary)
         
         # 3. Freshness (0..100) - Dynamic decay relative to request time
-        pub_dt = card.published_at or card.created_at
+        pub_dt = card.published_at
         frsh = FreshnessEngine.calculate_freshness(published_at=pub_dt, current_time=now)
         
         # 4. Verification (0..100)
@@ -195,8 +195,8 @@ def get_feed(
         card.final_feed_score = scoring_out.final_feed_score
         card.priority_reason = scoring_out.priority_reason
 
-        # Deduplicate per cluster and headline, keeping highest scoring representation
-        cluster_key = (card.cluster_id, " ".join(card.headline.lower().split()))
+        # Deduplicate per cluster, keeping highest scoring representation
+        cluster_key = card.cluster_id or card.id
         if cluster_key in seen_cluster_keys:
             if card.final_feed_score > seen_cluster_keys[cluster_key].final_feed_score:
                 seen_cluster_keys[cluster_key] = card
@@ -214,7 +214,7 @@ def get_feed(
     unique_rows = sorted(
         seen_cluster_keys.values(),
         key=lambda c: (
-            _state_priority(c) if (is_strictly_state_cat or not wanted) else 0,
+            _state_priority(c) if is_strictly_state_cat else 0,
             c.final_feed_score,
             c.published_at.timestamp() if c.published_at else 0.0,
             c.created_at.timestamp() if c.created_at else 0.0,
@@ -285,27 +285,78 @@ def get_card_sources(card_id: str, db: Session = Depends(get_db)) -> list[CardSo
     )
     if card is None:
         raise HTTPException(status_code=404, detail="card not found")
-    return [
-        CardSourceOut(
-            source_id=s.source_id,
-            name=s.name,
-            url=s.url,
-            trust_tier=s.trust_tier,
-        )
-        for s in card.sources
-    ]
+    return [_classify_card_source(s) for s in card.sources]
+
+
+def _classify_card_source(source) -> CardSourceOut:
+    raw_url = (getattr(source, "url", "") or "").strip()
+    is_aggregator = "google" in raw_url.lower() or "news.google" in raw_url.lower()
+    url_type = "aggregator" if is_aggregator else "direct"
+
+    source_id_str = str(getattr(source, "source_id", "") or "")
+    tier_str = str(getattr(source, "trust_tier", "") or "")
+    name_str = getattr(source, "name", "") or ""
+
+    if (
+        source_id_str == "00000000-0000-0000-0000-000000000000"
+        or tier_str in ("3", 3)
+        or "unresolved" in name_str.lower()
+        or "legacy unresolved provenance" in name_str.lower()
+    ):
+        provenance_status = "unresolved"
+    elif url_type == "direct":
+        url_lower = raw_url.lower()
+        name_lower = name_str.lower()
+        if "bbc" in name_lower and ("bbc.co.uk" in url_lower or "bbci.co.uk" in url_lower):
+            provenance_status = "verified_identity"
+        elif "the new york times" in name_lower and "nytimes.com" in url_lower:
+            provenance_status = "verified_identity"
+        elif any(dom in url_lower for dom in ["bbc.co.uk", "nytimes.com"]) and not any(t in name_lower for t in ["bbc", "new york times"]):
+            provenance_status = "domain_conflict"
+        else:
+            provenance_status = "name_only_match"
+    else:
+        provenance_status = "name_only_match"
+
+    return CardSourceOut(
+        source_id=source.source_id,
+        name=source.name,
+        url=source.url,
+        trust_tier=source.trust_tier,
+        url_type=url_type,
+        provenance_status=provenance_status,
+    )
 
 
 def _to_out(card: Card) -> CardOut:
+    sources_out = [_classify_card_source(s) for s in (card.sources or [])]
+    valid_publishers = {
+        s.name.strip().lower()
+        for s in sources_out
+        if s.provenance_status != "unresolved" and s.name.strip()
+    }
+    corroboration_count = max(1, len(valid_publishers)) if valid_publishers else len(sources_out) or 1
+    is_single_source = corroboration_count <= 1
+
+    # Guard verification_type: single-source cards must NEVER be described as cross-verified
+    raw_ver_type = card.verification_type
+    if is_single_source or len(sources_out) <= 1:
+        ver_type = "single_source" if raw_ver_type != "official_source" else "official_source"
+    else:
+        ver_type = raw_ver_type or "multi_source"
+
     return CardOut(
         id=card.id,
         headline=card.headline,
         summary=card.summary,
         category=card.category,
         verified_status=card.verified_status,
-        verification_type=card.verification_type,
+        verification_type=ver_type,
+        corroboration_count=corroboration_count,
+        is_single_source=is_single_source,
         created_at=card.created_at,
         published_at=card.published_at,
+        newzz_published_at=getattr(card, "newzz_published_at", None),
         district=card.district,
         state=card.state,
         objective_score=getattr(card, "objective_score", 0.0) or 0.0,
@@ -321,13 +372,5 @@ def _to_out(card: Card) -> CardOut:
         image_url=card.image_url,
         image_author=card.image_author,
         image_author_url=card.image_author_url,
-        sources=[
-            CardSourceOut(
-                source_id=s.source_id,
-                name=s.name,
-                url=s.url,
-                trust_tier=s.trust_tier,
-            )
-            for s in (card.sources or [])
-        ],
+        sources=sources_out,
     )

@@ -86,6 +86,8 @@ def ingest_serpapi_source(
         from worker.verify import extract_wire_attribution
         wire = extract_wire_attribution(f"{title} {raw_content}")
 
+        published = parse_datetime(item.get("date"))
+
         db.add(
             Article(
                 id=new_id(),
@@ -100,7 +102,7 @@ def ingest_serpapi_source(
                 category=source.category,
                 state=source.region,
                 district=None,
-                published_at=now,  # Fallback to now for scraped news to keep it fresh
+                published_at=published,  # Missing source date remains None, never fallback to now
                 wire_attribution=wire,
             )
         )

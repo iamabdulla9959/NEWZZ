@@ -117,7 +117,7 @@ class MultiProviderClient:
                         name="groq",
                         api_key=groq_key,
                         base_url=os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1"),
-                        model=os.getenv("GROQ_MODEL", "openai/gpt-oss-20b"),
+                        model=os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b"),
                     )
                 )
             if gemini_key:

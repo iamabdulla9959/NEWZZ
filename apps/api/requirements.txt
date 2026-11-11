@@ -10,3 +10,4 @@ redis>=5.2.0
 pytest>=8.3.0
 pytest-asyncio>=0.24.0
 pgvector>=0.3.6
+feedparser>=6.0.11

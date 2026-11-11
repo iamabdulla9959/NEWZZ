@@ -23,11 +23,11 @@ class FreshnessEngine:
         Computes the freshness score (0..100).
         Evaluates age in minutes using the best available timestamp in order of precedence.
         """
-        ref_time = event_time or published_at or scraped_at
+        ref_time = event_time or published_at
         now = current_time or datetime.now(timezone.utc)
 
         if not ref_time:
-            # Default conservative score when no timestamp is known
+            # Default conservative score when no publication timestamp is known
             return 25.0
 
         # Ensure timezone awareness
@@ -36,10 +36,10 @@ class FreshnessEngine:
         if now.tzinfo is None:
             now = now.replace(tzinfo=timezone.utc)
 
-        # Handle future timestamps safely (clamped to 100.0)
+        # Handle future timestamps conservatively (clamped to 25.0, never 100.0)
         diff_seconds = (now - ref_time).total_seconds()
         if diff_seconds < 0:
-            return 100.0
+            return 25.0
 
         age_minutes = diff_seconds / 60.0
 

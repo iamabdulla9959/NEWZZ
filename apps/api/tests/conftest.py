@@ -17,15 +17,15 @@ from app.models import Base
 
 @pytest.fixture(scope="session", autouse=True)
 def migrated_db():
-    if DB.exists():
-        DB.unlink()
+    # reuse migrated db if available
+    pass
     cfg = Config(str(ROOT / "alembic.ini"))
     cfg.set_main_option("sqlalchemy.url", os.environ["DATABASE_URL"])
     command.upgrade(cfg, "head")
     yield
     engine.dispose()
-    if DB.exists():
-        DB.unlink()
+    # reuse migrated db if available
+    pass
 
 
 @pytest.fixture()
