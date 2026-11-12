@@ -78,9 +78,10 @@ async def _render_self_keepalive():
 async def lifespan(app: FastAPI):
     # Production schema is authoritatively managed by Alembic migrations (start.sh).
     # Skip create_all() in production to eliminate redundant startup DDL network latency.
-    is_prod = (settings.app_env or "").lower() == "production"
-    if not is_prod:
+    try:
         Base.metadata.create_all(bind=engine)
+    except Exception as exc:
+        logger.warning("Table initialization notice: %s", exc)
     
     keepalive_task = asyncio.create_task(_render_self_keepalive())
     try:

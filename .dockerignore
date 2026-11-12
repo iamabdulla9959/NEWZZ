@@ -15,6 +15,7 @@ scratch/
 artifacts/
 backups/
 *.db
+!newsreels.db
 *.sqlite3
 *.zip
 .idea/

@@ -26,6 +26,7 @@ COPY scripts/ scripts/
 COPY website_scraping/ website_scraping/
 COPY start.sh start.sh
 COPY worker_start.sh worker_start.sh
+COPY newsreels.db newsreels.db
 RUN sed -i 's/\r$//' start.sh worker_start.sh && chmod +x start.sh worker_start.sh
 
 ENV PORT=8000 \
