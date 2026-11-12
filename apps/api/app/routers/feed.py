@@ -2,7 +2,7 @@ import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 import sqlalchemy as sa
 from sqlalchemy.orm import Session, selectinload
 
@@ -26,6 +26,7 @@ router = APIRouter()
 
 @router.get("/feed", response_model=FeedOut)
 def get_feed(
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     categories: str | None = Query(default=None),
     category: str | None = Query(default=None),
@@ -34,9 +35,18 @@ def get_feed(
     device_id: str | None = Query(default=None),
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=50, ge=1, le=500),
+    refresh: bool = Query(default=False),
 ) -> FeedOut:
     if not categories and category:
         categories = category
+
+    # If user explicitly requested refresh, or on top-of-feed load, trigger live wire crawl
+    if offset == 0:
+        try:
+            from scripts.ingest_real_live_news import fetch_and_build_live_feed
+            background_tasks.add_task(fetch_and_build_live_feed, target_state=state, max_per_feed=15)
+        except Exception:
+            pass
 
     # Canonical category and synonyms mapping to guarantee matching across all DB conventions
     _CAT_SYNONYMS = {
@@ -45,8 +55,8 @@ def get_feed(
         "international": ["international", "world", "global"],
         "world": ["world", "international", "global"],
         "global": ["world", "international", "global"],
-        "national": ["national", "india"],
-        "politics": ["politics", "political"],
+        "national": ["national", "india", "politics", "political"],
+        "politics": ["politics", "political", "national", "governance", "policy", "india"],
         "business": ["business", "economy", "finance"],
         "science": ["science", "space"],
         "health": ["health", "medical"],

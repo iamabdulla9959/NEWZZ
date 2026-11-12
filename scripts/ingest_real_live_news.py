@@ -34,6 +34,11 @@ logging.basicConfig(
 logger = logging.getLogger("LiveIngest")
 
 FEEDS_CONFIG = [
+    # --- POLITICS & ELECTIONS ---
+    {"name": "Google News Politics", "url": "https://news.google.com/rss/headlines/section/topic/POLITICS?hl=en-IN&gl=IN&ceid=IN:en", "category": "politics", "state": None, "trust_tier": 2},
+    {"name": "The Hindu (Politics)", "url": "https://www.thehindu.com/news/national/feeder/default.rss", "category": "politics", "state": None, "trust_tier": 1},
+    {"name": "Times of India Politics", "url": "https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms", "category": "politics", "state": None, "trust_tier": 1},
+
     # --- NATIONAL & POLICY ---
     {"name": "The Hindu", "url": "https://www.thehindu.com/news/national/feeder/default.rss", "category": "national", "state": None, "trust_tier": 1},
     {"name": "The Times of India", "url": "https://timesofindia.indiatimes.com/rssfeedstopstories.cms", "category": "national", "state": None, "trust_tier": 1},
@@ -485,7 +490,7 @@ def sync_to_sqlite(articles: List[Dict]):
     """Synchronizes fresh cards into database via SQLAlchemy ORM (compatible with PostgreSQL & SQLite)."""
     try:
         from app.db import SessionLocal
-        from app.models import Card, StoryCluster, CardSource
+        from app.models import Card, StoryCluster, CardSource, Source
 
         db = SessionLocal()
         now = datetime.now(timezone.utc)
@@ -553,11 +558,24 @@ def sync_to_sqlite(articles: List[Dict]):
 
             if art.get("sources"):
                 src_data = art["sources"][0]
+                src_name = src_data["name"]
+                parent_source = db.query(Source).filter(Source.name == src_name).first()
+                if not parent_source:
+                    parent_source = Source(
+                        id=str(uuid.uuid4()),
+                        name=src_name,
+                        category=category.lower(),
+                        trust_tier=str(src_data.get("trust_tier", "1")),
+                        is_active=True,
+                    )
+                    db.add(parent_source)
+                    db.flush()
+
                 card_src = CardSource(
                     id=src_data.get("source_id", str(uuid.uuid4())),
                     card_id=card_id,
-                    source_id=src_data.get("source_id", str(uuid.uuid4())),
-                    name=src_data["name"],
+                    source_id=parent_source.id,
+                    name=src_name,
                     url=src_data["url"],
                     trust_tier=str(src_data["trust_tier"]),
                 )

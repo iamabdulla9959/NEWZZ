@@ -18,6 +18,7 @@ class NewsService {
     String? deviceId,
     int offset = 0,
     int limit = 20,
+    bool refresh = false,
   }) async {
     try {
       final response = await _dio.get('/feed', queryParameters: {
@@ -27,6 +28,8 @@ class NewsService {
         if (deviceId != null && deviceId.isNotEmpty) 'device_id': deviceId,
         'offset': offset,
         'limit': limit,
+        if (refresh) 'refresh': 'true',
+        't': DateTime.now().millisecondsSinceEpoch,
       });
 
       if (response.statusCode == 200) {
@@ -43,6 +46,16 @@ class NewsService {
       throw Exception('Network error: ${e.message}');
     } catch (e) {
       throw Exception('Error loading feed: $e');
+    }
+  }
+
+  Future<void> triggerRefresh({String? state}) async {
+    try {
+      await _dio.get('/feed/refresh', queryParameters: {
+        if (state != null && state.isNotEmpty) 'state': state,
+      });
+    } catch (_) {
+      // Best effort background trigger
     }
   }
 

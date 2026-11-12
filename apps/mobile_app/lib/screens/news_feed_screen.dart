@@ -35,6 +35,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
   late final PageController _pageController = PageController();
 
   late TabController _tabController;
+  int _lastTabIndex = 0;
   final List<String> _tabs = ['Top Stories', 'Technology', 'Politics', 'Business', 'World', 'State'];
 
   @override
@@ -68,7 +69,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
   }
 
   void _onTabChanged() {
-    if (_tabController.indexIsChanging) {
+    if (_tabController.index != _lastTabIndex) {
+      _lastTabIndex = _tabController.index;
+      if (_pageController.hasClients) {
+        _pageController.jumpToPage(0);
+      }
       _fetchFeed(refresh: true);
     }
   }
@@ -92,6 +97,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
         _offset = 0;
         _hasMore = true;
       });
+      // Fire-and-forget trigger to pull latest real-time dispatches from wire servers
+      _newsService.triggerRefresh(state: _selectedState);
     } else {
       setState(() {
         _isFetchingMore = true;
@@ -113,6 +120,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
         deviceId: _deviceId,
         offset: _offset,
         limit: _limit,
+        refresh: refresh,
       );
 
       if (!mounted) return;
@@ -172,6 +180,20 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
         centerTitle: false,
         actions: [
           IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Refresh live news',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Refreshing latest live wires...'),
+                  duration: Duration(milliseconds: 1500),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              _fetchFeed(refresh: true);
+            },
+          ),
+          IconButton(
             icon: Icon(
               theme.brightness == Brightness.dark
                   ? Icons.light_mode_outlined
@@ -191,12 +213,22 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
           ),
           IconButton(
             icon: const Icon(Icons.tune),
+            tooltip: 'Preferences',
             onPressed: _openPreferences,
           ),
         ],
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
+          onTap: (index) {
+            if (index != _lastTabIndex) {
+              _lastTabIndex = index;
+              if (_pageController.hasClients) {
+                _pageController.jumpToPage(0);
+              }
+              _fetchFeed(refresh: true);
+            }
+          },
           tabs: _tabs.map((t) => Tab(text: t)).toList(),
         ),
       ),
@@ -324,20 +356,54 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
     }
   }
 
+  Widget _buildMetaChip(ThemeData theme, IconData icon, String label) {
+    final isDark = theme.brightness == Brightness.dark;
+    final chipBg = isDark ? const Color(0xFF1E2129) : const Color(0xFFF3F4F6);
+    final textCol = isDark ? const Color(0xFFD1D5DB) : const Color(0xFF4B5563);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: chipBg,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: textCol),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: textCol,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildReelsView(ThemeData theme) {
-    return PageView.builder(
-      controller: _pageController,
-      scrollDirection: Axis.vertical,
-      itemCount: _stories.length,
-      onPageChanged: (index) {
-        if (index >= _stories.length - 2 && _hasMore && !_isFetchingMore) {
-          _fetchFeed(refresh: false);
-        }
-      },
-      itemBuilder: (context, index) {
-        final card = _stories[index];
-        return _buildReelCard(card, index, theme);
-      },
+    return RefreshIndicator(
+      onRefresh: () => _fetchFeed(refresh: true),
+      child: PageView.builder(
+        controller: _pageController,
+        scrollDirection: Axis.vertical,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: _stories.length,
+        onPageChanged: (index) {
+          if (index >= _stories.length - 2 && _hasMore && !_isFetchingMore) {
+            _fetchFeed(refresh: false);
+          }
+        },
+        itemBuilder: (context, index) {
+          final card = _stories[index];
+          return _buildReelCard(card, index, theme);
+        },
+      ),
     );
   }
 
@@ -484,11 +550,24 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      if (card.imageUrl != null && card.imageUrl!.isNotEmpty) ...[
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(8),
+                                          child: Image.network(
+                                            card.imageUrl!,
+                                            height: 160,
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                      ],
                                       Text(
                                         _distill60Words(TextSanitizer.cleanSummary(card.headline, card.summary)),
                                         style: TextStyle(
                                           color: isDark ? const Color(0xFFE2E8F0) : const Color(0xFF2D3748),
-                                          fontSize: 14.5,
+                                          fontSize: 15,
                                           height: 1.55,
                                         ),
                                       ),
@@ -522,6 +601,62 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                                             ),
                                           )).toList(),
                                         ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.primary.withValues(alpha: isDark ? 0.12 : 0.05),
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(
+                                            color: theme.colorScheme.primary.withValues(alpha: isDark ? 0.3 : 0.2),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              card.isSingleSource ? Icons.shield_outlined : Icons.verified_user_outlined,
+                                              size: 16,
+                                              color: theme.colorScheme.primary,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                card.isSingleSource
+                                                    ? 'Single Source Wire: Verified against primary agency dispatch.'
+                                                    : 'Cross-Wire Consensus: Corroborated across ${card.corroborationCount > 1 ? card.corroborationCount : 2} independent wires.',
+                                                style: TextStyle(
+                                                  fontSize: 11.5,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: isDark ? const Color(0xFFE2E8F0) : const Color(0xFF374151),
+                                                  height: 1.35,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Wrap(
+                                        spacing: 6,
+                                        runSpacing: 6,
+                                        children: [
+                                          _buildMetaChip(
+                                            theme,
+                                            Icons.speed,
+                                            'Impact: ${card.priorityScore > 0 ? (card.priorityScore * 10).clamp(60, 99) : card.finalFeedScore.toInt().clamp(60, 99)}/100',
+                                          ),
+                                          _buildMetaChip(
+                                            theme,
+                                            Icons.timer_outlined,
+                                            '1 min read',
+                                          ),
+                                          _buildMetaChip(
+                                            theme,
+                                            Icons.public,
+                                            sourceName,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
