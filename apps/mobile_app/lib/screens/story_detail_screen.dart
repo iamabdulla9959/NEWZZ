@@ -9,20 +9,41 @@ class StoryDetailScreen extends StatelessWidget {
 
   const StoryDetailScreen({super.key, required this.card});
 
-  Future<void> _launchUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+  Future<void> _launchUrl(BuildContext context, String url) async {
+    if (url.trim().isEmpty) return;
+    try {
+      final uri = Uri.parse(url.trim());
+      final launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched) {
+        await launchUrl(uri, mode: LaunchMode.platformDefault);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Could not open source link: $url'),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NEWZZ', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+        title: Image.asset(
+          isDark ? 'assets/images/logo_dark.png' : 'assets/images/logo_light.png',
+          height: 24,
+          fit: BoxFit.contain,
+        ),
         centerTitle: true,
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
@@ -75,6 +96,7 @@ class StoryDetailScreen extends StatelessWidget {
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 height: 1.3,
+                color: isDark ? Colors.white : const Color(0xFF111111),
               ),
             ),
             const SizedBox(height: 16),
@@ -86,55 +108,91 @@ class StoryDetailScreen extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.access_time, size: 16, color: Colors.grey[500]),
+                    Icon(Icons.access_time, size: 16, color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
                     const SizedBox(width: 4),
                     Text(
                       card.publishedAt != null
                           ? 'Source: ${card.publishedAt!.toLocal().toString().split('.')[0]}'
                           : 'Date unavailable',
-                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                      ),
                     ),
                   ],
                 ),
                 if (card.impactEvidence?['latest_independent_report_at'] != null)
                   Text(
                     'Updated: ${card.impactEvidence!['latest_independent_report_at'].toString().split('.')[0].replaceAll('T', ' ')}',
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                    ),
                   ),
                 if (card.newzzPublishedAt != null)
                   Text(
                     'Curated: ${card.newzzPublishedAt!.toLocal().toString().split('.')[0]}',
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                    ),
                   ),
               ],
             ),
             const SizedBox(height: 24),
             Text(
               'Summary',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               TextSanitizer.cleanSummary(card.headline, card.summary),
-              style: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                height: 1.6,
+                color: isDark ? const Color(0xFFE2E8F0) : const Color(0xFF2D3748),
+              ),
             ),
             if (card.priorityReason.isNotEmpty) ...[
               const SizedBox(height: 24),
               Text(
                 'Why It Matters',
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
               ),
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
+                  color: isDark ? const Color(0xFF181A20) : const Color(0xFFF8F9FA),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border(left: BorderSide(color: theme.colorScheme.primary, width: 4)),
+                  border: Border.all(color: theme.colorScheme.outline),
                 ),
-                child: Text(
-                  card.priorityReason,
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5, fontStyle: FontStyle.italic),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 60,
+                        color: theme.colorScheme.primary,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            card.priorityReason,
+                            style: TextStyle(
+                              height: 1.5,
+                              fontStyle: FontStyle.italic,
+                              color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF374151),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -184,9 +242,9 @@ class StoryDetailScreen extends StatelessWidget {
       subtitle: Text(typeLabel, style: theme.textTheme.bodySmall?.copyWith(color: iconColor)),
       trailing: IconButton(
         icon: const Icon(Icons.open_in_new),
-        onPressed: () => _launchUrl(source.url),
+        onPressed: () => _launchUrl(context, source.url),
       ),
-      onTap: () => _launchUrl(source.url),
+      onTap: () => _launchUrl(context, source.url),
     );
   }
 }

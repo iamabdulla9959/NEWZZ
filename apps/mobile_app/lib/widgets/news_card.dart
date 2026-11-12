@@ -25,21 +25,25 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 0,
-      color: const Color(0xFF141414),
+      color: theme.cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: const BorderSide(color: Color(0xFF262626), width: 1),
+        side: BorderSide(
+          color: theme.colorScheme.outline,
+          width: 1,
+        ),
       ),
       clipBehavior: Clip.antiAlias,
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(width: 4, color: const Color(0xFFFF7A00)),
+            Container(width: 4, color: theme.colorScheme.primary),
             Expanded(
               child: InkWell(
                 onTap: onTap,
@@ -91,11 +95,13 @@ class NewsCard extends StatelessWidget {
                   Row(
                     children: [
                       if (card.importanceScore >= 70)
-                        const Icon(Icons.local_fire_department, color: Colors.orange, size: 16),
+                        Icon(Icons.local_fire_department, color: theme.colorScheme.primary, size: 16),
                       const SizedBox(width: 4),
                       Text(
                         _getTimeAgo(card.publishedAt),
-                        style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                        ),
                       ),
                     ],
                   ),
@@ -107,6 +113,7 @@ class NewsCard extends StatelessWidget {
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   height: 1.3,
+                  color: isDark ? Colors.white : const Color(0xFF111111),
                 ),
               ),
               const SizedBox(height: 8),
@@ -115,8 +122,8 @@ class NewsCard extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[400],
-                  height: 1.4,
+                  color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF4B5563),
+                  height: 1.45,
                 ),
               ),
               const SizedBox(height: 16),
@@ -127,7 +134,7 @@ class NewsCard extends StatelessWidget {
                     child: Text(
                       _getSourcesText(),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[500],
+                        color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                         fontWeight: FontWeight.w500,
                       ),
                       maxLines: 1,

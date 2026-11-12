@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/news_service.dart';
+import '../core/theme/app_theme.dart';
+import 'landing_onboarding_screen.dart';
 
 class PreferencesScreen extends StatefulWidget {
-  const PreferencesScreen({super.key});
+  final NewsService? newsService;
+  const PreferencesScreen({super.key, this.newsService});
 
   @override
   State<PreferencesScreen> createState() => _PreferencesScreenState();
 }
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
-  final _newsService = NewsService();
+  late final _newsService = widget.newsService ?? NewsService();
   bool _isLoading = true;
   String? _deviceId;
 
@@ -52,9 +55,15 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     }
 
     _selectedState = prefs.getString('selected_state');
+    final cachedCats = prefs.getStringList('selected_categories');
+    if (cachedCats != null && cachedCats.isNotEmpty) {
+      _selectedCategories = List<String>.from(cachedCats);
+    }
 
     try {
-      final userPrefs = await _newsService.getUserPreferences(deviceId);
+      final userPrefs = await _newsService
+          .getUserPreferences(deviceId)
+          .timeout(const Duration(seconds: 2));
       if (mounted) {
         setState(() {
           _deviceId = deviceId;
@@ -84,8 +93,11 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
       } else {
         await prefs.remove('selected_state');
       }
+      await prefs.setStringList('selected_categories', _selectedCategories);
 
-      await _newsService.updateUserPreferences(_deviceId!, _selectedCategories);
+      await _newsService
+          .updateUserPreferences(_deviceId!, _selectedCategories)
+          .timeout(const Duration(seconds: 3));
 
       if (mounted) {
         Navigator.pop(context, true);
@@ -172,6 +184,57 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                     );
                   }).toList(),
                 ),
+                const SizedBox(height: 32),
+                const Divider(),
+                const SizedBox(height: 16),
+                Text('Appearance & Theme', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Text('Choose your preferred visual presentation.', style: theme.textTheme.bodyMedium),
+                const SizedBox(height: 12),
+                ValueListenableBuilder<ThemeMode>(
+                  valueListenable: appThemeNotifier,
+                  builder: (context, mode, _) {
+                    final isDark = mode == ThemeMode.dark;
+                    return SegmentedButton<ThemeMode>(
+                      segments: const [
+                        ButtonSegment(
+                          value: ThemeMode.light,
+                          icon: Icon(Icons.light_mode_outlined),
+                          label: Text('Light'),
+                        ),
+                        ButtonSegment(
+                          value: ThemeMode.dark,
+                          icon: Icon(Icons.dark_mode_outlined),
+                          label: Text('Dark'),
+                        ),
+                      ],
+                      selected: {isDark ? ThemeMode.dark : ThemeMode.light},
+                      onSelectionChanged: (newSelection) async {
+                        final chosen = newSelection.first;
+                        appThemeNotifier.value = chosen;
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('app_theme_mode', chosen == ThemeMode.dark ? 'dark' : 'light');
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 32),
+                const Divider(),
+                const SizedBox(height: 16),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.explore_outlined),
+                  label: const Text('Replay Welcome & Onboarding Tour'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LandingOnboardingScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
               ],
             ),
     );

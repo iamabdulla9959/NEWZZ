@@ -58,3 +58,4 @@ class TextSanitizer {
     return s[0].toUpperCase() + s.substring(1);
   }
 }
+

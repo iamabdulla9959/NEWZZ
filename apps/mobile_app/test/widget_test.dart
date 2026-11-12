@@ -7,10 +7,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('App builds and shows NEWZZ', (WidgetTester tester) async {
+  testWidgets('App builds and shows NEWZZ branding and onboarding', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('NEWZZ'), findsOneWidget);
+    expect(find.bySemanticsLabel('NEWZZ'), findsOneWidget);
+    expect(find.text('Real News. 60 Words. Zero Ads.'), findsOneWidget);
   });
 }

@@ -6,6 +6,7 @@ import '../widgets/news_card.dart';
 import 'story_detail_screen.dart';
 import 'preferences_screen.dart';
 import '../core/utils/text_sanitizer.dart';
+import '../core/theme/app_theme.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   const NewsFeedScreen({super.key});
@@ -158,9 +159,27 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NEWZZ', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2)),
-        centerTitle: true,
+        title: Semantics(
+          label: 'NEWZZ',
+          child: Image.asset(
+            theme.brightness == Brightness.dark
+                ? 'assets/images/logo_dark.png'
+                : 'assets/images/logo_light.png',
+            height: 28,
+            fit: BoxFit.contain,
+          ),
+        ),
+        centerTitle: false,
         actions: [
+          IconButton(
+            icon: Icon(
+              theme.brightness == Brightness.dark
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined,
+            ),
+            tooltip: theme.brightness == Brightness.dark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+            onPressed: () => AppTheme.toggleTheme(),
+          ),
           IconButton(
             icon: Icon(_isReelsMode ? Icons.view_headline : Icons.bolt),
             tooltip: _isReelsMode ? 'Switch to Broadsheet List' : 'Switch to 60-Word Reels',
@@ -323,13 +342,14 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
   }
 
   Widget _buildReelCard(CardOut card, int index, ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
     final cat = card.category.toUpperCase();
     final sourceName = card.sources.isNotEmpty ? card.sources.first.name : 'Verified Wire';
     final fact1 = 'Verified by $sourceName';
     final fact2 = card.priorityReason.isNotEmpty ? card.priorityReason : 'Audited via verified national telemetry';
 
     return Container(
-      color: const Color(0xFF080808),
+      color: theme.scaffoldBackgroundColor,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: SafeArea(
         child: Column(
@@ -340,12 +360,12 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.bolt, size: 16, color: Color(0xFFFF7A00)),
+                    Icon(Icons.bolt, size: 16, color: theme.colorScheme.primary),
                     const SizedBox(width: 4),
                     Text(
                       'NEWZZ REELS',
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: const Color(0xFFFF7A00),
+                        color: theme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,
                       ),
@@ -355,13 +375,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1C1C1C),
+                    color: isDark ? const Color(0xFF1E2129) : const Color(0xFFF3F4F6),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     '${index + 1} / ${_stories.length}',
                     style: theme.textTheme.labelSmall?.copyWith(
-                      color: Colors.grey,
+                      color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                       fontFamily: 'monospace',
                     ),
                   ),
@@ -374,16 +394,23 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF141414),
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF262626)),
+                  border: Border.all(color: theme.colorScheme.outline),
+                  boxShadow: isDark ? null : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Container(width: 4, color: const Color(0xFFFF7A00)),
+                      Container(width: 4, color: theme.colorScheme.primary),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(20),
@@ -399,13 +426,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFFF7A00).withValues(alpha: 0.15),
+                                      color: theme.colorScheme.primary.withValues(alpha: 0.12),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Text(
                                       cat,
-                                      style: const TextStyle(
-                                        color: Color(0xFFFF7A00),
+                                      style: TextStyle(
+                                        color: theme.colorScheme.primary,
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
                                         letterSpacing: 0.5,
@@ -416,13 +443,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF262626),
+                                        color: isDark ? const Color(0xFF262930) : const Color(0xFFE5E7EB),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: Text(
                                         card.state!.toUpperCase(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                        style: TextStyle(
+                                          color: isDark ? Colors.white : const Color(0xFF111111),
                                           fontSize: 11,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -430,7 +457,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                                     ),
                                   Text(
                                     _getTimeAgo(card.publishedAt),
-                                    style: const TextStyle(color: Colors.grey, fontSize: 11),
+                                    style: TextStyle(
+                                      color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                                      fontSize: 11,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -439,11 +469,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                               // Headline
                               Text(
                                 card.headline,
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: isDark ? Colors.white : const Color(0xFF111111),
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  height: 1.3,
+                                  height: 1.35,
                                 ),
                               ),
                               const SizedBox(height: 12),
@@ -456,19 +486,19 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                                     children: [
                                       Text(
                                         _distill60Words(TextSanitizer.cleanSummary(card.headline, card.summary)),
-                                        style: const TextStyle(
-                                          color: Color(0xFFEDEDED),
-                                          fontSize: 14,
-                                          height: 1.5,
+                                        style: TextStyle(
+                                          color: isDark ? const Color(0xFFE2E8F0) : const Color(0xFF2D3748),
+                                          fontSize: 14.5,
+                                          height: 1.55,
                                         ),
                                       ),
                                       const SizedBox(height: 14),
                                       Container(
                                         padding: const EdgeInsets.all(12),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF1A1A1A),
+                                          color: isDark ? const Color(0xFF1F222A) : const Color(0xFFF8F9FA),
                                           borderRadius: BorderRadius.circular(8),
-                                          border: Border.all(color: const Color(0xFF2E2E2E)),
+                                          border: Border.all(color: theme.colorScheme.outline),
                                         ),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -477,11 +507,15 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                                             child: Row(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const Text('✓ ', style: TextStyle(color: Color(0xFFFF7A00), fontWeight: FontWeight.bold)),
+                                                Text('✓ ', style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
                                                 Expanded(
                                                   child: Text(
                                                     fact,
-                                                    style: const TextStyle(color: Color(0xFFA3A3A3), fontSize: 12, height: 1.4),
+                                                    style: TextStyle(
+                                                      color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF4B5563),
+                                                      fontSize: 12,
+                                                      height: 1.4,
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -495,24 +529,28 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with SingleTickerProvid
                               ),
 
                               // Bottom Action Row
-                              const Divider(color: Color(0xFF262626), height: 20),
+                              Divider(color: theme.dividerColor, height: 20),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
-                                      const Icon(Icons.verified, size: 16, color: Color(0xFFFF7A00)),
+                                      Icon(Icons.verified, size: 16, color: theme.colorScheme.primary),
                                       const SizedBox(width: 4),
                                       Text(
                                         sourceName,
-                                        style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                          color: isDark ? Colors.white70 : const Color(0xFF374151),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ],
                                   ),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFFF7A00),
-                                      foregroundColor: Colors.black,
+                                      backgroundColor: theme.colorScheme.primary,
+                                      foregroundColor: Colors.white,
                                       elevation: 0,
                                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                                       textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

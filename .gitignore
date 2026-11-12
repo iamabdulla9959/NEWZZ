@@ -46,6 +46,7 @@ scratch/audit_formula_948.py
 temp_check.html
 
 # Test coverage & build artifacts
+*.zip
 coverage/
 .coverage
 htmlcov/
