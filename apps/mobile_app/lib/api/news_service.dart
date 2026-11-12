@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:dio/dio.dart';
 import '../core/network/api_client.dart';
+import '../models/card.dart';
 import '../models/feed.dart';
 import '../models/user_preferences.dart';
 
@@ -33,19 +36,57 @@ class NewsService {
       });
 
       if (response.statusCode == 200) {
-        return FeedOut.fromJson(response.data as Map<String, dynamic>);
-      } else if (response.statusCode == 503) {
-         throw Exception('Service Unavailable');
-      } else {
-        throw Exception('Failed to load feed: ${response.statusCode}');
+        final feedOut = FeedOut.fromJson(response.data as Map<String, dynamic>);
+        if (feedOut.items.isNotEmpty) {
+          return feedOut;
+        }
       }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 503) {
-         throw Exception('Service Unavailable');
-      }
-      throw Exception('Network error: ${e.message}');
-    } catch (e) {
-      throw Exception('Error loading feed: $e');
+      return await _loadBundledFallback(category: category, state: state, offset: offset, limit: limit);
+    } catch (_) {
+      return await _loadBundledFallback(category: category, state: state, offset: offset, limit: limit);
+    }
+  }
+
+  Future<FeedOut> _loadBundledFallback({
+    String? category,
+    String? state,
+    int offset = 0,
+    int limit = 20,
+  }) async {
+    try {
+      final jsonStr = await rootBundle.loadString('assets/data/feed.json');
+      final data = json.decode(jsonStr) as Map<String, dynamic>;
+      final rawItems = data['items'] as List<dynamic>? ?? [];
+      
+      final lowerCat = category?.trim().toLowerCase();
+      final isPolitics = lowerCat == 'politics';
+      
+      final filtered = rawItems.where((item) {
+        if (item is! Map<String, dynamic>) return false;
+        if (lowerCat != null && lowerCat != 'top stories') {
+          final itemCat = (item['category'] as String? ?? '').trim().toLowerCase();
+          if (isPolitics) {
+            if (itemCat != 'politics' && itemCat != 'national') return false;
+          } else if (itemCat != lowerCat) {
+            return false;
+          }
+        }
+        if (state != null && state.isNotEmpty && lowerCat == 'state') {
+          final itemState = (item['state'] as String? ?? '').trim().toLowerCase();
+          if (itemState.isNotEmpty && itemState != state.trim().toLowerCase()) return false;
+        }
+        return true;
+      }).toList();
+
+      final slice = filtered.skip(offset).take(limit).map((e) => CardOut.fromJson(e as Map<String, dynamic>)).toList();
+      return FeedOut(
+        items: slice,
+        total: filtered.length,
+        offset: offset,
+        limit: limit,
+      );
+    } catch (_) {
+      return FeedOut(items: [], total: 0, offset: offset, limit: limit);
     }
   }
 
